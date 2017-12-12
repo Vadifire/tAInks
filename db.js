@@ -12,6 +12,12 @@ var Player = new mongoose.Schema({
 });
 
 mongoose.model('Player', Player);  
-mongoose.connect('mongodb://localhost/'); 
+	
+mongoose.connect('mongodb://localhost/', function (error, db){
+	if (error){
+		console.log("Failed to connect to MongoDB.");
+	}else{
+		console.log("Connected to MongoDB.");
+	}
+}); 
 
-console.log('Connected to DB');
