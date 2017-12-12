@@ -10,10 +10,23 @@ body {
   background-color: ivory;
 } 
 
-#battleCanvas{
-	border: 1px solid #000000;
-}	
 
-#html-canvas{
-	overflow:auto
+#canvas-div{
+	border: 1px solid #000000;
+    width: 1344px;
+    height: 756px;
+	overflow: auto;
+	position: relative;
 }
+
+canvas {
+	left: 0px;
+	position: absolute;
+}
+
+#game-layer{
+	z-index: 2;
+}
+#bg-layer{
+	z-index: 1;
+}	

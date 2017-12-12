@@ -18,8 +18,10 @@ var DIAG_SPEED_FACTOR = Math.sqrt(2)/2;
 
 /* ARCHITECTURE LEVEL VARS */
 var socket = io(); //Client socket for server communication
-var canvas; //battle canvas
-var ctx; //canvas context
+var gameCanvas; //top, dynamic canvas layer
+var bgCanvas; // background, static canvas layer
+var ctx; //ctx for gameCanvas
+var bgCtx; //ctx for bgCanvas
 
 /* GAME VARS */
 var gameInterval;
@@ -37,18 +39,36 @@ var tankImage = new Image();
 tankImage.src = 'public/img/tank/1.png'; //TODO: transparency
 tank.image = tankImage;
 
-
 /* Document is Ready */
 $(function() { 
-	canvas = $("#battleCanvas").get(0);
-	ARENA_WIDTH = canvas.width;
-	ARENA_HEIGHT = canvas.height;
-	ctx = canvas.getContext('2d');
+	gameCanvas = $("#game-layer").get(0);
+	ARENA_WIDTH = gameCanvas.width;
+	ARENA_HEIGHT = gameCanvas.height;
+	ctx = gameCanvas.getContext('2d');
+	bgCanvas = $("#bg-layer").get(0);
+	bgCtx = bgCanvas.getContext('2d');
 
-	/*We're assuming images are loaded by this point,
-		might be unstable */
+	renderBG();
 	setInterval(gameLoop, 1000 / TARGET_FPS); //very inefficient I'd imagine
 });
+
+
+/* Initially render BG Canvas with all dirt */
+function renderBG(){
+	if (!bgCtx) //bgCtx not yet retrieved
+		return;
+	var x = 0, y = 0; //base top left
+
+	/* draw dirt */
+	while (y < ARENA_HEIGHT){
+		while (x < ARENA_WIDTH){
+			bgCtx.drawImage(dirtImage, x, y);
+			x += SPRITE_WIDTH;
+		}
+		x = 0;
+		y += SPRITE_HEIGHT;
+	}
+}
 
 
 /* Shoot for 60 UPS and max FPS */
@@ -57,26 +77,15 @@ function gameLoop(){
 	render();
 }
 
-/* Render battle Canvas */
-function render(){ //Lots of flickering ATM
-	if (!ctx) //canvas ctx not yet retrieved
+/* Render game-layer */
+function render(){
+	if (!ctx) //game ctx not yet retrieved
 		return;
-	var x = 0, y = 0; //base top left
-
-	/* draw dirt */
-	while (y < canvas.height){
-		while (x < canvas.width){
-			ctx.drawImage(dirtImage, x, y);
-			x += SPRITE_WIDTH;
-		}
-		x = 0;
-		y += SPRITE_HEIGHT;
-	}
-
+	ctx.clearRect(0,0,ARENA_WIDTH,ARENA_HEIGHT);
 	ctx.drawImage(tank.image, tank.x, tank.y);
-
 }
 
+/* Update Local Game State */
 function update(){
 	/* Handle Tank Movement */
 
