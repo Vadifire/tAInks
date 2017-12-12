@@ -4,10 +4,18 @@
 		<title> tAInks </title>
 	</head>
 
-	<body>
+	<body><center>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 		<script src="public/client.js"></script>
-
-	</body>
+	<h3>Register New Player</h3>
+	<form action="/players" method="POST">
+	  	<input type="text" placeholder="username" name="username"><br><br>
+	  	<button type="submit">Submit</button>
+	</form>
+	<br>
+	<form action="/players" method="GET">
+		<button type="submit">See All Players</button>
+	</form>
+	</center></body>
 </html>

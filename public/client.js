@@ -1,5 +1,5 @@
 /*
- * Client Sided Entry Point
+ * Client Sided Javascript
  *
  * Title: tAInks
  *
