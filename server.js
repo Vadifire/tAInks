@@ -16,7 +16,7 @@ var serv = require('http').Server(app);
 var io = require('socket.io')(serv,{}); //Packet sending module
 const bodyParser= require('body-parser'); //Used for MongoDB parsing
 var db = require('./db'); //Interface with MongoDB
-var player = require('./player'); //Import player model
+var player = require('./models/player'); //Import player model
 
 
 /* Routes */

@@ -13,8 +13,8 @@ var Player = new mongoose.Schema({
 
 mongoose.model('Player', Player);  
 	
-mongoose.connect('mongodb://localhost/', function (error, db){
-	if (error){
+mongoose.connect('mongodb://localhost/', function (err, db){
+	if (err){
 		console.log("Failed to connect to MongoDB.");
 	}else{
 		console.log("Connected to MongoDB.");

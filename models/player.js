@@ -51,7 +51,7 @@ module.exports = {
 		}).remove(function (err) {
 			console.log(err);
 			if (err) {
-				res.end(err);            
+				res.end(err);
 			} else {
 				res.end();
 			}
