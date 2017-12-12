@@ -4,8 +4,8 @@
  * Title: tAInks
  *
  * Authors:
- *   @author Cedric Debelle
- *	 @author Calvin Ellis
+ *	@author Cedric Debelle
+ *	@author Calvin Ellis
  */
 
 /* Dependencies */

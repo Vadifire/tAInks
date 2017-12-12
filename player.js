@@ -2,8 +2,8 @@
  * Player Object
  *
  * Authors:
- *   @author Cedric Debelle
- *	 @author Calvin Ellis
+ *	@author Cedric Debelle
+ *	@author Calvin Ellis
  */
 
 
