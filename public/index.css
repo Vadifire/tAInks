@@ -9,3 +9,11 @@
 body {
   background-color: ivory;
 } 
+
+#battleCanvas{
+	border: 1px solid #000000;
+}	
+
+#html-canvas{
+	overflow:auto
+}
