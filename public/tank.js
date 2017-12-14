@@ -45,9 +45,19 @@ function Tank(id, x, y, speed, control){
  * @param {boolean} backwards - whether tank is backing up
  */
 Tank.prototype.move = function(backwards){
-	this.frame += .25; /* advance animation frame every 10 game frames only */
-	if (this.frame > tankImage.length-1){
+	/* advance animation frame every 10 game frames only */
+	var animationSpeed = .25;
+	if(!backwards){
+		this.frame += animationSpeed; 
+	}else{
+		this.frame -= animationSpeed; 
+	}
+	if (this.frame > tankImage.length-1){ //forward animation
 		this.frame = 0;
+	}else if (this.frame <= 0){ //backwards animation
+		this.frame = tankImage.length-1;
+	} else {
+		//null frame call, reset animation
 	}
 	this.x += (this.speed*Math.cos(this.dir) * ((backwards) ? -1 : 1));
 	this.y -= (this.speed*Math.sin(this.dir) * ((backwards) ? -1 : 1));
