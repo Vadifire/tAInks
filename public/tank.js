@@ -109,9 +109,10 @@ Tank.prototype.update = function(Keys){
  * @param {Object} ctx - The context to draw to
  */
 Tank.prototype.render = function(ctx){
+	// TODO: investigate how image rotation can be done more efficiently
 	ctx.save(); //save context state
-	ctx.translate(this.x, this.y);
-	ctx.rotate(-this.dir); //rotate context plane
+	ctx.translate(this.x, this.y); //shift origin to tank
+	ctx.rotate(-this.dir); //rotate plane around tank
 	ctx.drawImage(tankImage[Math.floor(this.frame)], -SPRITE_WIDTH/2, -SPRITE_HEIGHT/2);
 	ctx.restore(); //restore normal xy coordinate plane
 	ctx.fillText(this.name, this.x, this.y-SPRITE_HEIGHT/2);

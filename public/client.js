@@ -74,7 +74,7 @@ $(function() {
 	renderBG();
 	ctx.font = '24px serif';
 	
-	setInterval(gameLoop, 1000 / TARGET_FPS); //very inefficient I'd imagine
+	gameLoop(); //Start Game Loop
 });
 
 
@@ -95,11 +95,25 @@ function renderBG(){
 	}
 }
 
+/* Lets Browser Efficiently Manage Animations */
+window.requestAnimFrame = (function(){
+	return  window.requestAnimationFrame || 
+	window.webkitRequestAnimationFrame   || 
+	window.mozRequestAnimationFrame      || 
+	window.oRequestAnimationFrame        || 
+	window.msRequestAnimationFrame       || 
+	function(callback, element){
+		window.setTimeout(function(){
+			callback(performance.now());
+		}, 1000 / TARGET_FPS);
+	};
+})();
 
-/* Shoot for 60 UPS and max FPS */
+/* Game loop invoked every frame */
 function gameLoop(){
 	update();
 	render();
+	requestAnimFrame(gameLoop);
 }
 
 /* Render game-layer */
