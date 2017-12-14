@@ -109,7 +109,9 @@ function render(){
 
 	/* Clear Drawing Area */
 	ctx.clearRect(0,0,ARENA_WIDTH,ARENA_HEIGHT);
-	
+
+	ctx.textBaseline="bottom";
+	ctx.textAlign="center";
 	/* Draw All Tanks In Game*/
 	for (var tank in tanks){
 		tanks[tank].render(ctx);

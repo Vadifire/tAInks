@@ -26,7 +26,11 @@ for (var i = 1; i < 9; i++){
  */
 function Tank(id, x, y, speed, control){
 	this.id = id; //unique id TO-DO: avoid id collision
-	this.name = 'Player ' + id; //assume we're a player
+	if (control)
+		this.name = 'Player ' + id; //assume we're a player
+	else{
+		this.name = 'AI ' + id; //assume we're a player
+	}
 	this.x = x;
 	this.y = y;
 	this.dir = Math.PI / 2;
@@ -98,6 +102,5 @@ Tank.prototype.render = function(ctx){
 	ctx.rotate(-this.dir); //rotate context plane
 	ctx.drawImage(tankImage[Math.floor(this.frame)], -SPRITE_WIDTH/2, -SPRITE_HEIGHT/2);
 	ctx.restore(); //restore normal xy coordinate plane
-	ctx.textBaseline="bottom";
-	ctx.fillText(this.name, this.x-SPRITE_WIDTH/2, this.y-SPRITE_HEIGHT/2);
+	ctx.fillText(this.name, this.x, this.y-SPRITE_HEIGHT/2);
 }
