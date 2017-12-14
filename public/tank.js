@@ -51,6 +51,18 @@ Tank.prototype.move = function(backwards){
 	}
 	this.x += (this.speed*Math.cos(this.dir) * ((backwards) ? -1 : 1));
 	this.y -= (this.speed*Math.sin(this.dir) * ((backwards) ? -1 : 1));
+
+	/* Lock player within Arena */
+	if (this.y > ARENA_HEIGHT){
+		this.y = ARENA_HEIGHT;
+	} else if (this.y < 0){
+		 this.y = 0;
+	}
+	if (this.x > ARENA_WIDTH){
+		this.x = ARENA_WIDTH;
+	} else if (this.x < 0){
+		this.x = 0;
+	}
 }
 
 /* 
