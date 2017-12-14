@@ -52,7 +52,7 @@ Tank.prototype.move = function(backwards){
 	this.x += (this.speed*Math.cos(this.dir) * ((backwards) ? -1 : 1));
 	this.y -= (this.speed*Math.sin(this.dir) * ((backwards) ? -1 : 1));
 
-	/* Lock player within Arena */
+	/* Lock tank within Arena */
 	if (this.y > ARENA_HEIGHT){
 		this.y = ARENA_HEIGHT;
 	} else if (this.y < 0){
@@ -70,7 +70,6 @@ Tank.prototype.move = function(backwards){
  * @param {boolean} cw - Whether the rotation should be CW
  */
 Tank.prototype.rotate = function(cw){
-	console.log(this.dir);
 	if (cw)
 		this.dir -= this.angularSpeed;
 	else
@@ -80,6 +79,14 @@ Tank.prototype.rotate = function(cw){
 	}else if (this.dir < 0){
 		this.dir += Math.PI * 2;
 	}
+}
+
+
+/* 
+ * Shoots a bullet from the tank's origin in dir
+ */
+Tank.prototype.shoot = function(){
+	new Bullet(this.id, this.x, this.y, 5, this.dir);
 }
 
 
@@ -109,7 +116,6 @@ Tank.prototype.update = function(Keys){
  * @param {Object} ctx - The context to draw to
  */
 Tank.prototype.render = function(ctx){
-	// TODO: investigate how image rotation can be done more efficiently
 	ctx.save(); //save context state
 	ctx.translate(this.x, this.y); //shift origin to tank
 	ctx.rotate(-this.dir); //rotate plane around tank

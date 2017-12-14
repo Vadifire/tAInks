@@ -21,10 +21,7 @@ var gameCanvas; //top, dynamic canvas layer
 var bgCanvas; // background, static canvas layer
 var ctx; //ctx for gameCanvas
 var bgCtx; //ctx for bgCanvas
-
-/* IMAGE VARS */
-var dirtImage = new Image();
-dirtImage.src = 'public/img/dirt.png';
+var currentPage; //Page (div) currently being viewed
 
 /* GAME VARS */
 var gameInterval;
@@ -36,6 +33,8 @@ var tanks = [ playerTank,
 	new Tank(3,200,200,2)
 ];
 
+var bullets = new Map(); //Maps bullet ids to bullet obj
+
 /* Keep Track of Keys Pressed */
 var Keys = {
 	_pressed: {},
@@ -44,6 +43,7 @@ var Keys = {
 	LEFT: 65, // A
 	DOWN: 83, // S
 	RIGHT: 68,// D
+	SPACE: 32, // SPACE
   
 	isDown: function(keyCode) {
 		return this._pressed[keyCode];
@@ -51,6 +51,9 @@ var Keys = {
   
 	onKeydown: function(event) {
 		this._pressed[event.keyCode] = true;
+		if (event.keyCode == Keys.SPACE){
+			playerTank.shoot(); //listen to shoots
+		}
 	},
   
 	onKeyup: function(event) {
@@ -71,29 +74,13 @@ $(function() {
 	gameCanvas.addEventListener('keyup', function(event) { Keys.onKeyup(event); }, false);
 	gameCanvas.addEventListener('keydown', function(event) { Keys.onKeydown(event); }, false);
 
-	renderBG();
+	/* Set Current Page */
+	currentPage = $('#login-page');
 	ctx.font = '24px serif';
 	
 	gameLoop(); //Start Game Loop
 });
 
-
-/* Initially render BG Canvas with all dirt */
-function renderBG(){
-	if (!bgCtx) //bgCtx not yet retrieved
-		return;
-	var x = 0, y = 0; //base top left
-
-	/* draw dirt */
-	while (y < ARENA_HEIGHT){
-		while (x < ARENA_WIDTH){
-			bgCtx.drawImage(dirtImage, x, y);
-			x += SPRITE_WIDTH;
-		}
-		x = 0;
-		y += SPRITE_HEIGHT;
-	}
-}
 
 /* Lets Browser Efficiently Manage Animations */
 window.requestAnimFrame = (function(){
@@ -126,15 +113,22 @@ function render(){
 
 	ctx.textBaseline="bottom";
 	ctx.textAlign="center";
-	/* Draw All Tanks In Game*/
-	for (var tank in tanks){
-		tanks[tank].render(ctx);
-	}
+
+	/* Draw All Entities In Game*/
+	bullets.forEach(function (bullet) {
+		bullet.render(ctx);
+	});
+	tanks.forEach(function(tank){
+		tank.render(ctx);
+	});
 }
 
 /* Update Local Game State */
 function update(){
-	for (var tank in tanks){
-		tanks[tank].update(Keys);
-	}
+	bullets.forEach(function(bullet){
+		bullet.update(Keys);
+	});
+	tanks.forEach(function(tank){
+		tank.update(Keys);
+	});
 }
