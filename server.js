@@ -17,11 +17,26 @@ var io = require('socket.io')(serv,{}); //Packet sending module
 const bodyParser= require('body-parser'); //Used for MongoDB parsing
 var db = require('./db'); //Interface with MongoDB
 var player = require('./models/player'); //Import player model
-
+var sass = require('node-sass');//Node SCSS
+var fs = require('fs'); //Filesystem
 
 /* Routes */
 app.get('/',function(req, res) { //Respond with index.html to HTTP get request
 	res.sendFile(path.join(__dirname,"public/index.html"));
+});
+
+/* Build SCSS into CSS */
+var scss_filename = './public/styles.scss';
+var scss_savepath = './public/styles.css';
+console.log("Begin compiling " + scss_filename + " to " + scss_savepath);
+sass.render({
+  file: scss_filename
+}, function(err, result) {
+	if(err) console.log(err);
+	fs.writeFile(scss_savepath, result.css, function(err_write) {
+		if(err_write) console.log(err_write);
+		console.log("Successfully compiled " + scss_filename + " to " + scss_savepath);
+	});
 });
 
 //Serve public resources
