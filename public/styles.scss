@@ -8,25 +8,47 @@
 
 body {
   background-color: black;
+  background: url('./img/bg.jpeg');
+  
+  /* remove :focus outline from all elements */
+   *:focus {
+   outline: 0;
+ }
+ 
+#headerLogo img{
+	border-radius: 5px;
+	border-radius: 0px 0px 40px 40px;
+	-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	box-shadow:         7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	margin-bottom: 20px;
+}
   
 #arena-page{
 	border: 1px solid #000000;
     width: 1344px;
     height: 756px;
-	overflow: auto;
+	//overflow: auto;
 	position: relative;
+	margin-bottom: 20px;
 }
 
 canvas {
 	left: 0px;
 	position: absolute;
+	border: solid 1px black;
+	-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	box-shadow:         7px 7px 5px 0px rgba(50, 50, 50, 0.75);
 }
 
 #game-layer{
 	z-index: 2;
+	overflow: hidden;
 }
 #bg-layer{
 	z-index: 1;
+	background: url('./img/dirt.png');
 }	
 
 } 
