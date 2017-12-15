@@ -31,8 +31,8 @@ function Tank(id, x, y, speed, control){
 	this.id = id; //unique id TO-DO: avoid id collision
 	this.control = control;
 	this.components = []; //no components by default
-	this.width = tankImage[0].naturalWidth;
-	this.height = tankImage[0].naturalHeight;
+	this.width = 84;
+	this.height = 84;
 	this.x = x;
 	this.y = y;
 	this.dir = Math.PI / 2;
