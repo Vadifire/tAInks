@@ -11,7 +11,7 @@ var bulletImage = new Image();
 bulletImage.src = 'public/img/missle/20.png';
 var nextBulletId = 0; //just allow natural overflow
 
-/* Tank Constructor
+/* Bullet Constructor
  *
  * @param {string?} ownerID - unique ID of tank owner
  * @param {number} x - X pos in Arena

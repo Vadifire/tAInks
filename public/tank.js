@@ -31,6 +31,8 @@ function Tank(id, x, y, speed, control){
 	else{
 		this.name = 'AI ' + id; //assume we're a player
 	}
+	this.width = tankImage[0].naturalWidth;
+	this.height = tankImage[0].naturalHeight;
 	this.x = x;
 	this.y = y;
 	this.dir = Math.PI / 2;
@@ -38,6 +40,7 @@ function Tank(id, x, y, speed, control){
 	this.angularSpeed = 0.04; //this is in terms of rad * FPS for now
 	this.frame = 0; //current animation frame
 	this.control = control;
+	this.components = []; //components attached to tank
 }
 
 /*
@@ -128,7 +131,10 @@ Tank.prototype.render = function(ctx){
 	ctx.save(); //save context state
 	ctx.translate(this.x, this.y); //shift origin to tank
 	ctx.rotate(-this.dir); //rotate plane around tank
-	ctx.drawImage(tankImage[Math.floor(this.frame)], -SPRITE_WIDTH/2, -SPRITE_HEIGHT/2);
+	ctx.drawImage(tankImage[Math.floor(this.frame)], -this.width/2, -this.height/2);
+	this.components.forEach(function(comp){
+		comp.render(ctx); //draw all components
+	});
 	ctx.restore(); //restore normal xy coordinate plane
-	ctx.fillText(this.name, this.x, this.y-SPRITE_HEIGHT/2);
+	ctx.fillText(this.name, this.x, this.y-this.height/2);
 }
