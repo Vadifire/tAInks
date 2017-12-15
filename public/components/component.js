@@ -11,16 +11,22 @@
 
 /* Component Constructor
  *
- * @param {Object} tank - the tank comp is attached to
  * @param {number} x - The x-pos offset relative to tank x
  * @param {number} y - The y-pos offset relative to tank y
  * @param {Object} image - the image for this component (often null)
  */
-function Component(tank, x, y, image){
-	this.tank = tank; //this.tank = our owner
+function Component(x, y, image){
 	this.xOffset = -y; //due to rotation
 	this.yOffset = x;
 	this.image = image;
+}
+
+/*
+ * Attach this component to a tank
+ * @param {Object} tank - The owner for this component
+ */
+Component.prototype.setOwner = function(tank){
+	this.tank = tank;
 }
 
 /*

@@ -1,6 +1,9 @@
 /*
  * Client-Sided Notion of a Tank
  *
+ * Tanks can be controlled by Players, or by
+ * a neural-network based AI
+ *
  * Authors:
  *	@author Cedric Debelle
  *	@author Calvin Ellis
@@ -18,7 +21,7 @@ for (var i = 1; i < 9; i++){
 
 /* Tank Constructor
  *
- * @param {string?} id - unique ID
+ * @param {number} id - unique ID
  * @param {number} x - X pos in Arena
  * @param {number} y - Y pos in Arena
  * @param {number} speed  - px / frame to advance in dir
@@ -26,11 +29,8 @@ for (var i = 1; i < 9; i++){
  */
 function Tank(id, x, y, speed, control){
 	this.id = id; //unique id TO-DO: avoid id collision
-	if (control)
-		this.name = 'Player ' + id; //assume we're a player
-	else{
-		this.name = 'AI ' + id; //assume we're a player
-	}
+	this.control = control;
+	this.components = []; //no components by default
 	this.width = tankImage[0].naturalWidth;
 	this.height = tankImage[0].naturalHeight;
 	this.x = x;
@@ -39,8 +39,29 @@ function Tank(id, x, y, speed, control){
 	this.speed = Math.abs(speed); //this is in terms of px * FPS for now
 	this.angularSpeed = 0.04; //this is in terms of rad * FPS for now
 	this.frame = 0; //current animation frame
-	this.control = control;
-	this.components = []; //components attached to tank
+	if (control)
+		this.name = 'Player ' + id; //assume we're a player
+	else{
+		this.name = 'AI ' + id; // if we don't control, assume AI for now
+	}
+}
+
+/*
+ * Attach a list of Components to the Tank
+ *
+ * @param {object} components - Array of components attached to this tank
+ */
+Tank.prototype.attachComponents = function(components){
+	this.components = components;
+
+	this.components.forEach(function(comp){
+		comp.setOwner(this);
+	}, this);
+
+	/* If we don't control, assuming AI. Create Neural Network */
+	if (!this.control){
+		this.neuralNetwork = new NeuralNetwork(this);
+	}
 }
 
 /*
@@ -82,10 +103,11 @@ Tank.prototype.move = function(backwards){
  * @param {boolean} cw - Whether the rotation should be CW
  */
 Tank.prototype.rotate = function(cw){
-	if (cw)
+	if (cw){
 		this.dir -= this.angularSpeed;
-	else
+	}else{
 		this.dir += this.angularSpeed;
+	}
 	if (this.dir > Math.PI * 2){
 		this.dir -= Math.PI * 2;	
 	}else if (this.dir < 0){
@@ -107,7 +129,7 @@ Tank.prototype.shoot = function(){
  * @param {Object} keys - A listing of which keys are pressed
  */
 Tank.prototype.update = function(Keys){
-	if (this.control){ //if our client controls the tank
+	if (this.control){ // Client's keyboard controls tank
 		if (Keys.isDown(Keys.LEFT)){
 			this.rotate();
 		}
@@ -120,6 +142,8 @@ Tank.prototype.update = function(Keys){
 		if (Keys.isDown(Keys.DOWN)){
 			this.move(true);
 		}
+	}else if (this.neuralNetwork){ // AI powered by Neural Network
+		this.neuralNetwork.activate();
 	}
 }
 

@@ -7,36 +7,45 @@
  * An InputComponent is intended to be a sort of
  * abstract class, and thus should not be directly created
  *
- * NOTE: There is a strong possibility that this 
- * class is reworked / removed as the Neural Network
- * system is built.
- *
  * Authors:
  *	@author Cedric Debelle
  *	@author Calvin Ellis
  */
+
 
 /* Inherits from Component */
 InputComponent.prototype = Object.create(Component.prototype);
 
 /* Input Component Constructor
  *
- * @param {Object} tank - the tank comp is attached to
  * @param {number} x - The x-pos offset relative to tank x
  * @param {number} y - The y-pos offset relative to tank y
  * @param {Object} image - the image for this component (often null)
- * @param {Object} node - the Input Node attached to this component
  */
-function InputComponent(tank, x, y, image, node){
-	Component.call(this, tank, x, y, image); //super()
-	this.node = node;
+function InputComponent(x, y, image){
+	Component.call(this, x, y, image); //super()
 }
 
 /*
  * Inputs are sensors that read information from the game state
  * Individual Input Components MUST override the readInput() method
+ *
  * @returns {number} - A value between 0 and 1, based on the input signal strength
  */
-function readInput(){
+InputComponent.prototype.readInput = function(){
 	throw new Error("No InputComponent implementation for readInput()");
+}
+
+
+/************************************************************
+*                                                           *
+*   Define InputComponent Implementations Below             *
+*                                                           *
+*************************************************************/
+
+/* This component is for testing only - returns random number beween 0 and 1 */
+function RandomComponent(x, y, image){InputComponent.call(this,x,y,image)};
+RandomComponent.prototype = Object.create(InputComponent.prototype);
+RandomComponent.prototype.readInput = function(){
+	return Math.random();
 }
