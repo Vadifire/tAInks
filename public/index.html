@@ -12,7 +12,6 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 		
 		<!-- JS Includes -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 		<script src="public/bullet.js"></script>
 		<script src="public/tank.js"></script>
@@ -20,30 +19,60 @@
 
 	</head>
 
-	<body><center>
-
-		
-
-		<div id = "login-page">
+	<body>
+		<div id = "login-page" class="text-center">
 			<div id="headerLogo">
-				<img src = "public/img/logo.png">
+				<a href="/">
+					<img src = "public/img/logo.png">
+				</a>
 			</div>
-			<h3>Register New Player</h3>
-			<form action="/players" method="POST">
-			  	<input type="text" placeholder="username" name="username"><br><br>
-			  	<button type="submit">Submit</button>
-			</form>
+			<div class="col-xs-12 registerToggle">
+				<a href="#registerForm" data-toggle="collapse" aria-expanded="false" aria-controls="registerForm" class="btn btn-danger">
+					<h3>Register</h3>
+				</a>
+				<a href="#arena-page" data-toggle="collapse" aria-expanded="false" aria-controls="arena-page" class="btn btn-success">
+					<h3>Play Now</h3>
+				</a>
+			</div>
+			<div id="registerForm" class="collapse">
+				<h3>Registration</h3>
+				<form action="/players" method="POST">
+					<input type="text" placeholder="Username" name="username"><br>
+					<input type="text" placeholder="Email" name="email"><br>
+					<input type="text" placeholder="Password" name="password"><br>
+					<input type="text" placeholder="Confirm Password" name="password_confirm"><br><br>
+					<button type="submit" class="btn btn-danger">Sign up</button>
+					<br><br><span><a href="#loginForm" data-toggle="collapse" aria-expanded="false" aria-controls="loginForm" >Already have an account? Sign in!</a></span>
+				</form>
 			<br>
-			<form action="/players" method="GET">
-				<button type="submit">See All Players</button>
-			</form>
-			<br>
+			</div>
+			<div id="loginForm" class="collapse show">
+				<h3>Login</h3>
+				<form action="/players" method="POST">
+					<input type="text" placeholder="Username" name="username"><br>
+					<input type="text" placeholder="Password" name="password"><br><br>
+					<button type="submit" class="btn btn-danger">Sign in</button>
+					<br><br><span><a href="#registerForm" data-toggle="collapse" aria-expanded="false" aria-controls="registerForm" >No account? Sign up!</a></span>
+				</form>
+				<br>
+				
+			</div>
 		</div>
 
-		<div id = "arena-page">
+		<div id = "arena-page" class="collapse">
 			<canvas id="game-layer" width="1344" height="756" tabindex='1'></canvas>
 			<canvas id="bg-layer" width="1344" height="756"></canvas>
 		</div>
-
-	</center></body>
+		<script>
+		$('#loginForm').on('show.bs.collapse', function () {
+			$('#registerForm').collapse('hide');
+		});
+		$('#registerForm').on('show.bs.collapse', function () {
+			$('#loginForm').collapse('hide');
+		});
+		$('#arena-page').on('show.bs.collapse', function () {
+			$('#loginForm, registerForm').collapse('hide');
+		});
+		</script>
+</body>
 </html>
