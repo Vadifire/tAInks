@@ -54,7 +54,7 @@ Tank.prototype.move = function(backwards){
 	}
 	if (this.frame > tankImage.length-1){ //forward animation
 		this.frame = 0;
-	}else if (this.frame <= 0){ //backwards animation
+	}else if (this.frame < 0){ //backwards animation
 		this.frame = tankImage.length-1;
 	} else {
 		//null frame call, reset animation
