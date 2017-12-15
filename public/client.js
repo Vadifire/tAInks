@@ -7,6 +7,8 @@
  *	@author Cedric Debelle
  *	@author Calvin Ellis
  */
+ 
+
 
 /* CONSTANTS */
 const SPRITE_WIDTH = 84;
@@ -34,6 +36,7 @@ var tanks = [ playerTank,
 ];
 
 var bullets = new Map(); //Maps bullet ids to bullet obj
+var viewmngr; //Object in charge of handling views shown to user.
 
 /* Keep Track of Keys Pressed */
 var Keys = {
@@ -63,20 +66,9 @@ var Keys = {
 
 /* Document is Ready */
 $(function() { 
-	gameCanvas = $("#game-layer").get(0);
-	ARENA_WIDTH = gameCanvas.width;
-	ARENA_HEIGHT = gameCanvas.height;
-	ctx = gameCanvas.getContext('2d');
-	bgCanvas = $("#bg-layer").get(0);
-	bgCtx = bgCanvas.getContext('2d');
-
-	/* Hook Key Presses */
-	gameCanvas.addEventListener('keyup', function(event) { Keys.onKeyup(event); }, false);
-	gameCanvas.addEventListener('keydown', function(event) { Keys.onKeydown(event); }, false);
-
+	
 	/* Set Current Page */
-	currentPage = $('#login-page');
-	ctx.font = '24px serif';
+	viewmngr = new ViewManager();
 	
 	gameLoop(); //Start Game Loop
 });
@@ -98,15 +90,34 @@ window.requestAnimFrame = (function(){
 
 /* Game loop invoked every frame */
 function gameLoop(){
-	update();
-	render();
-	requestAnimFrame(gameLoop);
+	if ($("#game-layer").length > 0){ //game ctx not yet retrieved
+		console.log('Setting up 2D display...');
+		gameCanvas = $("#game-layer").get(0);
+		ARENA_WIDTH = gameCanvas.width;
+		ARENA_HEIGHT = gameCanvas.height;
+		ctx = gameCanvas.getContext('2d');
+		ctx.font = '24px serif';
+		bgCanvas = $("#bg-layer").get(0);
+		bgCtx = bgCanvas.getContext('2d');
+		
+		/* Hook Key Presses */
+		gameCanvas.addEventListener('keyup', function(event) { Keys.onKeyup(event); }, false);
+		gameCanvas.addEventListener('keydown', function(event) { Keys.onKeydown(event); }, false);
+	}
+	switch(viewmngr.currentView){
+		case VIEWS.ARENA:
+			update();
+			render();
+			requestAnimFrame(gameLoop);
+			break;
+		default:
+			break;
+	}
 }
 
 /* Render game-layer */
 function render(){
-	if (!ctx) //game ctx not yet retrieved
-		return;
+	return;
 
 	/* Clear Drawing Area */
 	ctx.clearRect(0,0,ARENA_WIDTH,ARENA_HEIGHT);

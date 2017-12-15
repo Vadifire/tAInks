@@ -7,8 +7,11 @@
  */
 
 body {
-  background-color: black;
-  background: url('./img/bg.jpeg');
+  background-color: #D6BB9E;
+  //background: url('./img/bg.jpeg');
+  background-image: url('./img/login-bg.jpg');
+  background-size: cover;
+  background-repeat-y: no-repeat;
   
   /* remove :focus outline from all elements */
    *:focus {
@@ -65,7 +68,7 @@ canvas {
 	border: 1px solid rgba(0,0,0,0.6);;
 	max-width: 500px;
 	margin: auto;
-		-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+	-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
 	-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);
 	box-shadow:         7px 7px 5px 0px rgba(50, 50, 50, 0.75);
 	a{

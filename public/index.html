@@ -3,76 +3,28 @@
 	<head>
 		<title> tAInks </title>
 		<link rel="stylesheet" href="public/styles.css">
-		
-		<!-- Bootstrap 4 Includes -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-		
-		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-		
 		<!-- JS Includes -->
+		<script src="public/assets/jquery-3.2.1.js"></script>
 		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+		<script src="public/view-manager.js"></script>
 		<script src="public/bullet.js"></script>
 		<script src="public/tank.js"></script>
 		<script src="public/client.js"></script>
+		
+		<!-- Bootstrap 4 Includes -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+		
+		
 
 	</head>
 
 	<body>
-		<div id = "login-page" class="text-center">
-			<div id="headerLogo">
-				<a href="/">
-					<img src = "public/img/logo.png">
-				</a>
-			</div>
-			<div class="col-xs-12 registerToggle">
-				<a href="#registerForm" data-toggle="collapse" aria-expanded="false" aria-controls="registerForm" class="btn btn-danger">
-					<h3>Register</h3>
-				</a>
-				<a href="#arena-page" data-toggle="collapse" aria-expanded="false" aria-controls="arena-page" class="btn btn-success">
-					<h3>Play Now</h3>
-				</a>
-			</div>
-			<div id="registerForm" class="collapse">
-				<h3>Registration</h3>
-				<form action="/players" method="POST">
-					<input type="text" placeholder="Username" name="username"><br>
-					<input type="text" placeholder="Email" name="email"><br>
-					<input type="text" placeholder="Password" name="password"><br>
-					<input type="text" placeholder="Confirm Password" name="password_confirm"><br><br>
-					<button type="submit" class="btn btn-danger">Sign up</button>
-					<br><br><span><a href="#loginForm" data-toggle="collapse" aria-expanded="false" aria-controls="loginForm" >Already have an account? Sign in!</a></span>
-				</form>
-			<br>
-			</div>
-			<div id="loginForm" class="collapse show">
-				<h3>Login</h3>
-				<form action="/players" method="POST">
-					<input type="text" placeholder="Username" name="username"><br>
-					<input type="text" placeholder="Password" name="password"><br><br>
-					<button type="submit" class="btn btn-danger">Sign in</button>
-					<br><br><span><a href="#registerForm" data-toggle="collapse" aria-expanded="false" aria-controls="registerForm" >No account? Sign up!</a></span>
-				</form>
-				<br>
-				
-			</div>
+		<div id="Viewport">
 		</div>
-
-		<div id = "arena-page" class="collapse">
-			<canvas id="game-layer" width="1344" height="756" tabindex='1'></canvas>
-			<canvas id="bg-layer" width="1344" height="756"></canvas>
-		</div>
-		<script>
-		$('#loginForm').on('show.bs.collapse', function () {
-			$('#registerForm').collapse('hide');
-		});
-		$('#registerForm').on('show.bs.collapse', function () {
-			$('#loginForm').collapse('hide');
-		});
-		$('#arena-page').on('show.bs.collapse', function () {
-			$('#loginForm, registerForm').collapse('hide');
-		});
-		</script>
-</body>
+		
+		
+		
+    </body>
 </html>
