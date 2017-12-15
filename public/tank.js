@@ -47,17 +47,16 @@ function Tank(id, x, y, speed, control){
 Tank.prototype.move = function(backwards){
 	/* advance animation frame every 10 game frames only */
 	var animationSpeed = .25;
-	if(!backwards){
+	if(backwards){ //backwards anim
 		this.frame += animationSpeed; 
+		if (this.frame > tankImage.length-1){ 
+			this.frame = 0;
+		}
 	}else{
-		this.frame -= animationSpeed; 
-	}
-	if (this.frame > tankImage.length-1){ //forward animation
-		this.frame = 0;
-	}else if (this.frame < 0){ //backwards animation
-		this.frame = tankImage.length-1;
-	} else {
-		//null frame call, reset animation
+		this.frame -= animationSpeed;
+		if (this.frame < 0){ //backwards animation
+			this.frame = tankImage.length-1;
+		}
 	}
 	this.x += (this.speed*Math.cos(this.dir) * ((backwards) ? -1 : 1));
 	this.y -= (this.speed*Math.sin(this.dir) * ((backwards) ? -1 : 1));
