@@ -1,0 +1,32 @@
+/*
+ * Front-End Styling for Main Page
+ *
+ * Authors:
+ *	@author Cedric Debelle
+ *	@author Calvin Ellis
+ */
+
+body {
+  background-color: black;
+  
+#arena-page{
+	border: 1px solid #000000;
+    width: 1344px;
+    height: 756px;
+	overflow: auto;
+	position: relative;
+}
+
+canvas {
+	left: 0px;
+	position: absolute;
+}
+
+#game-layer{
+	z-index: 2;
+}
+#bg-layer{
+	z-index: 1;
+}	
+
+} 
