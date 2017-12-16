@@ -1,0 +1,21 @@
+<div id="headerLogo" class="col-xs-12 text-center">
+				<a href="/">
+					<img src = "public/img/logo.png">
+				</a>
+			</div>
+<div id = "arena-page">
+	<canvas id="game-layer" width="1344" height="756" tabindex='1'></canvas>
+	<canvas id="bg-layer" width="1344" height="756"></canvas>
+</div>
+<div id="arena-footer">
+	<div class="col-xs-12 text-center">
+		<button id="arena-back-button" class="btn btn-danger"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back to Login</button>
+	</div>
+</div>
+
+<script>
+$('#arena-back-button').click(function(){
+	viewmngr.setView(VIEWS.LOGIN);
+});
+
+</script>
