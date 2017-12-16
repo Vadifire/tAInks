@@ -66,6 +66,10 @@ var Keys = {
 
 /* Document is Ready */
 $(function() { 
+
+if ($("#game-layer").length > 0){ //game ctx not yet retrieved
+		
+	}
 	
 	/* Set Current Page */
 	viewmngr = new ViewManager();
@@ -90,20 +94,7 @@ window.requestAnimFrame = (function(){
 
 /* Game loop invoked every frame */
 function gameLoop(){
-	if ($("#game-layer").length > 0){ //game ctx not yet retrieved
-		console.log('Setting up 2D display...');
-		gameCanvas = $("#game-layer").get(0);
-		ARENA_WIDTH = gameCanvas.width;
-		ARENA_HEIGHT = gameCanvas.height;
-		ctx = gameCanvas.getContext('2d');
-		ctx.font = '24px serif';
-		bgCanvas = $("#bg-layer").get(0);
-		bgCtx = bgCanvas.getContext('2d');
-		
-		/* Hook Key Presses */
-		gameCanvas.addEventListener('keyup', function(event) { Keys.onKeyup(event); }, false);
-		gameCanvas.addEventListener('keydown', function(event) { Keys.onKeydown(event); }, false);
-	}
+	console.log(viewmngr.currentView);
 	switch(viewmngr.currentView){
 		case VIEWS.ARENA:
 			update();
@@ -111,14 +102,13 @@ function gameLoop(){
 			requestAnimFrame(gameLoop);
 			break;
 		default:
+			requestAnimFrame(gameLoop);
 			break;
 	}
 }
 
 /* Render game-layer */
 function render(){
-	return;
-
 	/* Clear Drawing Area */
 	ctx.clearRect(0,0,ARENA_WIDTH,ARENA_HEIGHT);
 
@@ -131,6 +121,7 @@ function render(){
 	});
 	tanks.forEach(function(tank){
 		tank.render(ctx);
+		console.log("im a tank ");
 	});
 }
 
