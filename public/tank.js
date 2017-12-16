@@ -19,6 +19,8 @@ for (var i = 1; i < 9; i++){
 	tankImage.push(image);
 }
 
+var TANK_WIDTH = 64, TANK_HEIGHT = 64;
+
 /* Tank Constructor
  *
  * @param {number} id - unique ID
@@ -29,10 +31,11 @@ for (var i = 1; i < 9; i++){
  */
 function Tank(id, x, y, speed, control){
 	this.id = id; //unique id TO-DO: avoid id collision
+	this.health = 100;
 	this.control = control;
 	this.components = []; //no components by default
-	this.width = 84;
-	this.height = 84;
+	this.width = TANK_WIDTH;
+	this.height = TANK_HEIGHT;
 	this.x = x;
 	this.y = y;
 	this.dir = Math.PI / 2;
@@ -143,7 +146,7 @@ Tank.prototype.update = function(Keys){
 			this.move(true);
 		}
 	}else if (this.neuralNetwork){ // AI powered by Neural Network
-		this.neuralNetwork.activate();
+		this.neuralNetwork.act();
 	}
 }
 
@@ -155,10 +158,11 @@ Tank.prototype.render = function(ctx){
 	ctx.save(); //save context state
 	ctx.translate(this.x, this.y); //shift origin to tank
 	ctx.rotate(-this.dir); //rotate plane around tank
-	ctx.drawImage(tankImage[Math.floor(this.frame)], -this.width/2, -this.height/2);
+	var img = tankImage[Math.floor(this.frame)]; // img of current frame
+	ctx.drawImage(img, -img.naturalWidth/2, -img.naturalHeight/2);
 	this.components.forEach(function(comp){
 		comp.render(ctx); //draw all components
 	});
 	ctx.restore(); //restore normal xy coordinate plane
-	ctx.fillText(this.name, this.x, this.y-this.height/2);
+	ctx.fillText(this.name, this.x, this.y-img.naturalHeight/2-4);
 }

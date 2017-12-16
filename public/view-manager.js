@@ -57,6 +57,9 @@ ViewManager.prototype.setView = function(view=VIEWS.LOGIN){
 			bgCtx = bgCanvas.getContext('2d');
 			
 			/* Hook Key Presses */
+			$(gameCanvas).focusout(function() {
+				Keys._pressed = {}; /* clear input on loss of focus */
+			}); 
 			gameCanvas.addEventListener('keyup', function(event) { Keys.onKeyup(event); }, false);
 			gameCanvas.addEventListener('keydown', function(event) { Keys.onKeydown(event); }, false);
 		}

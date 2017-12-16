@@ -27,7 +27,9 @@ var currentPage; //Page (div) currently being viewed
 var playerTank = new Tank(0,300,400,2,true);
 var aiTank = new Tank(1,600,200,2,false);
 aiTank.attachComponents([new RandomComponent(), new DriveComponent(), new RotateComponent()]);
-var tanks = [playerTank, aiTank];
+var aiTank2 = new Tank(1,300,200,2,false);
+aiTank2.attachComponents([new RandomComponent(), new DriveComponent(), new RotateComponent()]);
+var tanks = [playerTank, aiTank2];
 
 var bullets = new Map(); //Maps bullet ids to bullet obj
 var viewmngr; //Object in charge of handling views shown to user.

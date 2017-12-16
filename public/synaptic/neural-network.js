@@ -50,9 +50,10 @@ function NeuralNetwork(tank){
 }
 
 /*
- * Reads input neurons and produces target value
+ * Read input neurons and calculate output neuron values
+ * Perform actions based on output neurons
  */
-NeuralNetwork.prototype.activate = function(){
+NeuralNetwork.prototype.act = function(){
 	if (!this.inputs.length || !this.outputs.length){
 		return;	//Need both inputs and outputs defined
 	}
@@ -65,8 +66,15 @@ NeuralNetwork.prototype.activate = function(){
 	
 	//calculate outputs and perform actions
 	var outputValues = this.network.activate(inputValues);
-	this.network.propagate(0.05, [0.3, 0.3]); //Encourage the robot to spin!
 	for (var i = 0; i < this.outputs.length; i++){
 		this.outputs[i].performAction(outputValues[i]);
 	}
+}
+
+
+/*
+ * Update weights and biases baesd on loss function
+ */
+NeuralNetwork.prototype.learn = function (){
+	
 }
