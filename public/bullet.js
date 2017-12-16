@@ -24,10 +24,13 @@ function Bullet(ownerID, x, y, speed, dir){
 	this.ownerID = ownerID; //unique id TO-DO: avoid id collision
 	this.x = x;
 	this.y = y;
-	this.speed = Math.abs(speed); //this is in terms of px * FPS for now
+	this.speed = speed //this is in terms of px * FPS for now
 	this.dir = dir;
+	this.xComp = (this.speed*Math.cos(this.dir));
+	this.yComp = (this.speed*Math.sin(this.dir));
 	this.width = 16;
 	this.height = 16;
+	this.damage = 5;
 	bullets.set(this.id, this); /* add this to bullets map within client.js */
 }
 
@@ -36,8 +39,8 @@ function Bullet(ownerID, x, y, speed, dir){
  * Advance the bullet in the current direction prop. to speed
  */
 Bullet.prototype.update = function(){
-	this.x += (this.speed*Math.cos(this.dir));
-	this.y -= (this.speed*Math.sin(this.dir));
+	this.x += this.xComp;
+	this.y -= this.yComp;
 
 	this.hitDetect(tanks); // detect collision with 'client.js'.tanks
 
@@ -66,14 +69,15 @@ Bullet.prototype.render = function(ctx){
 Bullet.prototype.hitDetect = function(tanks){
 	var w = (TANK_WIDTH + this.width) / 2;
 	var h = (TANK_HEIGHT + this.height) / 2;
-	for (var i = 0 ; i < tanks.length; i++){
-		if (tanks[i].id !== this.ownerID){ //not our owner
-			if (Math.abs(this.x - tanks[i].x) < w){ //within w px
-				if (Math.abs(this.y - tanks[i].y) < h){ //within h px
+	tanks.forEach(function(tank){
+		if (tank.id !== this.ownerID){ //not our owner
+			if (Math.abs(this.x - tank.x) < w){ //within w px
+				if (Math.abs(this.y - tank.y) < h){ //within h px
+					tank.dealDamage(this.damage);
 					bullets.delete(this.id);
-					break;
+					return;
 				}
 			}
 		}
-	}
+	}, this);
 }

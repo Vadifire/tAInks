@@ -24,14 +24,18 @@ var bgCtx; //ctx for bgCanvas
 var currentPage; //Page (div) currently being viewed
 
 /* GAME VARS */
+var tanks = new Map();
+var bullets = new Map(); //Maps bullet ids to bullet obj
+
 var playerTank = new Tank(0,300,400,2,true);
 var aiTank = new Tank(1,600,200,2,false);
 aiTank.attachComponents([new RandomComponent(), new DriveComponent(), new RotateComponent()]);
-var aiTank2 = new Tank(1,300,200,2,false);
+var aiTank2 = new Tank(2,300,200,2,false);
 aiTank2.attachComponents([new RandomComponent(), new DriveComponent(), new RotateComponent()]);
-var tanks = [playerTank, aiTank2];
 
-var bullets = new Map(); //Maps bullet ids to bullet obj
+tanks.set(playerTank.id, playerTank);
+tanks.set(aiTank.id, aiTank);
+
 var viewmngr; //Object in charge of handling views shown to user.
 
 /* Keep Track of Keys Pressed */

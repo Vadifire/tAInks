@@ -39,7 +39,7 @@ function Tank(id, x, y, speed, control){
 	this.x = x;
 	this.y = y;
 	this.dir = Math.PI / 2;
-	this.speed = Math.abs(speed); //this is in terms of px * FPS for now
+	this.speed = speed; //this is in terms of px * FPS for now
 	this.angularSpeed = 0.04; //this is in terms of rad * FPS for now
 	this.frame = 0; //current animation frame
 	if (control)
@@ -51,7 +51,6 @@ function Tank(id, x, y, speed, control){
 
 /*
  * Attach a list of Components to the Tank
- *
  * @param {object} components - Array of components attached to this tank
  */
 Tank.prototype.attachComponents = function(components){
@@ -64,6 +63,19 @@ Tank.prototype.attachComponents = function(components){
 	/* If we don't control, assuming AI. Create Neural Network */
 	if (!this.control){
 		this.neuralNetwork = new NeuralNetwork(this);
+	}
+}
+
+/* 
+ * @param {number} damage - the damage to inflict to this tank
+ */
+Tank.prototype.dealDamage = function(damage){
+	this.health -= damage;
+	if (this.health <= 0){ //die
+		tanks.delete(this.id);
+		if (tanks.size == 1){ //only one tank left - they win!
+			//process winning here
+		}
 	}
 }
 
@@ -156,13 +168,38 @@ Tank.prototype.update = function(Keys){
  */
 Tank.prototype.render = function(ctx){
 	ctx.save(); //save context state
-	ctx.translate(this.x, this.y); //shift origin to tank
-	ctx.rotate(-this.dir); //rotate plane around tank
 	var img = tankImage[Math.floor(this.frame)]; // img of current frame
+	ctx.translate(this.x, this.y); //shift origin to tank
+	this.drawHealth(ctx);
+	ctx.rotate(-this.dir); //rotate plane around tank
 	ctx.drawImage(img, -img.naturalWidth/2, -img.naturalHeight/2);
 	this.components.forEach(function(comp){
 		comp.render(ctx); //draw all components
 	});
 	ctx.restore(); //restore normal xy coordinate plane
-	ctx.fillText(this.name, this.x, this.y-img.naturalHeight/2-4);
+	ctx.fillText(this.name, this.x, this.y-img.naturalHeight/2-16);
+}
+
+/* 
+ * Draws the Tank's healthbar
+ * @param {Object} ctx - The context to draw to
+ */
+Tank.prototype.drawHealth = function(ctx){
+	ctx.beginPath();
+	ctx.strokeStyle = "black";
+	ctx.rect(-20,-54,40,6);
+	ctx.lineWidth="4";
+	ctx.stroke();
+
+	var hp = 40*(this.health/100);
+
+	ctx.beginPath();
+	ctx.fillStyle = "green";
+	ctx.rect(-20,-54,hp ,6);
+	ctx.fill();
+
+	ctx.beginPath();
+	ctx.fillStyle = "red";
+	ctx.rect(-20+hp,-54, 40-hp,6);
+	ctx.fill();
 }
