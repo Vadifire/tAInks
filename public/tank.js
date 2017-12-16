@@ -19,7 +19,7 @@ for (var i = 1; i < 9; i++){
 	tankImage.push(image);
 }
 
-var TANK_WIDTH = 64, TANK_HEIGHT = 64;
+var TANK_WIDTH = 68, TANK_HEIGHT = 68;
 
 /* Tank Constructor
  *
@@ -111,6 +111,38 @@ Tank.prototype.move = function(backwards){
 	} else if (this.x < 0){
 		this.x = 0;
 	}
+	this.preventCollisions(tanks);
+}
+
+/*
+ * Detect collisions with other tanks and snap them back
+ * @param {Object} tanks - An array of tanks to check collisions with
+ */
+Tank.prototype.preventCollisions = function(tanks){
+	tanks.forEach(function(tank){
+		if (tank.id !== this.id){ //not our owner
+			var xDist = Math.abs(this.x - tank.x);
+			if (xDist < TANK_WIDTH){
+				var yDist = Math.abs(this.y - tank.y);
+				if (yDist < TANK_HEIGHT){ 
+					if (xDist > yDist){
+						if (this.x < tank.x){
+							this.x -= (TANK_WIDTH - xDist);
+						} else {
+							this.x += (TANK_WIDTH - xDist);
+						} 
+					} else {
+						if (this.y < tank.y){
+							this.y -= (TANK_HEIGHT - yDist);
+						} else {
+							this.y += (TANK_HEIGHT - yDist);
+						} 
+					}
+
+				}
+			}
+		}
+	}, this);
 }
 
 /* 
@@ -135,7 +167,7 @@ Tank.prototype.rotate = function(cw){
  * Shoots a bullet from the tank's origin in dir
  */
 Tank.prototype.shoot = function(){
-	new Bullet(this.id, this.x, this.y, 5, this.dir);
+	new Bullet(this.id, this.x, this.y, 8, this.dir);
 }
 
 

@@ -27,10 +27,10 @@ var currentPage; //Page (div) currently being viewed
 var tanks = new Map();
 var bullets = new Map(); //Maps bullet ids to bullet obj
 
-var playerTank = new Tank(0,300,400,2,true);
-var aiTank = new Tank(1,600,200,2,false);
+var playerTank = new Tank(0,300,400,3,true);
+var aiTank = new Tank(1,600,200,3,false);
 aiTank.attachComponents([new RandomComponent(), new DriveComponent(), new RotateComponent()]);
-var aiTank2 = new Tank(2,300,200,2,false);
+var aiTank2 = new Tank(2,300,200,3,false);
 aiTank2.attachComponents([new RandomComponent(), new DriveComponent(), new RotateComponent()]);
 
 tanks.set(playerTank.id, playerTank);
