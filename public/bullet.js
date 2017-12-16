@@ -11,9 +11,9 @@ var bulletImage = new Image();
 bulletImage.src = 'public/img/missle/20.png';
 var nextBulletId = 0; //just allow natural overflow
 
-/* Tank Constructor
+/* Bullet Constructor
  *
- * @param {string?} ownerID - unique ID of tank owner
+ * @param {number} ownerID - unique ID of tank owner
  * @param {number} x - X pos in Arena
  * @param {number} y - Y pos in Arena
  * @param {number} speed  - px / frame to advance in dir
@@ -26,6 +26,8 @@ function Bullet(ownerID, x, y, speed, dir){
 	this.y = y;
 	this.speed = Math.abs(speed); //this is in terms of px * FPS for now
 	this.dir = dir;
+	this.width = bulletImage.naturalWidth;
+	this.height = bulletImage.naturalHeight;
 	bullets.set(this.id, this); /* add this to bullets map within client.js */
 }
 
@@ -51,9 +53,6 @@ Bullet.prototype.render = function(ctx){
 	ctx.save(); //save context state
 	ctx.translate(this.x, this.y); //shift origin to tank
 	ctx.rotate(-this.dir); //rotate plane around tank
-	ctx.drawImage(bulletImage, -SPRITE_WIDTH/2, -SPRITE_HEIGHT/2);
+	ctx.drawImage(bulletImage, -this.width/2, -this.height/2);
 	ctx.restore(); //restore normal xy coordinate plane
 }
-
-
-
