@@ -9,14 +9,14 @@
  /* Constants */
 var VIEW_ELEMENT_ID = '#Viewport'; //the element within the DOM to append to
 var VIEWS_SOURCE_DIR = '/public/views' //directory of views source files
- var VIEWS = {
-		LOGIN : '/login.html',
-		MAIN_MENU : '/main-menu.html',
-		ARENA: '/arena.html',
-		ARENA_LOBBY : '/arena-lobby.html',
-		TANK_GALLERY : '/tank-gallery.html',
-		TANK_EDIT : '/tank-edit.html'
- }
+var VIEWS = {
+	LOGIN : '/login.html',
+	MAIN_MENU : '/main-menu.html',
+	ARENA: '/arena.html',
+	ARENA_LOBBY : '/arena-lobby.html',
+	TANK_GALLERY : '/tank-gallery.html',
+	TANK_EDIT : '/tank-edit.html'
+}
  
  /* Variables */
  var currentView;
@@ -32,12 +32,14 @@ function ViewManager(view=VIEWS.LOGIN){
 }
 
 /*
- * 
+ * Set current View
+ *
+ * @param {string} - The path of the view
  */
 ViewManager.prototype.setView = function(view=VIEWS.LOGIN){
 	var view_path = VIEWS_SOURCE_DIR + view;
 	console.log("Changing view to " + view_path + "...");
-	var vmngr = viewmngr;
+	var vmngr = this;
 	$.ajax({
 	  url: view_path,
 	  success: function(result){
@@ -49,6 +51,8 @@ ViewManager.prototype.setView = function(view=VIEWS.LOGIN){
 			ARENA_HEIGHT = gameCanvas.height;
 			ctx = gameCanvas.getContext('2d');
 			ctx.font = '24px serif';
+			ctx.textBaseline="bottom";
+			ctx.textAlign="center";
 			bgCanvas = $("#bg-layer").get(0);
 			bgCtx = bgCanvas.getContext('2d');
 			
@@ -64,6 +68,4 @@ ViewManager.prototype.setView = function(view=VIEWS.LOGIN){
 	});
 	
 }
-
-
 

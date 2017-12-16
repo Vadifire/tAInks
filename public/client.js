@@ -60,13 +60,7 @@ var Keys = {
 
 /* Document is Ready */
 $(function() { 
-	/* Set Current Page */
 	viewmngr = new ViewManager();
-
-	ctx.font = '24px serif';
-	ctx.textBaseline="bottom";
-	ctx.textAlign="center";
-
 	gameLoop(); //Start Game Loop
 });
 
@@ -87,7 +81,6 @@ window.requestAnimFrame = (function(){
 
 /* Game loop invoked every frame */
 function gameLoop(){
-	console.log(viewmngr.currentView);
 	switch(viewmngr.currentView){
 		case VIEWS.ARENA:
 			update();
