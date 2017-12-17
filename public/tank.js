@@ -20,6 +20,7 @@ for (var i = 1; i < 9; i++){
 }
 
 var TANK_WIDTH = 68, TANK_HEIGHT = 68;
+var SHOOT_CD = 300; //shoot cd in millis
 
 /* Tank Constructor
  *
@@ -42,6 +43,7 @@ function Tank(id, x, y, speed, control){
 	this.speed = speed; //this is in terms of px * FPS for now
 	this.angularSpeed = 0.04; //this is in terms of rad * FPS for now
 	this.frame = 0; //current animation frame
+	this.lastShoot =  0;
 	if (control)
 		this.name = 'Player ' + id; //assume we're a player
 	else{
@@ -167,7 +169,11 @@ Tank.prototype.rotate = function(cw){
  * Shoots a bullet from the tank's origin in dir
  */
 Tank.prototype.shoot = function(){
-	new Bullet(this.id, this.x, this.y, 8, this.dir);
+	var now = performance.now();
+	if ((now - this.lastShoot) >= SHOOT_CD){
+		this.lastShoot = now;
+		new Bullet(this.id, this.x, this.y, 8, this.dir);
+	}
 }
 
 
@@ -188,6 +194,9 @@ Tank.prototype.update = function(Keys){
 		}
 		if (Keys.isDown(Keys.DOWN)){
 			this.move(true);
+		}
+		if (Keys.isDown(Keys.SPACE)){
+			this.shoot();
 		}
 	}else if (this.neuralNetwork){ // AI powered by Neural Network
 		this.neuralNetwork.act();

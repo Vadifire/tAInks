@@ -29,14 +29,16 @@ var arenaSoundLoop = new Howl({src: ['public/audio/arena-loop.mp3'], loop:true, 
 var tanks = new Map();
 var bullets = new Map(); //Maps bullet ids to bullet obj
 
-var playerTank = new Tank(0,300,400,3,true);
-var aiTank = new Tank(1,600,200,3,false);
-aiTank.attachComponents([new RandomComponent(), new DriveComponent(), new RotateComponent()]);
-//var aiTank2 = new Tank(2,300,200,3,false);
-//aiTank2.attachComponents([new RandomComponent(), new DriveComponent(), new RotateComponent()]);
+var playerTank = new Tank(0,1200,600,3,true);
 
+for (var i = 0; i < 12; i++){
+	var ai = new Tank(i+1, 200+200*(i%4)+30*(i%8),160+Math.floor(i/4)*220,3,false);
+	ai.attachComponents([new RandomComponent(), 
+		new DriveComponent(), new RotateComponent(), new ShootComponent()]);
+	tanks.set(ai.id, ai);
+}
 tanks.set(playerTank.id, playerTank);
-tanks.set(aiTank.id, aiTank);
+
 
 var viewmngr; //Object in charge of handling views shown to user.
 
@@ -56,9 +58,6 @@ var Keys = {
   
 	onKeydown: function(event) {
 		this._pressed[event.keyCode] = true;
-		if (event.keyCode == Keys.SPACE){
-			playerTank.shoot(); //listen to shoots
-		}
 	},
   
 	onKeyup: function(event) {

@@ -66,3 +66,11 @@ RotateComponent.prototype.performAction = function (value){
 	}
 }
 
+/* Component that determines if Tank will shoot */
+function ShootComponent(x, y, image){OutputComponent.call(this,x,y,image)};
+ShootComponent.prototype = Object.create(OutputComponent.prototype);
+ShootComponent.prototype.performAction = function (value){
+	if (value > 0.5){
+		this.tank.shoot();
+	}
+}

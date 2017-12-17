@@ -70,7 +70,7 @@ NeuralNetwork.prototype.constructRandomNetwork = function(hLayers, hNeurons){
 			biases[synapse][n2] = (Math.random()*2-1);
 		}
 	}
-
+	this.count = 0;
 	var network = new Object();
 	network.weights = weights;
 	network.biases = biases;
@@ -93,9 +93,13 @@ NeuralNetwork.prototype.act = function(){
 	});
 	
 	//calculate outputs and perform actions
-	var outputValues = this.calculate(inputValues);
+	if (this.count === 0){
+		this.count = TARGET_FPS/2; //calculate new action every half-second
+		this.outputValues = this.calculate(inputValues);
+	}
+	this.count--;
 	for (var i = 0; i < this.outputs.length; i++){
-		this.outputs[i].performAction(outputValues[i]);
+		this.outputs[i].performAction(this.outputValues[i]);
 	}
 }
 
@@ -125,7 +129,7 @@ NeuralNetwork.prototype.calculate = function(inputs){
 
 		inputValues = outputValues.slice(); //Next inputs are the newly calculated outputs
 	}
-	console.log(outputValues);
+	//console.log(outputValues);
 	return outputValues;
 }
 
