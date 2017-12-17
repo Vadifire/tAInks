@@ -38,33 +38,40 @@ function ViewManager(view=VIEWS.LOGIN){
  */
 ViewManager.prototype.setView = function(view=VIEWS.LOGIN){
 	var view_path = VIEWS_SOURCE_DIR + view;
-	console.log("Changing view to " + view_path + "...");
+	//console.log("Changing view to " + view_path + "...");
 	var vmngr = this;
 	$.ajax({
 	  url: view_path,
 	  success: function(result){
 		$( VIEW_ELEMENT_ID ).html( result );
-		if(view === VIEWS.ARENA){
-			console.log(vmngr);
-			gameCanvas = $("#game-layer").get(0);
-			ARENA_WIDTH = gameCanvas.width;
-			ARENA_HEIGHT = gameCanvas.height;
-			ctx = gameCanvas.getContext('2d');
-			ctx.font = '16px impact';
-			ctx.textBaseline="bottom";
-			ctx.textAlign="center";
-			bgCanvas = $("#bg-layer").get(0);
-			bgCtx = bgCanvas.getContext('2d');
-			
-			/* Hook Key Presses */
-			$(gameCanvas).focusout(function() {
-				Keys._pressed = {}; /* clear input on loss of focus */
-			}); 
-			gameCanvas.addEventListener('keyup', function(event) { Keys.onKeyup(event); }, false);
-			gameCanvas.addEventListener('keydown', function(event) { Keys.onKeydown(event); }, false);
+		switch (view){
+			case VIEWS.ARENA:
+				if (enableAudio)
+					arenaSoundLoop.play();
+				gameCanvas = $("#game-layer").get(0);
+				ARENA_WIDTH = gameCanvas.width;
+				ARENA_HEIGHT = gameCanvas.height;
+				ctx = gameCanvas.getContext('2d');
+				ctx.font = '16px impact';
+				ctx.textBaseline="bottom";
+				ctx.textAlign="center";
+				bgCanvas = $("#bg-layer").get(0);
+				bgCtx = bgCanvas.getContext('2d');
+				
+				/* Hook Key Presses */
+				$(gameCanvas).focusout(function() {
+					Keys._pressed = {}; /* clear input on loss of focus */
+				}); 
+				gameCanvas.addEventListener('keyup', function(event) { Keys.onKeyup(event); }, false);
+				gameCanvas.addEventListener('keydown', function(event) { Keys.onKeydown(event); }, false);
+				break;
+
+			default:
+				arenaSoundLoop.stop();
+				break;
 		}
 		vmngr.currentView = view;
-		console.log("Successfully changed view to " + vmngr.currentView);
+		//console.log("Successfully changed view to " + vmngr.currentView);
 	  },
 	  dataType: "html",
 	  error: function(textStatus){ console.log(textStatus); }

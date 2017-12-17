@@ -22,6 +22,8 @@ var bgCanvas; // background, static canvas layer
 var ctx; //ctx for gameCanvas
 var bgCtx; //ctx for bgCanvas
 var currentPage; //Page (div) currently being viewed
+var enableAudio = true; //Whether or not we should play Audio
+var arenaSoundLoop = new Howl({src: ['public/audio/arena-loop.mp3'], loop:true, volume: 0.2});
 
 /* GAME VARS */
 var tanks = new Map();
