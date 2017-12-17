@@ -52,7 +52,7 @@ Bullet.prototype.update = function(){
 
 /* 
  * Draws the bullet to the given context
- * @param {Object} ctx - The context to draw to
+ * @param {CanvasRenderingContext2D} ctx - The context to draw to
  */
 Bullet.prototype.render = function(ctx){
 	ctx.save(); //save context state
@@ -64,7 +64,7 @@ Bullet.prototype.render = function(ctx){
 
 /*
  * Detect hit detections with other tanks
- * @param {Object} tanks - An array of tanks to check collisions with
+ * @param {Array} tanks - An array of tanks to check collisions with
  */
 Bullet.prototype.hitDetect = function(tanks){
 	var w = (TANK_WIDTH + this.width) / 2;

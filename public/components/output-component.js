@@ -48,9 +48,9 @@ OutputComponent.prototype.performAction = function(value){
 function DriveComponent(x, y, image){OutputComponent.call(this,x,y,image)};
 DriveComponent.prototype = Object.create(OutputComponent.prototype);
 DriveComponent.prototype.performAction = function (value){
-	if (value < 0.3333){ 
+	if (value < 0.4){ 
 		this.tank.move(); // bottom third, move fowards
-	}else if (value > 0.6667){
+	}else if (value > 0.6){
 		this.tank.move(true); // top third, move backwards
 	}
 }
@@ -59,9 +59,9 @@ DriveComponent.prototype.performAction = function (value){
 function RotateComponent(x, y, image){OutputComponent.call(this,x,y,image)};
 RotateComponent.prototype = Object.create(OutputComponent.prototype);
 RotateComponent.prototype.performAction = function (value){
-	if (value < 0.3333){ 
+	if (value < 0.4){ 
 		this.tank.rotate(); // bottom third, move CCW
-	}else if (value > 0.6667){
+	}else if (value > 0.6){
 		this.tank.rotate(true); // top third, move CW
 	}
 }

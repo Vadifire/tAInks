@@ -20,7 +20,7 @@ InputComponent.prototype = Object.create(Component.prototype);
  *
  * @param {number} x - The x-pos offset relative to tank x
  * @param {number} y - The y-pos offset relative to tank y
- * @param {Object} image - the image for this component (often null)
+ * @param {Image} image - the image for this component (often null)
  */
 function InputComponent(x, y, image){
 	Component.call(this, x, y, image); //super()

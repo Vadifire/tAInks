@@ -51,7 +51,7 @@ function Tank(id, x, y, speed, control){
 
 /*
  * Attach a list of Components to the Tank
- * @param {object} components - Array of components attached to this tank
+ * @param {Array} components - Array of components attached to this tank
  */
 Tank.prototype.attachComponents = function(components){
 	this.components = components;
@@ -116,7 +116,7 @@ Tank.prototype.move = function(backwards){
 
 /*
  * Detect collisions with other tanks and snap them back
- * @param {Object} tanks - An array of tanks to check collisions with
+ * @param {Array} tanks - An array of tanks to check collisions with
  */
 Tank.prototype.preventCollisions = function(tanks){
 	tanks.forEach(function(tank){
@@ -196,7 +196,7 @@ Tank.prototype.update = function(Keys){
 
 /* 
  * Draws the Tank to the given context
- * @param {Object} ctx - The context to draw to
+ * @param {CanvasRenderingContext2D} ctx - The context to draw to
  */
 Tank.prototype.render = function(ctx){
 	ctx.save(); //save context state
@@ -214,7 +214,7 @@ Tank.prototype.render = function(ctx){
 
 /* 
  * Draws the Tank's healthbar
- * @param {Object} ctx - The context to draw to
+ * @param {CanvasRenderingContext2D} ctx - The context to draw to
  */
 Tank.prototype.drawHealth = function(ctx){
 	ctx.beginPath();
