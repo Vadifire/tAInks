@@ -37,6 +37,7 @@ for (var i = 0; i < 12; i++){
 		new DriveComponent(), new RotateComponent(), new ShootComponent()]);
 	tanks.set(ai.id, ai);
 }
+
 tanks.set(playerTank.id, playerTank);
 
 

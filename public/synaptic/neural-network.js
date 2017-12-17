@@ -31,6 +31,7 @@ function NeuralNetwork(tank){
 		}
 	}, this);
 	this.network = this.constructRandomNetwork(1,3);
+	this.count = 0;
 	console.log(this.network);
 }
 
@@ -70,7 +71,6 @@ NeuralNetwork.prototype.constructRandomNetwork = function(hLayers, hNeurons){
 			biases[synapse][n2] = (Math.random()*2-1);
 		}
 	}
-	this.count = 0;
 	var network = new Object();
 	network.weights = weights;
 	network.biases = biases;
@@ -95,42 +95,13 @@ NeuralNetwork.prototype.act = function(){
 	//calculate outputs and perform actions
 	if (this.count === 0){
 		this.count = TARGET_FPS/2; //calculate new action every half-second
-		this.outputValues = this.calculate(inputValues);
+		this.outputValues = this.calculateOutputs(inputValues);
+		this.mutate(0.5);
 	}
 	this.count--;
 	for (var i = 0; i < this.outputs.length; i++){
 		this.outputs[i].performAction(this.outputValues[i]);
 	}
-}
-
-/*
- * Calculate output values from input values
- * @param {Array} inputs - Array of input numbers
- * @returns {Array} Array of output values
- */
-NeuralNetwork.prototype.calculate = function(inputs){
-	var numSynapses = this.network.weights.length; // numLayers - 1
-
-	var inputValues = inputs;
-	var outputValues;
-
-	/* Iterate across all hidden layers */
-	for (var layer = 0; layer < numSynapses; layer++){
-		outputValues = []; //clear current output values
-		/*  For every receiving neuron */
-		for (var n2 = 0; n2 < this.network.biases[layer].length; n2++){
-			outputValues.push(this.network.biases[layer][n2]); //start with bias
-			/* for every sending neuron */
-			for (var n1 = 0; n1 < this.network.weights[layer].length; n1++){ //weighted sum
-				outputValues[n2] += inputValues[n1] * this.network.weights[layer][n1][n2];
-			}
-			outputValues[n2] = sigmoid(outputValues[n2]); //squish range to (0,1)
-		}
-
-		inputValues = outputValues.slice(); //Next inputs are the newly calculated outputs
-	}
-	//console.log(outputValues);
-	return outputValues;
 }
 
 /*
@@ -142,10 +113,71 @@ function sigmoid(x){
 	return 1/(1+Math.pow(Math.E, -x));
 }
 
+/*
+ * Calculate output values from input values
+ * @param {Array} inputs - Array of input numbers
+ * @returns {Array} Array of output values
+ */
+NeuralNetwork.prototype.calculateOutputs = function(inputs){
+	var numSynapses = this.network.biases.length; // numLayers - 1
+
+	var inputValues = inputs;
+	var outputValues;
+
+	/* Iterate across all hidden layers */
+	for (var syn = 0; syn < numSynapses; syn++){
+		outputValues = []; //clear current output values
+		/*  For every receiving neuron */
+		for (var n2 = 0; n2 < this.network.biases[syn].length; n2++){
+			outputValues.push(this.network.biases[syn][n2]); //start with bias
+			/* for every sending neuron */
+			for (var n1 = 0; n1 < this.network.weights[syn].length; n1++){ //weighted sum
+				outputValues[n2] += inputValues[n1] * this.network.weights[syn][n1][n2];
+			}
+			outputValues[n2] = sigmoid(outputValues[n2]); //squish range to (0,1)
+		}
+
+		inputValues = outputValues.slice(); //Next inputs are the newly calculated outputs
+	}
+	//console.log(outputValues);
+	return outputValues;
+}
 
 /*
- * Update weights and biases baesd on loss function
+ * Mutates this NeuralNetwork based on mutationStrength
+ *
+ * @param {number} mutationStrength: how much to mutate weights and biases
+ *  mutationStrength must be between 0 and 1. A mutation strength of 0
+ *  signals not to change the NeuralNetwork at all. A strength of 1 signals
+ *  to completely randomize the NeuralNetwork
  */
-NeuralNetwork.prototype.learn = function (){
-	
+NeuralNetwork.prototype.mutate = function(mutationStrength){
+
+	var numSynapses = this.network.biases.length; // numLayers - 1
+	var stagnation = 1-mutationStrength; //tendency for things to stay same [0,1]
+
+	/* copy original network */
+	originalNetwork = JSON.parse(JSON.stringify(this.network));
+	this.network = this.constructRandomNetwork(numSynapses-1, this.network.biases[1].length);
+
+	for (var layer = 0; layer < numSynapses; layer++){
+		//for all biases or 'cols'
+		for (var b = 0; b < originalNetwork.biases[layer].length; b++){
+			this.network.biases[layer][b] = this.network.biases[layer][b]*mutationStrength + originalNetwork.biases[layer][b]*(stagnation);
+			//for all weights or 'rows'
+			for (var w = 0; w < originalNetwork.weights[layer].length; w++){
+				this.network.weights[layer][w][b] = this.network.weights[layer][w][b]*mutationStrength + originalNetwork.weights[layer][w][b]*(stagnation);
+			}
+		}
+	}
 }
+
+
+/*
+ * For all tanks, select new fuinction
+ * @param {Tank} tank - The corresponding tank
+ */
+function calcualteFitness(tank){ //may want to put this in tank class
+	return tank.health + tank.damageDone; //Fitness is health left + total dmg done
+}
+

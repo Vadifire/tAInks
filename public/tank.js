@@ -44,6 +44,7 @@ function Tank(id, x, y, speed, control){
 	this.angularSpeed = 0.04; //this is in terms of rad * FPS for now
 	this.frame = 0; //current animation frame
 	this.lastShoot =  0;
+	this.damageDone = 0;
 	if (control)
 		this.name = 'Player ' + id; //assume we're a player
 	else{
@@ -75,9 +76,7 @@ Tank.prototype.dealDamage = function(damage){
 	this.health -= damage;
 	if (this.health <= 0){ //die
 		tanks.delete(this.id);
-		if (tanks.size == 1){ //only one tank left - they win!
-			//process winning here
-		}
+		//process death here...
 	}
 }
 
