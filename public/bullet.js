@@ -74,6 +74,9 @@ Bullet.prototype.hitDetect = function(tanks){
 			if (Math.abs(this.x - tank.x) < w){ //within w px
 				if (Math.abs(this.y - tank.y) < h){ //within h px
 					tank.dealDamage(this.damage);
+					var owner = tanks.get(this.ownerID);
+					if (owner)
+						owner.damageDone += this.damage; //increase owner's damage done
 					bullets.delete(this.id);
 					return;
 				}

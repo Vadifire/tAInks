@@ -96,7 +96,7 @@ NeuralNetwork.prototype.act = function(){
 	if (this.count === 0){
 		this.count = TARGET_FPS/2; //calculate new action every half-second
 		this.outputValues = this.calculateOutputs(inputValues);
-		this.mutate(0.5);
+		this.mutate(0.1);
 	}
 	this.count--;
 	for (var i = 0; i < this.outputs.length; i++){

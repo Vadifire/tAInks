@@ -75,6 +75,7 @@ Tank.prototype.attachComponents = function(components){
 Tank.prototype.dealDamage = function(damage){
 	this.health -= damage;
 	if (this.health <= 0){ //die
+		console.log('Did '+this.damageDone+' dmg before dying.');
 		tanks.delete(this.id);
 		//process death here...
 	}
