@@ -6,9 +6,14 @@ npm-debug.log
 *.env
 *.dev
 .DS_Store
+*.njsproj
 
 # Shortcuts
 *.lnk
 
 # Generated css
 styles.css
+
+# Binaries
+bin/
+obj/
