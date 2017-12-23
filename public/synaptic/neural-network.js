@@ -35,7 +35,6 @@ function NeuralNetwork(tank){
 	console.log(this.network);
 }
 
-
 /*
  * Constructs a randomly populated neural network
  *
@@ -151,27 +150,45 @@ NeuralNetwork.prototype.calculateOutputs = function(inputs){
  *  signals not to change the NeuralNetwork at all. A strength of 1 signals
  *  to completely randomize the NeuralNetwork
  */
-NeuralNetwork.prototype.mutate = function(mutationStrength){
+NeuralNetwork.prototype.mutate = function (mutationStrength) {
 
-	var numSynapses = this.network.biases.length; // numLayers - 1
-	var stagnation = 1-mutationStrength; //tendency for things to stay same [0,1]
+    var numSynapses = this.network.biases.length; // numLayers - 1
+    var stagnation = 1 - mutationStrength; //tendency for things to stay same [0,1]
 
-	/* copy original network */
-	originalNetwork = JSON.parse(JSON.stringify(this.network));
-	this.network = this.constructRandomNetwork(numSynapses-1, this.network.biases[1].length);
+    /* copy original network */
+    originalNetwork = JSON.parse(JSON.stringify(this.network));
+    this.network = this.constructRandomNetwork(numSynapses - 1, this.network.biases[1].length);
 
-	for (var layer = 0; layer < numSynapses; layer++){
-		//for all biases or 'cols'
-		for (var b = 0; b < originalNetwork.biases[layer].length; b++){
-			this.network.biases[layer][b] = this.network.biases[layer][b]*mutationStrength + originalNetwork.biases[layer][b]*(stagnation);
-			//for all weights or 'rows'
-			for (var w = 0; w < originalNetwork.weights[layer].length; w++){
-				this.network.weights[layer][w][b] = this.network.weights[layer][w][b]*mutationStrength + originalNetwork.weights[layer][w][b]*(stagnation);
-			}
-		}
-	}
+    for (var layer = 0; layer < numSynapses; layer++) {
+        //for all biases or 'cols'
+        for (var b = 0; b < originalNetwork.biases[layer].length; b++) {
+            this.network.biases[layer][b] = this.network.biases[layer][b] * mutationStrength + originalNetwork.biases[layer][b] * (stagnation);
+            //for all weights or 'rows'
+            for (var w = 0; w < originalNetwork.weights[layer].length; w++) {
+                this.network.weights[layer][w][b] = this.network.weights[layer][w][b] * mutationStrength + originalNetwork.weights[layer][w][b] * (stagnation);
+            }
+        }
+    }
 }
 
+/*
+ * Overwrite current genes with crossover of two parent Neural Networks
+ *
+ * @param {Object} n1 - The network of the first NN parent
+ * @param {Object} n2 - The network of the second NN parent
+ */
+NeuralNetwork.prototype.crossover = function(n1, n2) {
+    for (var layer = 0; layer < numSynapses; layer++) {
+        //for all biases or 'cols'
+        for (var b = 0; b < originalNetwork.biases[layer].length; b++) {
+            this.network.biases[layer][b] = (n1.biases[layer][b] + n2.biases[layer][b]) / 2;
+            //for all weights or 'rows'
+            for (var w = 0; w < originalNetwork.weights[layer].length; w++) {
+                this.network.weights[layer][w][b] = (n1.weights[layer][w][b] + n2.weights[layer][w][b]) /2;
+            }
+        }
+    }
+}
 
 /*
  * For all tanks, select new fuinction
