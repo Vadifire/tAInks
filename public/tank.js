@@ -21,6 +21,7 @@ for (var i = 1; i < 9; i++){
 
 var TANK_WIDTH = 68, TANK_HEIGHT = 68;
 var SHOOT_CD = 300; //shoot cd in millis
+var TANK_HEALTH = 10;
 
 /* Tank Constructor
  *
@@ -32,11 +33,13 @@ var SHOOT_CD = 300; //shoot cd in millis
  */
 function Tank(id, x, y, speed, control){
 	this.id = id; //unique id TO-DO: avoid id collision
-	this.health = 100;
+	this.health = TANK_HEALTH;
 	this.control = control;
 	this.components = []; //no components by default
 	this.width = TANK_WIDTH;
-	this.height = TANK_HEIGHT;
+    this.height = TANK_HEIGHT;
+    this.originalX = x; //Used for reset
+    this.originalY = y; //Used for reset
 	this.x = x;
 	this.y = y;
 	this.dir = Math.PI / 2;
@@ -50,6 +53,23 @@ function Tank(id, x, y, speed, control){
 	else{
 		this.name = 'AI ' + id; // if we don't control, assume AI for now
 	}
+}
+
+/*
+ * Reset the tanks, typically post-mortem
+ */
+Tank.prototype.reset = function() {
+    this.lastShoot = 0;
+    this.damageDone = 0;
+    this.health = TANK_HEALTH;
+    this.dir = Math.PI / 2;
+    this.frame = 0;
+    /*  Position reset should be rethought. With current
+        genetic algorithm implementation, it would make more sense
+        to come up with a list of valid positions and reset tank
+        positions to a random valid location (prevent positional bias) */
+    this.x = this.originalX;
+    this.y = this.originalY; 
 }
 
 /*
@@ -75,10 +95,19 @@ Tank.prototype.attachComponents = function(components){
 Tank.prototype.dealDamage = function(damage){
 	this.health -= damage;
 	if (this.health <= 0){ //die
-		console.log('Did '+this.damageDone+' dmg before dying.');
-		tanks.delete(this.id);
-		//process death here...
+        console.log('Did ' + this.damageDone + ' dmg before dying.');
+        deadTanks.set(this.id, this); /* add us to global list of dead tanks */
+        tanks.delete(this.id);
 	}
+}
+
+/*
+ * Calculate the fitness of this tank
+ *
+ * @param {Tank} tank - The corresponding tank
+ */
+function calcualteFitness() {
+    return this.health + this.damageDone; //Fitness is health left + total dmg done
 }
 
 /*
@@ -232,7 +261,7 @@ Tank.prototype.drawHealth = function(ctx){
 	ctx.lineWidth="4";
 	ctx.stroke();
 
-	var hp = 40*(this.health/100);
+	var hp = 40*(this.health/TANK_HEALTH);
 
 	ctx.beginPath();
 	ctx.fillStyle = "green";

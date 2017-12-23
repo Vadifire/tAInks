@@ -95,7 +95,7 @@ NeuralNetwork.prototype.act = function(){
 	if (this.count === 0){
 		this.count = TARGET_FPS/2; //calculate new action every half-second
 		this.outputValues = this.calculateOutputs(inputValues);
-		this.mutate(0.1);
+		//this.mutate(0.1); //No mutations once born
 	}
 	this.count--;
 	for (var i = 0; i < this.outputs.length; i++){
@@ -197,10 +197,13 @@ NeuralNetwork.prototype.crossover = function (n1, n2) {
 }
 
 /*
- * For all tanks, select new fuinction
- * @param {Tank} tank - The corresponding tank
+ * Genetic algorithm intended to evolve fitness of population over time
+ *
+ * @param {Map <number, Tank>} tankList - List of tanks to evolve
+ * @returns {Map <number, Tank>} new Tank map, but with evolved neural networks
  */
-function calcualteFitness(tank){ //may want to put this in tank class
-	return tank.health + tank.damageDone; //Fitness is health left + total dmg done
+function evolve(tankList) {
+    var evolvedList = Map(tankList); // copy list
+    return evolvedList;
 }
 
