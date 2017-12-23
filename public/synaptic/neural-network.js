@@ -32,7 +32,7 @@ function NeuralNetwork(tank){
 	}, this);
 	this.network = this.constructRandomNetwork(1,3);
 	this.count = 0;
-	console.log(this.network);
+    console.log(this.network);
 }
 
 /*
@@ -177,17 +177,23 @@ NeuralNetwork.prototype.mutate = function (mutationStrength) {
  * @param {Object} n1 - The network of the first NN parent
  * @param {Object} n2 - The network of the second NN parent
  */
-NeuralNetwork.prototype.crossover = function(n1, n2) {
+NeuralNetwork.prototype.crossover = function (n1, n2) {
+    /*console.log("Parent networks:");
+    console.log(n1);
+    console.log(n2);*/
+    var numSynapses = this.network.biases.length; // numLayers - 1
     for (var layer = 0; layer < numSynapses; layer++) {
         //for all biases or 'cols'
-        for (var b = 0; b < originalNetwork.biases[layer].length; b++) {
+        for (var b = 0; b < n1.biases[layer].length; b++) {
             this.network.biases[layer][b] = (n1.biases[layer][b] + n2.biases[layer][b]) / 2;
             //for all weights or 'rows'
-            for (var w = 0; w < originalNetwork.weights[layer].length; w++) {
+            for (var w = 0; w < n1.weights[layer].length; w++) {
                 this.network.weights[layer][w][b] = (n1.weights[layer][w][b] + n2.weights[layer][w][b]) /2;
             }
         }
     }
+    /*console.log("Child network:");
+    console.log(this.network);*/
 }
 
 /*
