@@ -59,9 +59,9 @@ DriveComponent.prototype.performAction = function (value){
 function RotateComponent(x, y, image){OutputComponent.call(this,x,y,image)};
 RotateComponent.prototype = Object.create(OutputComponent.prototype);
 RotateComponent.prototype.performAction = function (value){
-	if (value < 0.4){ 
+	if (value < 0.35){ 
 		this.tank.rotate(); // bottom third, move CCW
-	}else if (value > 0.6){
+	}else if (value > 0.65){
 		this.tank.rotate(true); // top third, move CW
 	}
 }

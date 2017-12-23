@@ -21,7 +21,7 @@ for (var i = 1; i < 9; i++){
 
 var TANK_WIDTH = 68, TANK_HEIGHT = 68;
 var SHOOT_CD = 300; //shoot cd in millis
-var TANK_HEALTH = 10;
+var TANK_HEALTH = 50;
 
 /* Tank Constructor
  *
@@ -103,10 +103,10 @@ Tank.prototype.dealDamage = function(damage){
 
 /*
  * Calculate the fitness of this tank
- *
- * @param {Tank} tank - The corresponding tank
+ * Used to evolve Neural Network
+ * @returns {number} - The fitness of the tank
  */
-function calcualteFitness() {
+Tank.prototype.calculateFitness = function(){
     return this.health + this.damageDone; //Fitness is health left + total dmg done
 }
 

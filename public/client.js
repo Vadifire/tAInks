@@ -141,7 +141,7 @@ function processGameEnd() {
 
     deadTanks.set(tankWinner.id, tankWinner); // add last tank to dead tanks
     tanks.delete(tankWinner.id); // remove from active tanks list
-    tanks = evolve(deadTanks);
+    tanks = evolve(deadTanks, 0.6);
     deadTanks = new Map(); // clear dead tanks
     bullets = new Map(); // clear any stray bullets
     tanks.forEach(function (tank) { //Revive the tanks
@@ -149,4 +149,5 @@ function processGameEnd() {
     });
     generation++; //Upgrade global generation var
     console.log("CURRENT GENERATION: " + generation);
+    console.log(tanks);
 }
