@@ -24,7 +24,7 @@ function Bullet(ownerID, x, y, speed, dir){
 	this.ownerID = ownerID; //unique id TO-DO: avoid id collision
 	this.x = x;
 	this.y = y;
-	this.speed = speed //this is in terms of px * FPS for now
+    this.speed = speed; //this is in terms of px * FPS for now
 	this.dir = dir;
 	this.xComp = (this.speed*Math.cos(this.dir));
 	this.yComp = (this.speed*Math.sin(this.dir));

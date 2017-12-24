@@ -53,14 +53,19 @@ var Keys = {
 	LEFT: 65, // A
 	DOWN: 83, // S
 	RIGHT: 68,// D
-	SPACE: 32, // SPACE
+    SPACE: 32, // SPACE
+    NEXT_GEN: 71, // G
   
 	isDown: function(keyCode) {
 		return this._pressed[keyCode];
 	},
   
-	onKeydown: function(event) {
-		this._pressed[event.keyCode] = true;
+    onKeydown: function (event) {
+        if (event.keyCode === Keys.NEXT_GEN) {
+            nextGeneration();
+        } else {
+            this._pressed[event.keyCode] = true;
+        }
 	},
   
 	onKeyup: function(event) {
@@ -103,10 +108,20 @@ function gameLoop(){
 	}
 }
 
-/* Render game-layer */
+/* Render game-layer for arena */
 function render(){
 	/* Clear Drawing Area */
 	ctx.clearRect(0,0,ARENA_WIDTH,ARENA_HEIGHT);
+
+
+    ctx.font = '24px impact';
+    ctx.textBaseline = "top";
+    ctx.textAlign = "right";
+    ctx.fillText("Generation: "+generation,ARENA_WIDTH-4, 0);
+
+    ctx.font = '16px impact';
+    ctx.textBaseline = "bottom";
+    ctx.textAlign = "center";
 
 	/* Draw All Entities In Game*/
 	bullets.forEach(function (bullet) {
@@ -137,11 +152,12 @@ function update(){
  *  2) Reset tanks and round
  */
 function processGameEnd() {
-    var tankWinner = tanks.entries().next().value[1]; //get first tank from tanks Map
-
-    deadTanks.set(tankWinner.id, tankWinner); // add last tank to dead tanks
-    tanks.delete(tankWinner.id); // remove from active tanks list
-    tanks = evolve(deadTanks, 0.6);
+    if (tanks.size === 1) { //if a lone winner stands, now add them to death list
+        var tankWinner = tanks.entries().next().value[1]; //get first tank from tanks Map
+        deadTanks.set(tankWinner.id, tankWinner); // add last tank to dead tanks
+        tanks.delete(tankWinner.id); // remove from active tanks list
+    }
+    tanks = evolve(deadTanks, 0.3);
     deadTanks = new Map(); // clear dead tanks
     bullets = new Map(); // clear any stray bullets
     tanks.forEach(function (tank) { //Revive the tanks
@@ -150,4 +166,16 @@ function processGameEnd() {
     generation++; //Upgrade global generation var
     console.log("CURRENT GENERATION: " + generation);
     console.log(tanks);
+}
+
+
+/*
+ * Kill all remaining tanks and proceed to next gen
+ */
+function nextGeneration() {
+    tanks.forEach(function (tank) { //soft kill remaining tanks
+        deadTanks.set(tank.id, tank);
+    });
+    tanks = new Map(); //clear
+    processGameEnd();
 }

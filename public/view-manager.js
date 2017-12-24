@@ -52,9 +52,6 @@ ViewManager.prototype.setView = function(view=VIEWS.LOGIN){
 				ARENA_WIDTH = gameCanvas.width;
 				ARENA_HEIGHT = gameCanvas.height;
 				ctx = gameCanvas.getContext('2d');
-				ctx.font = '16px impact';
-				ctx.textBaseline="bottom";
-				ctx.textAlign="center";
 				bgCanvas = $("#bg-layer").get(0);
 				bgCtx = bgCanvas.getContext('2d');
 				

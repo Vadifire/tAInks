@@ -201,7 +201,7 @@ Tank.prototype.shoot = function(){
 	var now = performance.now();
 	if ((now - this.lastShoot) >= SHOOT_CD){
 		this.lastShoot = now;
-		new Bullet(this.id, this.x, this.y, 8, this.dir);
+		new Bullet(this.id, this.x, this.y, 10, this.dir);
 	}
 }
 
