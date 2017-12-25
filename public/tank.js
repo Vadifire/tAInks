@@ -186,11 +186,11 @@ Tank.prototype.rotate = function(cw){
 	}else{
 		this.dir += this.angularSpeed;
 	}
-	if (this.dir > Math.PI * 2){
+	/*if (this.dir > Math.PI * 2){
 		this.dir -= Math.PI * 2;	
 	}else if (this.dir < 0){
 		this.dir += Math.PI * 2;
-	}
+	}*/
 }
 
 
