@@ -26,8 +26,8 @@ var VIEWS = {
  *
  * @param {string?} view - View to be shown at start
  */
-function ViewManager(view=VIEWS.LOGIN){
-	this.currentView = VIEWS.LOGIN;
+function ViewManager(view=VIEWS.MAIN_MENU){
+	this.currentView = view;
 	this.setView(view);
 }
 
