@@ -32,9 +32,9 @@ var bullets = new Map(); //Maps bullet ids to bullet obj
 
 var playerTank = new Tank(0, 100, 400, 3, true);
 //Scatter AI tanks
-for (var i = 0; i < 5; i++){ //12
+for (var i = 0; i < 12; i++){ //12
     //var ai = new Tank(i + 1, 200 + 200 * (i % 4) + 30 * (i % 8), 160 + Math.floor(i / 4) * 220, 3, false);
-    var ai = new Tank(i + 1, Math.random()*1200, Math.random()*800, 3, false);
+    var ai = new Tank(i + 1, Math.random()*1200, Math.random()*900, 3, false);
     ai.attachComponents([new TankSensorComponent(0, -96, Math.PI / 2),
         new TankSensorComponent(96 / 2 * Math.sqrt(2), -96 / 2 * Math.sqrt(2), Math.PI / 4),
         new TankSensorComponent(-96 / 2 * Math.sqrt(2), -96 / 2 * Math.sqrt(2), Math.PI * 3 / 4),

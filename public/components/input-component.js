@@ -70,12 +70,14 @@ TankSensorComponent.prototype.readInput = function () {
     rotateLineAroundEntity(line, this.tank);
     this.line = line;
 
+    var ret = -1;
     tanks.forEach(function (tank) { //Check for collisions with every tank
         if (tank.id !== this.tank.id) { //dont check for self-collisions
             if (tank.lines && doesLineIntersectEntity(line, tank)) {
-                return 1;
+                ret = 1;
+                return;
             }
         }
     }, this);
-    return 0;
+    return ret;
 }

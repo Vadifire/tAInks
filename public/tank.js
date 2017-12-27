@@ -279,16 +279,19 @@ Tank.prototype.update = function (Keys) {
 Tank.prototype.render = function(ctx){
 	ctx.save(); //save context state
 	var img = tankImage[Math.floor(this.frame)]; // img of current frame
-	ctx.translate(this.x, this.y); //shift origin to tank
-	this.drawHealth(ctx);
+    ctx.translate(this.x, this.y); //shift origin to tank
+    this.drawHealth(ctx);
 	ctx.rotate(-this.dir); //rotate plane around tank
 	ctx.drawImage(img, -img.naturalWidth/2, -img.naturalHeight/2);
 	this.components.forEach(function(comp){
 		comp.render(ctx); //draw all components
 	});
-	ctx.restore(); //restore normal xy coordinate plane
+    ctx.restore(); //restore normal xy coordinate plane
 	ctx.fillText(this.name, this.x, this.y-img.naturalHeight/2-16);
-	this.drawHitbox(ctx); //TODO: ? toggle hitbox rendering
+    this.drawHitbox(ctx); //TODO: ? toggle hitbox rendering
+    if (this.neuralNetwork) { //TODO: toggle neural network rendering
+       // this.neuralNetwork.render(ctx); // Draw Neural Network to Screen for Debug
+    }
 }
 
 /* 
