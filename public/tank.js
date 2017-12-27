@@ -241,7 +241,7 @@ Tank.prototype.shoot = function(){
  * Updates the state of the Tank, listening to keys
  * @param {Object} keys - A listing of which keys are pressed
  */
-Tank.prototype.update = function(Keys){
+Tank.prototype.update = function (Keys) {
 	if (this.control){ // Client's keyboard controls tank
 		if (Keys.isDown(Keys.LEFT)){
 			this.rotate();
@@ -259,15 +259,9 @@ Tank.prototype.update = function(Keys){
 			this.shoot();
 		}
 	}else if (this.neuralNetwork){ // AI powered by Neural Network
-		//this.neuralNetwork.act();
-	}
-	this.lines = getLinesForEntity(this);
-
-	this.components.forEach(function(comp){
-		if (this.control === true)
-			comp.readInput();
-	}, this);
-
+		this.neuralNetwork.act();
+    }
+    this.lines = getLinesForEntity(this);
 }
 
 /* 
@@ -297,8 +291,6 @@ Tank.prototype.render = function(ctx){
 		}
 	});
 	this.drawHitbox(ctx); //TODO: ? toggle hitbox rendering
-
-
 }
 
 /* 

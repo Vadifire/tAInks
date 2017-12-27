@@ -32,9 +32,9 @@ var bullets = new Map(); //Maps bullet ids to bullet obj
 
 var playerTank = new Tank(0, 100, 400, 3, true);
 //Scatter AI tanks
-for (var i = 0; i < 1; i++){ //12
-	var ai = new Tank(i+1, 200+200*(i%4)+30*(i%8),160+Math.floor(i/4)*220,3,false);
-	ai.attachComponents([new RandomComponent(),
+for (var i = 0; i < 12; i++){ //12
+    var ai = new Tank(i + 1, 200 + 200 * (i % 4) + 30 * (i % 8), 160 + Math.floor(i / 4) * 220, 3, false);
+    ai.attachComponents([new RandomComponent(), new TankSensorComponent(0,-96,Math.PI/2),
 		new DriveComponent(), new RotateComponent(), new ShootComponent()]);
 	tanks.set(ai.id, ai);
 }
@@ -145,7 +145,7 @@ function render(){
 }
 
 /* Update Local Game State */
-function update(){
+function update() {
 	bullets.forEach(function(bullet){
 		bullet.update(Keys);
 	});
