@@ -91,6 +91,12 @@ Tank.prototype.attachComponents = function(components){
 }
 
 /* 
+function getCursorPosition(canvas, event) {
+    var rect = canvas.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+    console.log("x: " + x + " y: " + y);
+}
  * @param {number} damage - the damage to inflict to this tank
  */
 Tank.prototype.dealDamage = function(damage){
@@ -253,10 +259,15 @@ Tank.prototype.update = function(Keys){
 			this.shoot();
 		}
 	}else if (this.neuralNetwork){ // AI powered by Neural Network
-		this.neuralNetwork.act();
+		//this.neuralNetwork.act();
 	}
-	var lines = getLinesForEntity(this);
-	this.lines = lines;
+	this.lines = getLinesForEntity(this);
+
+	this.components.forEach(function(comp){
+		if (this.control === true)
+			comp.readInput();
+	}, this);
+
 }
 
 /* 
@@ -276,14 +287,18 @@ Tank.prototype.render = function(ctx){
 	ctx.restore(); //restore normal xy coordinate plane
 	ctx.fillText(this.name, this.x, this.y-img.naturalHeight/2-16);
 
-	if (this.lines){
-		for (var i = 0 ; i < this.lines.length; i++){
+
+	this.components.forEach(function(comp){
+		if (comp.line){
 			ctx.beginPath();
-			ctx.moveTo(this.lines[i].x1, this.lines[i].y1);
-			ctx.lineTo(this.lines[i].x2, this.lines[i].y2);
+			ctx.moveTo(comp.line.x1, comp.line.y1);
+			ctx.lineTo(comp.line.x2, comp.line.y2);
 			ctx.stroke();
 		}
-	}
+	});
+	this.drawHitbox(ctx); //TODO: ? toggle hitbox rendering
+
+
 }
 
 /* 
@@ -308,4 +323,19 @@ Tank.prototype.drawHealth = function(ctx){
 	ctx.fillStyle = "red";
 	ctx.rect(-20+hp,-54, 40-hp,6);
 	ctx.fill();
+}
+
+/* 
+ * Draws the Tank's hitbox
+ * @param {CanvasRenderingContext2D} ctx - The context to draw to
+ */
+Tank.prototype.drawHitbox = function(ctx){
+	if (this.lines){
+		for (var i = 0 ; i < this.lines.length; i++){
+			ctx.beginPath();
+			ctx.moveTo(this.lines[i].x1, this.lines[i].y1);
+			ctx.lineTo(this.lines[i].x2, this.lines[i].y2);
+			ctx.stroke();
+		}
+	}
 }
