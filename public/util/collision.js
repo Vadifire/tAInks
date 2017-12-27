@@ -74,11 +74,15 @@ function getLinesIntercept(line1, line2){
  *  These lines must have {x1, y1, x2, y2}
  *  Entities must have already invoked getLinesForEntity()
  * 
- * @returns {number, number} x,y - The point of intersection (null if none)
+ * @returns {boolean} returns whether a line intersects an entity's hitbox
  */
-function getLineEntityIntercept(line, entity){
-
-
+function doesLineIntersectEntity(line, entity){
+    for (var i = 0 ; i < entity.lines.length; i++){
+        if (getLinesIntercept(entity.lines[i], line) !== null){
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -101,29 +105,46 @@ function getLinesForEntity(entity){
 
     var lines = [ // Array of 4 bounding lines
         { // Line 0
-            x1: entity.x + entity.width/2,
-            y1: entity.y - entity.height/2,
-            x2: entity.x + entity.width/2,
-            y2: entity.y + entity.height/2
+            x1: entity.width/2,
+            y1: -entity.height/2,
+            x2: entity.width/2,
+            y2: entity.height/2
         },
         { // Line 1
-            x1: entity.x - entity.width/2,
-            y1: entity.y - entity.height/2,
-            x2: entity.x + entity.width/2,
-            y2: entity.y - entity.height/2
+            x1: -entity.width/2,
+            y1: -entity.height/2,
+            x2: +entity.width/2,
+            y2: -entity.height/2
         },
         { // Line 2
-            x1: entity.x - entity.width/2,
-            y1: entity.y - entity.height/2,
-            x2: entity.x - entity.width/2,
-            y2: entity.y + entity.height/2
+            x1: -entity.width/2,
+            y1: -entity.height/2,
+            x2: -entity.width/2,
+            y2: entity.height/2
         },
         { // Line 3
-            x1: entity.x - entity.width/2,
-            y1: entity.y + entity.height/2,
-            x2: entity.x + entity.width/2,
-            y2: entity.y + entity.height/2
-        }];
+            x1: -entity.width/2,
+            y1: entity.height/2,
+            x2: +entity.width/2,
+            y2: entity.height/2
+        }
+    ];
+
+    //Rotate Points around Entity origin
+    for (var i = 0 ; i < lines.length; i++){
+        var x1 = lines[i].x1 * entity.xComp - lines[i].y1 * entity.yComp;
+        var y1 = lines[i].y1 * entity.xComp + lines[i].x1 * entity.yComp;
+
+        var x2 = lines[i].x2 * entity.xComp - lines[i].y2 * entity.yComp;
+        var y2 = lines[i].y2 * entity.xComp + lines[i].x2 * entity.yComp;
+
+        //Translate points to be correctly located on screen
+        lines[i].x1=entity.x+x1;
+        lines[i].x2=entity.x+x2;
+        lines[i].y1=entity.y+y1;
+        lines[i].y2=entity.y+y2;
+
+    }
 
     return lines;
 }
