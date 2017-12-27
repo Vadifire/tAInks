@@ -9,6 +9,7 @@ npm-debug.log
 *.njsproj
 *.vs/
 *.sln
+*.vscode/
 
 # Shortcuts
 *.lnk

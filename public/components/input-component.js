@@ -70,3 +70,4 @@ TankSensorComponent.prototype = Object.create(InputComponent.prototype);
 TankSensorComponent.prototype.readInput = function () {
     var angle = this.dir + tank.dir; // capture absolute angle
 }
+
