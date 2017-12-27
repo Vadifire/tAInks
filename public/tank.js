@@ -66,6 +66,7 @@ Tank.prototype.reset = function() {
     this.damageDone = 0;
     this.health = TANK_HEALTH;
     this.dir = Math.PI / 2;
+    this.rotate(dir);
     this.frame = 0;
     this.bullets = TANK_BULLETS;
     /*  Position reset should be rethought. With current
