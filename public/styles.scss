@@ -5,14 +5,13 @@
  *	@author Cedric Debelle
  *	@author Calvin Ellis
  */
+$main-menu-bg-color: rgba(48, 106, 178, 0.8);
 
 body {
-  background-color: #D6BB9E;
-  //background: url('./img/bg.jpeg');
-  background-image: url('./img/login-bg.jpg');
+  background-color: gray;
+  background-image: url('./img/bg/login-bg-black.png');
   background-size: cover;
   background-repeat-y: no-repeat;
-  
   /* remove :focus outline from all elements */
    *:focus {
    outline: 0;
@@ -22,13 +21,13 @@ body {
 
  
 #headerLogo img{
-	border-radius: 0px 0px 40px 40px;
-	-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
-	-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.75);
-	box-shadow:         7px 7px 5px 0px rgba(50, 50, 50, 0.75);
 	margin-bottom: 20px;
+	width: 500px;
 }
   
+#arena{
+	margin-top: 10px;
+}
 #arena-page{
     width: 1344px;
     height: 756px;
@@ -78,18 +77,26 @@ canvas {
 }
 
 #main-menu{
+	.main{
+		padding-right: 0px;
+		padding-left: 0px;
+	}
 	.title-arch {
 		text-align: center;
-		margin: 50px 0;
+		margin-top: 50px;
 		font-size: 22px;
 		letter-spacing: 2px;
 		text-transform: uppercase;
 		color: white;
+		background-color: $main-menu-bg-color; 
+		text-shadow: 2px 4px 3px rgba(0,0,0,0.6);
+		padding: 10px;
+		border-bottom: 1px solid white;
 	}
 	.project {
 		width: 100%;
 		height: 500px;
-		background-image: url(./img/bg/0009.jpeg);
+		background-image: url(./img/bg/0009.png);
 		background-size: cover;
 		background-position: center;
 		padding: 0 !important;
@@ -97,8 +104,8 @@ canvas {
 		
 		h3 {
 			color: white;
-			background-color: rgba(62, 58, 36, 0.7);
-			padding: 5px;
+			background-color: $main-menu-bg-color; 
+			padding: 5px 15px;
 			margin-bottom: 0px;
 			position: absolute;
 			width: 100%;
@@ -118,7 +125,7 @@ canvas {
 	}
 
 	.project-3 {
-		background-image: url(./img/bg/0008.jpg);
+		background-image: url(./img/bg/0008.png);
 	}
 
 	.project-4 {
@@ -134,7 +141,7 @@ canvas {
 		-moz-transition: all 0.5s ease;
 		-o-transition: all 0.5s ease;
 		transition: all 0.5s ease;
-		background-color: rgba(62, 58, 36, 0.7);
+		background-color: $main-menu-bg-color; 
 		padding: 40% 30px !important;
 		
 		hr {

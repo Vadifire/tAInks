@@ -1,6 +1,6 @@
 <style>
 #Viewport{
-    background: rgba(0,0,0,0.5);
+    
     background-size: cover;
     height: 100vh;
 }
@@ -19,11 +19,11 @@
 		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 project wow animated animated4 fadeInLeft">
 			<h3>Tank Garage</h3>
 			<div class="project-hover">
-				<h2>Manage Tanks</h2>
+				<h2>Tank Garage</h2>
 				
 				<hr />
 				<p>View, Edit, and Upgrade your tAInks here!</p>
-				<a href="#">Manage Tanks</a>
+				<a href="#" class="manage_tanks">Manage Tanks</a>
 			</div>
 		</div>
 		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 project project-2 wow animated animated3 fadeInLeft">
@@ -32,7 +32,7 @@
 				<h2>Play Local</h2>
 				<hr />
 				<p>Play locally to train your tAInks or try and kill them!</p>
-				<a href="#">Play Local</a>
+				<a href="#" class="play_local">Play Local</a>
 			</div>
 		</div>
 		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 project project-3 wow animated animated2 fadeInLeft">
@@ -41,7 +41,7 @@
 				<h2>Play Online</h2>
 				<hr />
 				<p>Play online against other tAInks!</p>
-				<a href="#">Play Online</a>
+				<a href="#" class="play_online">Play Online</a>
 			</div>
 		</div>
 		<div class="clearfix"></div>
@@ -53,7 +53,7 @@
 </div>
 		
 		<script>
-		$('#view-arena-page').click(function () {
-			viewmngr.setView(VIEWS.ARENA);
-		});
+		$('.manage_tanks').click(function () { viewmngr.setView(VIEWS.TANK_GALLERY); });
+		$('.play_local').click(function () { viewmngr.setView(VIEWS.ARENA); });
+		$('.play_online').click(function () { viewmngr.setView(VIEWS.ARENA); });
 		</script>
