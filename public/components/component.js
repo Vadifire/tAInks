@@ -36,7 +36,11 @@ Component.prototype.setOwner = function(tank){
  */
 Component.prototype.render = function(ctx){
 	if (this.image){
-		ctx.drawImage(image, this.xOffset-this.image.naturalWidth/2, 
-			this.yOffset-this.image.naturalHeight/2);
+		ctx.save(); //save context state
+		ctx.translate(this.xOffset, this.yOffset); //shift origin to tank
+		if (this.dir)
+			ctx.rotate(-this.dir); //rotate plane around tank
+		ctx.drawImage(this.image, -this.image.naturalWidth/2, -this.image.naturalHeight/2);
+		ctx.restore(); //pop saved context off stack
 	}
 }
