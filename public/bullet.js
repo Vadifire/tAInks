@@ -26,8 +26,8 @@ function Bullet(ownerID, x, y, speed, dir){
 	this.y = y;
     this.speed = speed; //this is in terms of px * FPS for now
 	this.dir = dir;
-	this.xComp = (this.speed*Math.cos(this.dir));
-	this.yComp = (this.speed*Math.sin(this.dir));
+	this.xComp = (Math.cos(this.dir));
+	this.yComp = (-Math.sin(this.dir));
 	this.width = 16;
 	this.height = 16;
 	this.damage = 5;
@@ -39,8 +39,8 @@ function Bullet(ownerID, x, y, speed, dir){
  * Advance the bullet in the current direction prop. to speed
  */
 Bullet.prototype.update = function(){
-	this.x += this.xComp;
-	this.y -= this.yComp;
+	this.x += this.speed*this.xComp;
+	this.y += this.speed*this.yComp;
 
 	this.hitDetect(tanks); // detect collision with 'client.js'.tanks
 

@@ -49,3 +49,25 @@ RandomComponent.prototype = Object.create(InputComponent.prototype);
 RandomComponent.prototype.readInput = function(){
 	return Math.random();
 }
+
+/* Component that measures distance to nearest bullet down a line */
+function BulletSensorComponent(x, y, image, dir) {
+    InputComponent.call(this, x, y, image);
+    this.dir = dir; // relative to tank
+}
+BulletSensorComponent.prototype = Object.create(InputComponent.prototype);
+BulletSensorComponent.prototype.readInput = function () {
+    var angle = this.dir + tank.dir; // capture absolute angle
+}
+
+
+/* Component that measures distance to nearest tank down a line */
+function TankSensorComponent(x, y, image, dir) {
+    InputComponent.call(this, x, y, image);
+    this.dir = dir; // relative to tank
+}
+TankSensorComponent.prototype = Object.create(InputComponent.prototype);
+TankSensorComponent.prototype.readInput = function () {
+    var angle = this.dir + tank.dir; // capture absolute angle
+}
+

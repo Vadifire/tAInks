@@ -45,6 +45,7 @@ function Tank(id, x, y, speed, control){
 	this.dir = Math.PI / 2;
 	this.speed = speed; //this is in terms of px * FPS for now
 	this.angularSpeed = 0.04; //this is in terms of rad * FPS for now
+	this.rotate(0); // This is done to initialize x and y comps
 	this.frame = 0; //current animation frame
 	this.lastShoot =  0;
 	this.damageDone = 0;
@@ -128,8 +129,9 @@ Tank.prototype.move = function(backwards){
 			this.frame = tankImage.length-1;
 		}
 	}
-	this.x += (this.speed*Math.cos(this.dir) * ((backwards) ? -1 : 1));
-	this.y -= (this.speed*Math.sin(this.dir) * ((backwards) ? -1 : 1));
+
+	this.x += this.speed*this.xComp * (backwards ? -1 : 1);
+	this.y += this.speed*this.yComp * (backwards ? -1 : 1);
 
 	/* Lock tank within Arena */
 	if (this.y > ARENA_HEIGHT){
@@ -186,11 +188,34 @@ Tank.prototype.rotate = function(cw){
 	}else{
 		this.dir += this.angularSpeed;
 	}
-	if (this.dir > Math.PI * 2){
-		this.dir -= Math.PI * 2;	
-	}else if (this.dir < 0){
-		this.dir += Math.PI * 2;
-	}
+	this.dir %=  2*Math.PI;
+
+	this.xComp = (Math.cos(this.dir));
+	this.yComp = (-Math.sin(this.dir)); //y plane inverted
+
+	/*var line1 = {
+		x1: this.x,
+		y1: this.y,
+		x2: this.xComp+this.x,
+		y2: this.yComp+this.y
+	};
+
+	var line2 = {
+		x1: 0,
+		y1: 0,
+		x2: 1000,
+		y2: 0
+	};
+	console.log("=== HORZ LINE ===");
+	console.log(getLinesIntercept(line1, line2));
+	line2 = {
+		x1: 0,
+		y1: 0,
+		x2: 0,
+		y2: 1000
+	};
+	console.log("=== VERT LINE ===");
+	console.log(getLinesIntercept(line1, line2));*/
 }
 
 
@@ -230,6 +255,8 @@ Tank.prototype.update = function(Keys){
 	}else if (this.neuralNetwork){ // AI powered by Neural Network
 		this.neuralNetwork.act();
 	}
+	var lines = getLinesForEntity(this);
+	this.lines = lines;
 }
 
 /* 
@@ -248,6 +275,15 @@ Tank.prototype.render = function(ctx){
 	});
 	ctx.restore(); //restore normal xy coordinate plane
 	ctx.fillText(this.name, this.x, this.y-img.naturalHeight/2-16);
+
+	if (this.lines){
+		for (var i = 0 ; i < this.lines.length; i++){
+			ctx.beginPath();
+			ctx.moveTo(this.lines[i].x1, this.lines[i].y1);
+			ctx.lineTo(this.lines[i].x2, this.lines[i].y2);
+			ctx.stroke();
+		}
+	}
 }
 
 /* 

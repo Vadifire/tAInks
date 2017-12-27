@@ -32,12 +32,12 @@ var bullets = new Map(); //Maps bullet ids to bullet obj
 
 var playerTank = new Tank(0, 1200, 600, 3, true);
 //Scatter AI tanks
-for (var i = 0; i < 12; i++){ //12
+/*for (var i = 0; i < 12; i++){ //12
 	var ai = new Tank(i+1, 200+200*(i%4)+30*(i%8),160+Math.floor(i/4)*220,3,false);
 	ai.attachComponents([new RandomComponent(), 
 		new DriveComponent(), new RotateComponent(), new ShootComponent()]);
 	tanks.set(ai.id, ai);
-}
+}*/
 //Add Player to Map
 tanks.set(playerTank.id, playerTank);
 var generation = 1;
@@ -79,17 +79,16 @@ $(function() {
 	gameLoop(); //Start Game Loop
 });
 
-
 /* Lets Browser Efficiently Manage Animations */
-window.requestAnimFrame = (function(){
+window.requestAnimFrame = (function () {
 	return  window.requestAnimationFrame || 
 	window.webkitRequestAnimationFrame   || 
 	window.mozRequestAnimationFrame      || 
 	window.oRequestAnimationFrame        || 
 	window.msRequestAnimationFrame       || 
 	function(callback, element){
-		window.setTimeout(function(){
-			callback(performance.now());
+        window.setTimeout(function () {
+            callback(performance.now());
 		}, 1000 / TARGET_FPS);
 	};
 })();
@@ -108,16 +107,28 @@ function gameLoop(){
 	}
 }
 
+/* FPS vars for performance measurement */
+var lastTime = 0;
+var fpsCount = 60;
+var fps = 0;
+
 /* Render game-layer for arena */
 function render(){
 	/* Clear Drawing Area */
 	ctx.clearRect(0,0,ARENA_WIDTH,ARENA_HEIGHT);
 
-
+    /* Draw HUD Info */
     ctx.font = '24px impact';
     ctx.textBaseline = "top";
     ctx.textAlign = "right";
     ctx.fillText("Generation: "+generation,ARENA_WIDTH-4, 0);
+    if (performance.now() - 1000 > lastTime) {
+        fps = fpsCount;
+        fpsCount = 0;
+        lastTime = performance.now();
+    }
+    fpsCount++;
+    ctx.fillText("FPS: " + fps, ARENA_WIDTH - 4, 28);
 
     ctx.font = '16px impact';
     ctx.textBaseline = "bottom";
@@ -129,7 +140,7 @@ function render(){
 	});
 	tanks.forEach(function(tank){
 		tank.render(ctx);
-	});
+    });
 }
 
 /* Update Local Game State */
@@ -141,8 +152,8 @@ function update(){
 		tank.update(Keys);
     });
 
-    if (tanks.size == 1) { /* one tank left -> winner decided, end game */
-        processGameEnd();
+    if (tanks.size <= 1) { /* one tank left -> winner decided, end game */
+        //processGameEnd();
     }
 }
 
