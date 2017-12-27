@@ -72,7 +72,7 @@ TankSensorComponent.prototype.readInput = function () {
 
     tanks.forEach(function (tank) { //Check for collisions with every tank
         if (tank.id !== this.tank.id) { //dont check for self-collisions
-            if (tank.lines && doesLineIntersectEntity(line, tank)){
+            if (tank.lines && doesLineIntersectEntity(line, tank)) {
                 return 1;
             }
         }

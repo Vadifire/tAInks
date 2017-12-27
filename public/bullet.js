@@ -41,13 +41,13 @@ function Bullet(ownerID, x, y, speed, dir){
 Bullet.prototype.update = function(){
 	this.x += this.speed*this.xComp;
 	this.y += this.speed*this.yComp;
-
+    this.lines = getLinesForEntity(this);
 	this.hitDetect(tanks); // detect collision with 'client.js'.tanks
 
 	/* if bullet leaves arena */
 	if (this.y > ARENA_HEIGHT || this.y < 0 || this.x > ARENA_WIDTH || this.x < 0){
 		bullets.delete(this.id);
-	}
+    }
 }
 
 /* 
@@ -59,7 +59,7 @@ Bullet.prototype.render = function(ctx){
 	ctx.translate(this.x, this.y); //shift origin to tank
 	ctx.rotate(-this.dir); //rotate plane around tank
 	ctx.drawImage(bulletImage, -bulletImage.naturalWidth/2, -bulletImage.naturalHeight/2);
-	ctx.restore(); //restore normal xy coordinate plane
+    ctx.restore(); //restore normal xy coordinate plane
 }
 
 /*
@@ -68,18 +68,17 @@ Bullet.prototype.render = function(ctx){
  */
 Bullet.prototype.hitDetect = function(tanks){
 	var w = (TANK_WIDTH + this.width) / 2;
-	var h = (TANK_HEIGHT + this.height) / 2;
+    var h = (TANK_HEIGHT + this.height) / 2;
 	tanks.forEach(function(tank){
 		if (tank.id !== this.ownerID){ //not our owner
-			if (Math.abs(this.x - tank.x) < w){ //within w px
-				if (Math.abs(this.y - tank.y) < h){ //within h px
-					tank.dealDamage(this.damage);
-					var owner = tanks.get(this.ownerID);
-					if (owner)
-						owner.damageDone += this.damage; //increase owner's damage done
-					bullets.delete(this.id);
-					return;
-				}
+            if (doesEntityIntersectEntity(this, tank)) {
+				tank.dealDamage(this.damage);
+				var owner = tanks.get(this.ownerID);
+                if (owner) {
+                    owner.damageDone += this.damage; //increase owner's damage done
+                }
+				bullets.delete(this.id);
+				return;
 			}
 		}
 	}, this);

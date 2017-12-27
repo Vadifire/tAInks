@@ -23,7 +23,6 @@
  * 
  */
 function getLinesIntercept(line1, line2){
-
     // Constants:
     // A = y2-y1
     // B = x1-x2
@@ -85,6 +84,27 @@ function doesLineIntersectEntity(line, entity){
     return false;
 }
 
+
+/*
+ * Calculates the intersection point between line and rectangle-based entity
+ *
+ * @param {Object} entity1
+ * @param {Object} entity2
+ *  Entities must have already invoked getLinesForEntity()
+ * 
+ * @returns {boolean} returns whether two entities make contact
+ */
+function doesEntityIntersectEntity(entity1, entity2) {
+    if (!entity1.lines || !entity2.lines) {
+        return false;   
+    }
+    for (var i = 0; i < entity1.lines.length; i++) {
+        if (doesLineIntersectEntity(entity1.lines[i], entity2)) {
+            return true;
+        }
+    }
+    return false;
+}
 
 /*
  * Calculates the bounding lines of a potentially rotated 

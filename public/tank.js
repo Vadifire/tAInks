@@ -22,6 +22,7 @@ for (var i = 1; i < 9; i++){
 var TANK_WIDTH = 68, TANK_HEIGHT = 68;
 var SHOOT_CD = 300; //shoot cd in millis
 var TANK_HEALTH = 50;
+var TANK_BULLETS = 32;
 
 /* Tank Constructor
  *
@@ -48,7 +49,8 @@ function Tank(id, x, y, speed, control){
 	this.rotate(0); // This is done to initialize x and y comps
 	this.frame = 0; //current animation frame
 	this.lastShoot =  0;
-	this.damageDone = 0;
+    this.damageDone = 0;
+    this.bullets = TANK_BULLETS;
 	if (control)
 		this.name = 'Player ' + id; //assume we're a player
 	else{
@@ -65,12 +67,15 @@ Tank.prototype.reset = function() {
     this.health = TANK_HEALTH;
     this.dir = Math.PI / 2;
     this.frame = 0;
+    this.bullets = TANK_BULLETS;
     /*  Position reset should be rethought. With current
         genetic algorithm implementation, it would make more sense
         to come up with a list of valid positions and reset tank
         positions to a random valid location (prevent positional bias) */
-    this.x = this.originalX;
-    this.y = this.originalY; 
+    /*this.x = this.originalX;
+    this.y = this.originalY; */
+    this.x = Math.random() * 1200;
+    this.y = Math.random() * 800;
 }
 
 /*
@@ -228,12 +233,15 @@ Tank.prototype.rotate = function(cw){
 /* 
  * Shoots a bullet from the tank's origin in dir
  */
-Tank.prototype.shoot = function(){
-	var now = performance.now();
-	if ((now - this.lastShoot) >= SHOOT_CD){
-		this.lastShoot = now;
-		new Bullet(this.id, this.x, this.y, 10, this.dir);
-	}
+Tank.prototype.shoot = function () {
+    if (this.bullets > 0){
+        var now = performance.now();
+        if ((now - this.lastShoot) >= SHOOT_CD) {
+            this.bullets--;
+            this.lastShoot = now;
+            new Bullet(this.id, this.x, this.y, 10, this.dir);
+        }
+    }
 }
 
 
@@ -280,16 +288,6 @@ Tank.prototype.render = function(ctx){
 	});
 	ctx.restore(); //restore normal xy coordinate plane
 	ctx.fillText(this.name, this.x, this.y-img.naturalHeight/2-16);
-
-
-	this.components.forEach(function(comp){
-		if (comp.line){
-			ctx.beginPath();
-			ctx.moveTo(comp.line.x1, comp.line.y1);
-			ctx.lineTo(comp.line.x2, comp.line.y2);
-			ctx.stroke();
-		}
-	});
 	this.drawHitbox(ctx); //TODO: ? toggle hitbox rendering
 }
 
@@ -329,5 +327,14 @@ Tank.prototype.drawHitbox = function(ctx){
 			ctx.lineTo(this.lines[i].x2, this.lines[i].y2);
 			ctx.stroke();
 		}
-	}
+    }
+    //Draw lines for components too
+    /*this.components.forEach(function (comp) {
+        if (comp.line) {
+            ctx.beginPath();
+            ctx.moveTo(comp.line.x1, comp.line.y1);
+            ctx.lineTo(comp.line.x2, comp.line.y2);
+            ctx.stroke();
+        }
+    });*/
 }
