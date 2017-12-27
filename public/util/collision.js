@@ -49,7 +49,7 @@ function getLinesIntercept(line1, line2){
         var x = (B2*C1 - B1*C2)/det;
         var y = (A1*C2 - A2*C1)/det;
 
-        // This is probably terrible (maybe not, performance seems insignificant)
+        // This is probably terrible (then again, performance impact insignificant)
         if (x > Math.max(line1.x1, line1.x2) || x > Math.max(line2.x1, line2.x2) ||
             x < Math.min(line1.x1, line1.x2) || x < Math.min(line2.x1, line2.x2) ||
             y > Math.max(line1.y1, line1.y2) || y > Math.max(line2.y1, line2.y2) ||
@@ -72,10 +72,58 @@ function getLinesIntercept(line1, line2){
  * @param {Object} line
  * @param {Object} entity
  *  These lines must have {x1, y1, x2, y2}
- *  Entities must have {x, y, width, height, xComp, yComp}
+ *  Entities must have already invoked getLinesForEntity()
  * 
  * @returns {number, number} x,y - The point of intersection (null if none)
  */
 function getLineEntityIntercept(line, entity){
-    
+
+
+}
+
+
+/*
+ * Calculates the bounding lines of a potentially rotated 
+ * rectangular entity
+ *
+ * @param {Object} entity
+ *  Entities must have {x, y, width, height, xComp, yComp}
+ * 
+ * @returns {Array<Line>} - The bounding lines of the entity
+ */
+function getLinesForEntity(entity){
+    /* 
+     * Line Layout
+     *  1_
+     * 2|_|0
+     *   3 
+     */
+
+    var lines = [ // Array of 4 bounding lines
+        { // Line 0
+            x1: entity.x + entity.width/2,
+            y1: entity.y - entity.height/2,
+            x2: entity.x + entity.width/2,
+            y2: entity.y + entity.height/2
+        },
+        { // Line 1
+            x1: entity.x - entity.width/2,
+            y1: entity.y - entity.height/2,
+            x2: entity.x + entity.width/2,
+            y2: entity.y - entity.height/2
+        },
+        { // Line 2
+            x1: entity.x - entity.width/2,
+            y1: entity.y - entity.height/2,
+            x2: entity.x - entity.width/2,
+            y2: entity.y + entity.height/2
+        },
+        { // Line 3
+            x1: entity.x - entity.width/2,
+            y1: entity.y + entity.height/2,
+            x2: entity.x + entity.width/2,
+            y2: entity.y + entity.height/2
+        }];
+
+    return lines;
 }

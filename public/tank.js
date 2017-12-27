@@ -130,8 +130,8 @@ Tank.prototype.move = function(backwards){
 		}
 	}
 
-	this.x += this.xComp * (backwards ? -1 : 1);
-	this.y += this.yComp * (backwards ? -1 : 1);
+	this.x += this.speed*this.xComp * (backwards ? -1 : 1);
+	this.y += this.speed*this.yComp * (backwards ? -1 : 1);
 
 	/* Lock tank within Arena */
 	if (this.y > ARENA_HEIGHT){
@@ -188,11 +188,11 @@ Tank.prototype.rotate = function(cw){
 	}else{
 		this.dir += this.angularSpeed;
 	}
-	this.xComp = (this.speed*Math.cos(this.dir));
-	this.yComp = (-this.speed*Math.sin(this.dir)); //y plane inverted
+	this.xComp = (Math.cos(this.dir));
+	this.yComp = (-Math.sin(this.dir)); //y plane inverted
 	this.dir %=  2*Math.PI;
 
-	var line1 = {
+	/*var line1 = {
 		x1: this.x,
 		y1: this.y,
 		x2: this.xComp+this.x,
@@ -214,7 +214,7 @@ Tank.prototype.rotate = function(cw){
 		y2: 1000
 	};
 	console.log("=== VERT LINE ===");
-	console.log(getLinesIntercept(line1, line2));
+	console.log(getLinesIntercept(line1, line2));*/
 }
 
 
@@ -235,6 +235,8 @@ Tank.prototype.shoot = function(){
  * @param {Object} keys - A listing of which keys are pressed
  */
 Tank.prototype.update = function(Keys){
+	var lines = getLinesForEntity(this);
+	this.lines = lines;
 	if (this.control){ // Client's keyboard controls tank
 		if (Keys.isDown(Keys.LEFT)){
 			this.rotate();
@@ -272,6 +274,15 @@ Tank.prototype.render = function(ctx){
 	});
 	ctx.restore(); //restore normal xy coordinate plane
 	ctx.fillText(this.name, this.x, this.y-img.naturalHeight/2-16);
+
+	if (this.lines){
+		for (var i = 0 ; i < this.lines.length; i++){
+			ctx.beginPath();
+			ctx.moveTo(this.lines[i].x1,this.lines[i].y1);
+			ctx.lineTo(this.lines[i].x2,this.lines[i].y2);
+			ctx.stroke();
+		}
+	}
 }
 
 /* 
