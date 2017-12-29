@@ -80,8 +80,8 @@ module.exports = {
 					if (docs[i].username === user){
 						if (docs[i].password === pass){
 							console.log("Login Accepted");
-							res.status(202); //'Accepted'
-							res.end();
+							res.status(200); //'OK'
+							res.end(JSON.stringify(docs[i]));
 							return;
 						}else{
 							console.log("Incorrect Password");
@@ -93,7 +93,6 @@ module.exports = {
 				}
 				console.log("Unknown User");
 				res.status(401); //'Unauthorized'
-				res.end();
 			}
 		});
 	},
