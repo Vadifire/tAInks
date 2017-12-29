@@ -32,13 +32,14 @@ var bullets = new Map(); //Maps bullet ids to bullet obj
 
 var playerTank = new Tank(0, 100, 400, 3, true);
 //Scatter AI tanks
-for (var i = 0; i < 12; i++){ //12
+for (var i = 0; i < 5; i++){ //12
     //var ai = new Tank(i + 1, 200 + 200 * (i % 4) + 30 * (i % 8), 160 + Math.floor(i / 4) * 220, 3, false);
-    var ai = new Tank(i + 1, Math.random()*1200, Math.random()*900, 3, false);
+    var ai = new Tank(i + 1, 10+Math.random()*652, 10+Math.random()*358, 3, false);
     ai.attachComponents([new TankSensorComponent(0, -96, Math.PI / 2),
-        new TankSensorComponent(96 / 2 * Math.sqrt(2), -96 / 2 * Math.sqrt(2), Math.PI / 4),
-        new TankSensorComponent(-96 / 2 * Math.sqrt(2), -96 / 2 * Math.sqrt(2), Math.PI * 3 / 4),
-		new DriveComponent(), new RotateComponent(), new ShootComponent()]);
+        new TankSensorComponent(96 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI / 3),
+        new TankSensorComponent(-96 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI * 2 / 3),
+        new DirComponent(), new xComponent(), new yComponent(),
+		new DriveComponent(), new RotateComponent(), new ShootComponent(), new RandomComponent()]);
 	tanks.set(ai.id, ai);
 }
 //Add Player to Map
@@ -120,6 +121,15 @@ function render(){
 	/* Clear Drawing Area */
 	ctx.clearRect(0,0,ARENA_WIDTH,ARENA_HEIGHT);
 
+
+	/* Draw All Entities In Game*/
+	bullets.forEach(function (bullet) {
+		bullet.render(ctx);
+	});
+	tanks.forEach(function(tank){
+		tank.render(ctx);
+    });
+
     /* Draw HUD Info */
     ctx.font = '24px impact';
     ctx.textBaseline = "top";
@@ -136,14 +146,6 @@ function render(){
     ctx.font = '16px impact';
     ctx.textBaseline = "bottom";
     ctx.textAlign = "center";
-
-	/* Draw All Entities In Game*/
-	bullets.forEach(function (bullet) {
-		bullet.render(ctx);
-	});
-	tanks.forEach(function(tank){
-		tank.render(ctx);
-    });
 }
 
 /* Update Local Game State */
@@ -171,7 +173,7 @@ function processGameEnd() {
         deadTanks.set(tankWinner.id, tankWinner); // add last tank to dead tanks
         tanks.delete(tankWinner.id); // remove from active tanks list
     }
-    tanks = evolve(deadTanks, 0.25);
+    tanks = evolve(deadTanks, 0.4);
     deadTanks = new Map(); // clear dead tanks
     bullets = new Map(); // clear any stray bullets
     tanks.forEach(function (tank) { //Revive the tanks

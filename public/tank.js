@@ -20,9 +20,9 @@ for (var i = 1; i < 9; i++){
 }
 
 var TANK_WIDTH = 68, TANK_HEIGHT = 68;
-var SHOOT_CD = 300; //shoot cd in millis
+var SHOOT_CD = 200; //shoot cd in millis
 var TANK_HEALTH = 50;
-var TANK_BULLETS = 32;
+var TANK_BULLETS = 64;
 
 /* Tank Constructor
  *
@@ -160,6 +160,26 @@ Tank.prototype.move = function(backwards){
 	this.preventCollisions(tanks);
 }
 
+/* 
+ * Rotates the tank's direction (CCW by default)
+ * @param {boolean} cw - Whether the rotation should be CW
+ */
+Tank.prototype.rotate = function(cw){
+	if (cw){
+		this.dir -= this.angularSpeed;
+	}else{
+		this.dir += this.angularSpeed;
+	}
+	this.dir %=  (2*Math.PI);
+	if (this.dir < 0){
+		this.dir+=2*Math.PI;
+	}
+
+	this.xComp = (Math.cos(this.dir));
+	this.yComp = (-Math.sin(this.dir)); //y plane inverted
+
+}
+
 /*
  * Detect collisions with other tanks and snap them back
  * @param {Array} tanks - An array of tanks to check collisions with
@@ -192,47 +212,6 @@ Tank.prototype.preventCollisions = function(tanks){
 }
 
 /* 
- * Rotates the tank's direction (CCW by default)
- * @param {boolean} cw - Whether the rotation should be CW
- */
-Tank.prototype.rotate = function(cw){
-	if (cw){
-		this.dir -= this.angularSpeed;
-	}else{
-		this.dir += this.angularSpeed;
-	}
-	this.dir %=  2*Math.PI;
-
-	this.xComp = (Math.cos(this.dir));
-	this.yComp = (-Math.sin(this.dir)); //y plane inverted
-
-	/*var line1 = {
-		x1: this.x,
-		y1: this.y,
-		x2: this.xComp+this.x,
-		y2: this.yComp+this.y
-	};
-
-	var line2 = {
-		x1: 0,
-		y1: 0,
-		x2: 1000,
-		y2: 0
-	};
-	console.log("=== HORZ LINE ===");
-	console.log(getLinesIntercept(line1, line2));
-	line2 = {
-		x1: 0,
-		y1: 0,
-		x2: 0,
-		y2: 1000
-	};
-	console.log("=== VERT LINE ===");
-	console.log(getLinesIntercept(line1, line2));*/
-}
-
-
-/* 
  * Shoots a bullet from the tank's origin in dir
  */
 Tank.prototype.shoot = function () {
@@ -241,7 +220,7 @@ Tank.prototype.shoot = function () {
         if ((now - this.lastShoot) >= SHOOT_CD) {
             this.bullets--;
             this.lastShoot = now;
-            new Bullet(this.id, this.x, this.y, 10, this.dir);
+            new Bullet(this.id, this.x, this.y, 12, this.dir);
         }
     }
 }
@@ -290,9 +269,9 @@ Tank.prototype.render = function(ctx){
 	});
     ctx.restore(); //restore normal xy coordinate plane
 	ctx.fillText(this.name, this.x, this.y-img.naturalHeight/2-16);
-    this.drawHitbox(ctx); //TODO: ? toggle hitbox rendering
+    //this.drawHitbox(ctx); //TODO: ? toggle hitbox rendering
     if (this.neuralNetwork) { //TODO: toggle neural network rendering
-       // this.neuralNetwork.render(ctx); // Draw Neural Network to Screen for Debug
+    	//this.neuralNetwork.render(ctx); // Draw Neural Network to Screen for Debug
     }
 }
 

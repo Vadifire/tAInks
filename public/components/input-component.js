@@ -43,11 +43,35 @@ InputComponent.prototype.readInput = function(){
 *                                                           *
 *************************************************************/
 
-/* This component is for testing only - returns random number beween 0 and 1 */
+/* This component is mainly for testing - returns random number beween 0 and 1 */
 function RandomComponent(x, y, image){InputComponent.call(this,x,y,image)};
 RandomComponent.prototype = Object.create(InputComponent.prototype);
 RandomComponent.prototype.readInput = function(){
 	return Math.random();
+}
+
+/* Component that reprsents tank direction */
+function DirComponent(x, y, image){InputComponent.call(this,x,y,image)};
+DirComponent.prototype = Object.create(InputComponent.prototype);
+DirComponent.prototype.readInput = function(){
+    console.log(this.tank.dir);
+	return (this.tank.dir)/(2*Math.PI);
+}
+
+/* Component that reprsents tank direction */
+function xComponent(x, y, image){InputComponent.call(this,x,y,image)};
+xComponent.prototype = Object.create(InputComponent.prototype);
+xComponent.prototype.readInput = function(){
+    console.log(this.tank.dir);
+	return (this.tank.x / ARENA_WIDTH);
+}
+
+/* Component that reprsents tank direction */
+function yComponent(x, y, image){InputComponent.call(this,x,y,image)};
+yComponent.prototype = Object.create(InputComponent.prototype);
+yComponent.prototype.readInput = function(){
+    console.log(this.tank.dir);
+	return (this.tank.y / ARENA_HEIGHT);
 }
 
 /* Component that measures distance to nearest tank down a line */
@@ -70,7 +94,7 @@ TankSensorComponent.prototype.readInput = function () {
     rotateLineAroundEntity(line, this.tank);
     this.line = line;
 
-    var ret = -1;
+    var ret = 0;
     tanks.forEach(function (tank) { //Check for collisions with every tank
         if (tank.id !== this.tank.id) { //dont check for self-collisions
             if (tank.lines && doesLineIntersectEntity(line, tank)) {

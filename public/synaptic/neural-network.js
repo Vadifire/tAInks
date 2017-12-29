@@ -32,7 +32,7 @@ function NeuralNetwork(tank) {
 		}
     }, this);
     this.tankId = tank.id;
-	this.network = this.constructRandomNetwork(1,2);
+	this.network = this.constructRandomNetwork(2,4);
 	this.count = 0;
     console.log(this.network);
 }
@@ -96,7 +96,7 @@ NeuralNetwork.prototype.act = function(){
     
 	//calculate outputs and perform actions
 	if (this.count === 0){
-		this.count = TARGET_FPS/2; //calculate new action every half-second
+		this.count = TARGET_FPS/5; //calculate new action every 200ms
 		this.outputValues = this.calculateOutputs(inputValues, ctx);
 	}
 	this.count--;
@@ -237,7 +237,7 @@ NeuralNetwork.prototype.render = function (ctx) {
         for (var layer = 0; layer < this.values.length; layer++) {
             for (var n = 0; n < this.values[layer].length; n++) {
                 var val = Math.round(this.values[layer][n] * 100) / 100; //Round to the nearest hundredth
-                ctx.fillText(val, x + layer*48, y + n * 64);
+                ctx.fillText(val, x + layer*40, y + n * 40);
             }
         }
     }
