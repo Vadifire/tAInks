@@ -157,6 +157,9 @@ function getLinesForEntity(entity){
 
     return lines;
 }
+function setLinesForEntity(entity){
+    entity.lines = getLinesForEntity(entity);
+}
 
 /*
  * Rotates a line around the origin of an 'entity'

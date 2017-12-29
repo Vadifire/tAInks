@@ -50,7 +50,8 @@ function Tank(id, x, y, speed, control){
 	this.frame = 0; //current animation frame
 	this.lastShoot =  0;
     this.damageDone = 0;
-    this.bullets = TANK_BULLETS;
+	this.bullets = TANK_BULLETS;
+	this.selected = false; // (controls hitbox rendering and selection)
 	if (control)
 		this.name = 'Player ' + id; //assume we're a player
 	else{
@@ -98,15 +99,9 @@ Tank.prototype.attachComponents = function(components){
 }
 
 /* 
-function getCursorPosition(canvas, event) {
-    var rect = canvas.getBoundingClientRect();
-    var x = event.clientX - rect.left;
-    var y = event.clientY - rect.top;
-    console.log("x: " + x + " y: " + y);
-}
  * @param {number} damage - the damage to inflict to this tank
  */
-Tank.prototype.dealDamage = function(damage){
+Tank.prototype.takeDamage = function(damage){
 	this.health -= damage;
 	if (this.health <= 0){ //die
         console.log('Did ' + this.damageDone + ' dmg before dying.');
@@ -222,7 +217,8 @@ Tank.prototype.shoot = function () {
             this.lastShoot = now;
             new Bullet(this.id, this.x, this.y, 12, this.dir);
         }
-    }
+	}
+	console.log(this.x+", "+this.y);
 }
 
 
@@ -250,7 +246,7 @@ Tank.prototype.update = function (Keys) {
 	}else if (this.neuralNetwork){ // AI powered by Neural Network
 		this.neuralNetwork.act();
     }
-    this.lines = getLinesForEntity(this);
+    setLinesForEntity(this);
 }
 
 /* 
@@ -269,10 +265,13 @@ Tank.prototype.render = function(ctx){
 	});
     ctx.restore(); //restore normal xy coordinate plane
 	ctx.fillText(this.name, this.x, this.y-img.naturalHeight/2-16);
-    //this.drawHitbox(ctx); //TODO: ? toggle hitbox rendering
-    if (this.neuralNetwork) { //TODO: toggle neural network rendering
-    	//this.neuralNetwork.render(ctx); // Draw Neural Network to Screen for Debug
-    }
+	if (this.selected){
+		this.drawHitbox(ctx);
+		if (this.neuralNetwork) { //TODO: toggle neural network rendering (?)
+			//this.neuralNetwork.render(ctx); // Draw Neural Network to Screen for Debug
+		}
+	}
+
 }
 
 /* 

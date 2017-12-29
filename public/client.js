@@ -30,7 +30,7 @@ var bullets = new Map(); //Maps bullet ids to bullet obj
 
 var playerTank = new Tank(0, 100, 400, 3, true);
 //Scatter AI tanks
-for (var i = 0; i < 5; i++){ //12
+for (var i = 0; i < 0; i++){ //12
     //var ai = new Tank(i + 1, 200 + 200 * (i % 4) + 30 * (i % 8), 160 + Math.floor(i / 4) * 220, 3, false);
     var ai = new Tank(i + 1, 10+Math.random()*652, 10+Math.random()*358, 3, false);
     ai.attachComponents([new TankSensorComponent(0, -96, Math.PI / 2),
@@ -41,7 +41,7 @@ for (var i = 0; i < 5; i++){ //12
 	tanks.set(ai.id, ai);
 }
 //Add Player to Map
-//tanks.set(playerTank.id, playerTank);
+tanks.set(playerTank.id, playerTank);
 var generation = 1;
 console.log("CURRENT GENERATION: "+generation);
 
@@ -127,7 +127,7 @@ function update() {
     });
 
     if (tanks.size <= 1) { /* one tank left -> winner decided, end game */
-        processGameEnd();
+        //processGameEnd();
     }
 }
 

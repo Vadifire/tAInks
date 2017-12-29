@@ -41,7 +41,7 @@ function Bullet(ownerID, x, y, speed, dir){
 Bullet.prototype.update = function(){
 	this.x += this.speed*this.xComp;
 	this.y += this.speed*this.yComp;
-    this.lines = getLinesForEntity(this);
+    setLinesForEntity(this);
 	this.hitDetect(tanks); // detect collision with 'client.js'.tanks
 
 	/* if bullet leaves arena */
@@ -72,7 +72,7 @@ Bullet.prototype.hitDetect = function(tanks){
 	tanks.forEach(function(tank){
 		if (tank.id !== this.ownerID){ //not our owner
             if (doesEntityIntersectEntity(this, tank)) {
-				tank.dealDamage(this.damage);
+				tank.takeDamage(this.damage);
 				var owner = tanks.get(this.ownerID);
                 if (owner) {
                     owner.damageDone += this.damage; //increase owner's damage done
