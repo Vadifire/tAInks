@@ -66,9 +66,7 @@ console.log("Server started on port "+port+".");
 
 /* Listen to packets from Clients */
 io.sockets.on('connection', function(socket){
-
 	//Handle disconnection
 	socket.on('disconnect', function(){
-		console.log('disconnected: '+socket.id);
 	});
 });

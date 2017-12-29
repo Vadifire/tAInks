@@ -29,7 +29,7 @@ module.exports = {
 		}
 
 		//Username / Password too short
-		if (person.username.length == 0 || person.password.length < 6){
+		if (person.username.length == 0 || person.password.length < 5){
 			res.status(406); //'Not Acceptable'
 			console.log("Player username/password too short");
 			res.end();
@@ -62,7 +62,6 @@ module.exports = {
 			} else if (!failed) {
 				console.log('Player Registered');
 				res.status(201); //'Created'
-				res.end();
 			}
 		});
 	},
@@ -81,7 +80,7 @@ module.exports = {
 						if (docs[i].password === pass){
 							console.log("Login Accepted");
 							res.status(200); //'OK'
-							res.end(JSON.stringify(docs[i]));
+							res.write(JSON.stringify(docs[i]));
 							return;
 						}else{
 							console.log("Incorrect Password");
@@ -93,6 +92,7 @@ module.exports = {
 				}
 				console.log("Unknown User");
 				res.status(401); //'Unauthorized'
+				res.end();
 			}
 		});
 	},
