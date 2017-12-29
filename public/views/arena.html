@@ -10,10 +10,11 @@
 	</div>
 	<div id="arena-footer">
 		<div class="col-xs-12 text-center">
-			<button id="arena-back-button" class="btn btn-danger"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back to Login</button>
+			<button id="logout-button" class="btn btn-danger"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Logout</button>
 		</div>
 	</div>
 </div>
 <script>
 $('#arena-back-button').click(function(){ viewmngr.setView(VIEWS.MAIN_MENU); });
+$('#logout-button').click(function(){ viewmngr.setView(VIEWS.LOGIN); });
 </script>
