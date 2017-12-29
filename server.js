@@ -17,6 +17,7 @@ var io = require('socket.io')(serv,{}); //Packet sending module
 const bodyParser= require('body-parser'); //Used for MongoDB parsing
 var db = require('./db'); //Interface with MongoDB
 var player = require('./models/player'); //Import player model
+var tank = require('./models/tank'); //Import tank model
 var sass = require('node-sass');//Node SCSS
 var fs = require('fs'); //Filesystem
 
@@ -46,10 +47,19 @@ app.use('/public', express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-/* API for interfacing with DB for Players */
-app.post('/players', player.createPlayers);
-app.get('/players', player.seeResults);
+/*
+ * TODO: learn more about Database posting / fetching. 
+ * For instance, we don't want player/tank info exposed to public.
+ */
+
+/* MongoDB API for Players */
+app.post('/players', player.createPlayer);
+app.get('/players', player.seePlayers);
 app.delete('/players/:id', player.delete);
+/* MongoDB API for Tanks */
+app.post('/tanks', tank.createTank);
+app.get('/tanks', tank.seeTanks);
+app.delete('/tanks/:id', tank.delete);
 
 /* Start Server */
 var port = process.env.PORT || 3000;  //default to port 3000

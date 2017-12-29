@@ -8,10 +8,15 @@
 
 var mongoose = require('mongoose');  
 var Player = new mongoose.Schema({
-	username: { type: String }
+	username: { type: String },
+});
+
+var Tank = new mongoose.Schema({
+	name: { type: String },
 });
 
 mongoose.model('Player', Player);  
+mongoose.model('Tank', Tank);  
 	
 mongoose.connect('mongodb://localhost/', function (err, db){
 	if (err){

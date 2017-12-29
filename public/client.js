@@ -53,7 +53,7 @@ $(function() {
 	gameLoop(); //Start Game Loop
 });
 
-/* Lets Browser Efficiently Manage Animations */
+/* Lets Browser Efficiently Manage Frames */
 window.requestAnimFrame = (function () {
 	return  window.requestAnimationFrame || 
 	window.webkitRequestAnimationFrame   || 

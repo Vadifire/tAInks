@@ -1,5 +1,5 @@
 /*
- * Player Object
+ * Server-Sided Player Object
  *
  * Authors:
  *	@author Cedric Debelle
@@ -12,10 +12,9 @@ require('mongoose').model('Player');
 var mongoose = require('mongoose');
 var Player = mongoose.model('Player');
 
-
 /* Exports for interfacing with MongoDB */
 module.exports = {
-	createPlayers: function (req, res) {
+	createPlayer: function (req, res) {
 		var person = req.body;
 		new Player({ username: person.username }).save(function (err) {
 			if (err) {
@@ -27,7 +26,7 @@ module.exports = {
 			}
 		});
 	},
-	seeResults: function (req, res, next) {
+	seePlayers: function (req, res, next) {
 		Player.find({}, function (err, docs) {
 			if (err) {
 				res.status(504);
