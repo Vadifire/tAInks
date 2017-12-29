@@ -1,5 +1,5 @@
 /*
- * Server-Sided Player Object
+ * Server-Sided Tank Object
  *
  * Authors:
  *	@author Cedric Debelle
@@ -7,33 +7,33 @@
  */
 
 
-/* Define Player based on MongoDB Model */
-require('mongoose').model('Player');
+/* Define Tank based on MongoDB Model */
+require('mongoose').model('Tank');
 var mongoose = require('mongoose');
-var Player = mongoose.model('Player');
+var Tank = mongoose.model('Tank');
 
 /* Exports for interfacing with MongoDB */
 module.exports = {
-	createPlayer: function (req, res) {
-		var person = req.body;
-		new Player({ username: person.username, password: person.password }).save(function (err) {
+	createTank: function (req, res) {
+		var tank = req.body;
+		new Tank({ name: tank.name }).save(function (err) {
 			if (err) {
 				res.status(504);
 				res.end(err);
 			} else {
-				console.log('player saved');
+				console.log('tank saved');
 				res.end();
 			}
 		});
 	},
-	seePlayers: function (req, res, next) {
-		Player.find({}, function (err, docs) {
+	seeTanks: function (req, res, next) {
+		Tank.find({}, function (err, docs) {
 			if (err) {
 				res.status(504);
 				res.end(err);
 			} else {
 				for (var i = 0; i < docs.length; i++) {
-					console.log('player:', docs[i].username);
+					console.log('tank:', docs[i].name);
 				}
 				res.end(JSON.stringify(docs));
 			}
@@ -41,7 +41,7 @@ module.exports = {
 	},
 	delete: function( req, res, next) {
 		console.log(req.params.id);
-		Player.find({ _id: req.params.id}, function(err) {
+		Tank.find({ _id: req.params.id}, function(err) {
 			if(err) {
 				req.status(504);
 				req.end();

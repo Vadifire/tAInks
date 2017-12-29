@@ -9,10 +9,11 @@
 var mongoose = require('mongoose');  
 var Player = new mongoose.Schema({
 	username: { type: String },
+	password: { type: String } 
 });
 
 var Tank = new mongoose.Schema({
-	name: { type: String },
+	name: { type: String }
 });
 
 mongoose.model('Player', Player);  

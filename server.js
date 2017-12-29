@@ -23,7 +23,7 @@ var fs = require('fs'); //Filesystem
 
 /* Routes */
 app.get('/',function(req, res) { //Respond with index.html to HTTP get request
-	res.sendFile(path.join(__dirname,"public/index.html"));
+	res.sendFile(path.join(__dirname,"public/views/index.html"));
 });
 
 /* Build SCSS into CSS */
