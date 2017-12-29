@@ -218,7 +218,6 @@ Tank.prototype.shoot = function () {
             new Bullet(this.id, this.x, this.y, 12, this.dir);
         }
 	}
-	console.log(this.x+", "+this.y);
 }
 
 
