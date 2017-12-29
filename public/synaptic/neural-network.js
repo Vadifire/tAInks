@@ -151,9 +151,12 @@ NeuralNetwork.prototype.calculateOutputs = function(inputs){
  * @param {number} mutationStrength: how much to mutate weights and biases
  *  mutationStrength must be between 0 and 1. A mutation strength of 0
  *  signals not to change the NeuralNetwork at all. A strength of 1 signals
- *  to completely randomize the NeuralNetwork
+ *  to completely randomize Neurons
+ * @param {number} mutationRate: the likelihood that any given neuron
+ *  within the network will be mutated. Must be between 0 and 1.
+ *
  */
-NeuralNetwork.prototype.mutate = function (mutationStrength) {
+NeuralNetwork.prototype.mutate = function (mutationStrength, mutationRate) {
     var numSynapses = this.network.biases.length; // numLayers - 1
     var stagnation = 1 - mutationStrength; //tendency for things to stay same [0,1]
 
@@ -167,7 +170,9 @@ NeuralNetwork.prototype.mutate = function (mutationStrength) {
             this.network.biases[layer][b] = this.network.biases[layer][b] * mutationStrength + originalNetwork.biases[layer][b] * (stagnation);
             //for all weights or 'rows'
             for (var w = 0; w < originalNetwork.weights[layer].length; w++) {
-                this.network.weights[layer][w][b] = this.network.weights[layer][w][b] * mutationStrength + originalNetwork.weights[layer][w][b] * (stagnation);
+                if (Math.random() < mutationRate){
+                    this.network.weights[layer][w][b] = this.network.weights[layer][w][b] * mutationStrength + originalNetwork.weights[layer][w][b] * (stagnation);
+                }
             }
         }
     }

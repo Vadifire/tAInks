@@ -7,8 +7,6 @@
  *	@author Cedric Debelle
  *	@author Calvin Ellis
  */
- 
-
 
 /* CONSTANTS */
 const TARGET_FPS = 60;
@@ -48,34 +46,6 @@ var generation = 1;
 console.log("CURRENT GENERATION: "+generation);
 
 var viewmngr; //Object in charge of handling views shown to user.
-
-/* Keep Track of Keys Pressed */
-var Keys = {
-	_pressed: {},
-
-	UP: 87,   // W
-	LEFT: 65, // A
-	DOWN: 83, // S
-	RIGHT: 68,// D
-    SPACE: 32, // SPACE
-    NEXT_GEN: 71, // G
-  
-	isDown: function(keyCode) {
-		return this._pressed[keyCode];
-	},
-  
-    onKeydown: function (event) {
-        if (event.keyCode === Keys.NEXT_GEN) {
-            nextGeneration();
-        } else {
-            this._pressed[event.keyCode] = true;
-        }
-	},
-  
-	onKeyup: function(event) {
-		delete this._pressed[event.keyCode];
-	}
-}
 
 /* Document is Ready */
 $(function() { 
@@ -120,7 +90,6 @@ var fps = 0;
 function render(){
 	/* Clear Drawing Area */
 	ctx.clearRect(0,0,ARENA_WIDTH,ARENA_HEIGHT);
-
 
 	/* Draw All Entities In Game*/
 	bullets.forEach(function (bullet) {
@@ -173,15 +142,13 @@ function processGameEnd() {
         deadTanks.set(tankWinner.id, tankWinner); // add last tank to dead tanks
         tanks.delete(tankWinner.id); // remove from active tanks list
     }
-    tanks = evolve(deadTanks, 0.4);
+    tanks = evolve(deadTanks, 0.2, 0.5);
     deadTanks = new Map(); // clear dead tanks
     bullets = new Map(); // clear any stray bullets
     tanks.forEach(function (tank) { //Revive the tanks
         tank.reset();
     });
     generation++; //Upgrade global generation var
-    console.log("CURRENT GENERATION: " + generation);
-    console.log(tanks);
 }
 
 

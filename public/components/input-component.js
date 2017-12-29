@@ -54,7 +54,6 @@ RandomComponent.prototype.readInput = function(){
 function DirComponent(x, y, image){InputComponent.call(this,x,y,image)};
 DirComponent.prototype = Object.create(InputComponent.prototype);
 DirComponent.prototype.readInput = function(){
-    console.log(this.tank.dir);
 	return (this.tank.dir)/(2*Math.PI);
 }
 
@@ -62,7 +61,6 @@ DirComponent.prototype.readInput = function(){
 function xComponent(x, y, image){InputComponent.call(this,x,y,image)};
 xComponent.prototype = Object.create(InputComponent.prototype);
 xComponent.prototype.readInput = function(){
-    console.log(this.tank.dir);
 	return (this.tank.x / ARENA_WIDTH);
 }
 
@@ -70,7 +68,6 @@ xComponent.prototype.readInput = function(){
 function yComponent(x, y, image){InputComponent.call(this,x,y,image)};
 yComponent.prototype = Object.create(InputComponent.prototype);
 yComponent.prototype.readInput = function(){
-    console.log(this.tank.dir);
 	return (this.tank.y / ARENA_HEIGHT);
 }
 

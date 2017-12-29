@@ -76,8 +76,8 @@ Tank.prototype.reset = function() {
         positions to a random valid location (prevent positional bias) */
     /*this.x = this.originalX;
     this.y = this.originalY; */
-    this.x = Math.random() * 1200;
-    this.y = Math.random() * 800;
+    this.x = Math.random() * ARENA_WIDTH;
+    this.y = Math.random() * ARENA_HEIGHT;
 }
 
 /*
