@@ -8,8 +8,11 @@
 
 function clickOnCanvas(event){
 
-    var y = event.clientY-92; //Not sure why this is needed, likely from HTML/css
-    var x = event.clientX;
+    var rect = gameCanvas.getBoundingClientRect();
+
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+    console.log(x+", "+y);
     var maxDist = Math.max(TANK_HEIGHT, TANK_HEIGHT) * .7;
 
     //TODO: rework with collision code
