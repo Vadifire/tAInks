@@ -22,7 +22,7 @@ for (var i = 1; i < 9; i++){
 var TANK_WIDTH = 68, TANK_HEIGHT = 68;
 var SHOOT_CD = 200; //shoot cd in millis
 var TANK_HEALTH = 50;
-var TANK_BULLETS = 64;
+var TANK_BULLETS = 200;
 
 /* Tank Constructor
  *
@@ -104,7 +104,6 @@ Tank.prototype.attachComponents = function(components){
 Tank.prototype.takeDamage = function(damage){
 	this.health -= damage;
 	if (this.health <= 0){ //die
-        console.log('Did ' + this.damageDone + ' dmg before dying.');
         deadTanks.set(this.id, this); /* add us to global list of dead tanks */
         tanks.delete(this.id);
 	}
@@ -301,9 +300,11 @@ Tank.prototype.drawHealth = function(ctx){
  * Draws the Tank's hitbox
  * @param {CanvasRenderingContext2D} ctx - The context to draw to
  */
-Tank.prototype.drawHitbox = function(ctx){
+Tank.prototype.drawHitbox = function (ctx) {
+    ctx.strokeStyle = "#0033FF";
+    ctx.lineWidth = "4";
 	if (this.lines){
-		for (var i = 0 ; i < this.lines.length; i++){
+        for (var i = 0; i < this.lines.length; i++){
 			ctx.beginPath();
 			ctx.moveTo(this.lines[i].x1, this.lines[i].y1);
 			ctx.lineTo(this.lines[i].x2, this.lines[i].y2);

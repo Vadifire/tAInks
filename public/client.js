@@ -142,7 +142,7 @@ function processGameEnd() {
         deadTanks.set(tankWinner.id, tankWinner); // add last tank to dead tanks
         tanks.delete(tankWinner.id); // remove from active tanks list
     }
-    tanks = evolve(deadTanks, 0.2, 0.5);
+    tanks = evolveUnselected(deadTanks, 0.25, 1); //Allow Divine Influence
     deadTanks = new Map(); // clear dead tanks
     bullets = new Map(); // clear any stray bullets
     tanks.forEach(function (tank) { //Revive the tanks

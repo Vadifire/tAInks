@@ -96,7 +96,7 @@ NeuralNetwork.prototype.act = function(){
     
 	//calculate outputs and perform actions
 	if (this.count === 0){
-		this.count = TARGET_FPS/5; //calculate new action every 200ms
+		this.count = TARGET_FPS/4; //calculate new action every 250ms
 		this.outputValues = this.calculateOutputs(inputValues, ctx);
 	}
 	this.count--;
@@ -152,8 +152,8 @@ NeuralNetwork.prototype.calculateOutputs = function(inputs){
  *  mutationStrength must be between 0 and 1. A mutation strength of 0
  *  signals not to change the NeuralNetwork at all. A strength of 1 signals
  *  to completely randomize Neurons
- * @param {number} mutationRate: the likelihood that any given neuron
- *  within the network will be mutated. Must be between 0 and 1.
+ * @param {number} mutationRate: the likelihood that any given weight
+ *  or bias within the network will mutate. Must be between 0 and 1.
  *
  */
 NeuralNetwork.prototype.mutate = function (mutationStrength, mutationRate) {
@@ -170,7 +170,7 @@ NeuralNetwork.prototype.mutate = function (mutationStrength, mutationRate) {
             this.network.biases[layer][b] = this.network.biases[layer][b] * mutationStrength + originalNetwork.biases[layer][b] * (stagnation);
             //for all weights or 'rows'
             for (var w = 0; w < originalNetwork.weights[layer].length; w++) {
-                if (Math.random() < mutationRate){
+                if (Math.random() < mutationRate){ // Check if individual mutation should occur
                     this.network.weights[layer][w][b] = this.network.weights[layer][w][b] * mutationStrength + originalNetwork.weights[layer][w][b] * (stagnation);
                 }
             }
@@ -207,10 +207,11 @@ NeuralNetwork.prototype.crossover = function (n1, n2) {
  * Genetic algorithm intended to evolve fitness of population over time
  *
  * @param {Map <number, Tank>} tankList - List of tanks to evolve
- * @param {number} maxMutation - the amount to mutate the worst tank [0,1]
- * @returns {Map <number, Tank>} new Tank map, but with evolved neural networks
+ * @param {number} maxMutationStrength - the degree to mutate the worst tank [0,1]
+ * @param {number} maxMutationRate - the rate at which weights/biases mutate in the worst tank [0,1]
+ * @returns {Map <number, Tank>} new map based on original tanks, but with evolved neural networks
  */
-function evolve(tankList, maxMutation) {
+function evolve(tankList, maxMutationStrength, maxMutationRate) {
     var evolutionArray = Array.from(tankList.values()); // copy original map to array
     var evolvedMap = new Map(); //Map which will return evolved tanks
 
@@ -222,7 +223,8 @@ function evolve(tankList, maxMutation) {
     for (var i = 0; i < totalPop; i++){ //Evolve every tank and add to evolvedMap
         var tank = evolutionArray[i];
         if (tank.neuralNetwork) { //tank is AI controlled
-            tank.neuralNetwork.mutate(maxMutation * (i/maxMutation)); //mutation ~ 1/fitness
+            tank.neuralNetwork.mutate(maxMutationStrength * (i / totalPop - 1),//mutation ~ 1/fitness
+                maxMutationRate * (i / totalPop - 1)); //This may be too conservative, but hopefully sustains growth
         }
         evolvedMap.set(tank.id, tank); // Add potentially modified tank to new map
     }
