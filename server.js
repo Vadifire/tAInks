@@ -17,12 +17,13 @@ var io = require('socket.io')(serv,{}); //Packet sending module
 const bodyParser= require('body-parser'); //Used for MongoDB parsing
 var db = require('./db'); //Interface with MongoDB
 var player = require('./models/player'); //Import player model
+var tank = require('./models/tank'); //Import tank model
 var sass = require('node-sass');//Node SCSS
 var fs = require('fs'); //Filesystem
 
 /* Routes */
 app.get('/',function(req, res) { //Respond with index.html to HTTP get request
-	res.sendFile(path.join(__dirname,"public/index.html"));
+	res.sendFile(path.join(__dirname,"public/views/index.html"));
 });
 
 /* Build SCSS into CSS */
@@ -46,10 +47,17 @@ app.use('/public', express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-/* API for interfacing with DB for Players */
-app.post('/players', player.createPlayers);
-app.get('/players', player.seeResults);
-app.delete('/players/:id', player.delete);
+
+/* MongoDB API for Players */
+app.post('/players', player.registerPlayer);
+app.get('/players', player.loginPlayer);
+//app.delete('/players/:id', player.delete);
+
+/* MongoDB API for Tanks */
+app.post('/tanks', tank.createTank);
+app.get('/tanks', tank.seeTanks);
+//app.delete('/tanks/:id', tank.delete);
+
 
 /* Start Server */
 var port = process.env.PORT || 3000;  //default to port 3000
@@ -58,9 +66,7 @@ console.log("Server started on port "+port+".");
 
 /* Listen to packets from Clients */
 io.sockets.on('connection', function(socket){
-
 	//Handle disconnection
 	socket.on('disconnect', function(){
-		console.log('disconnected: '+socket.id);
 	});
 });

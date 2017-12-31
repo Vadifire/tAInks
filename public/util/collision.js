@@ -23,7 +23,6 @@
  * 
  */
 function getLinesIntercept(line1, line2){
-
     // Constants:
     // A = y2-y1
     // B = x1-x2
@@ -45,11 +44,10 @@ function getLinesIntercept(line1, line2){
         return null; // no intersection (lines in parallel)
     } else{
         var C1 = A1 * line1.x1 + B1 * line1.y1;
-        var C2 = A2 * line2.x1 + B1 * line2.y1;
+        var C2 = A2 * line2.x1 + B2 * line2.y1;
         var x = (B2*C1 - B1*C2)/det;
         var y = (A1*C2 - A2*C1)/det;
 
-        // This is probably terrible (then again, performance impact insignificant)
         if (x > Math.max(line1.x1, line1.x2) || x > Math.max(line2.x1, line2.x2) ||
             x < Math.min(line1.x1, line1.x2) || x < Math.min(line2.x1, line2.x2) ||
             y > Math.max(line1.y1, line1.y2) || y > Math.max(line2.y1, line2.y2) ||
@@ -57,6 +55,7 @@ function getLinesIntercept(line1, line2){
              return null; //Not within both lines
         }
 
+        //console.log(x+" ,"+y);
         //Return point object representing intersection
         return {
             x: x,
@@ -85,6 +84,27 @@ function doesLineIntersectEntity(line, entity){
     return false;
 }
 
+
+/*
+ * Calculates the intersection point between line and rectangle-based entity
+ *
+ * @param {Object} entity1
+ * @param {Object} entity2
+ *  Entities must have already invoked getLinesForEntity()
+ * 
+ * @returns {boolean} returns whether two entities make contact
+ */
+function doesEntityIntersectEntity(entity1, entity2) {
+    if (!entity1.lines || !entity2.lines) {
+        return false;   
+    }
+    for (var i = 0; i < entity1.lines.length; i++) {
+        if (doesLineIntersectEntity(entity1.lines[i], entity2)) {
+            return true;
+        }
+    }
+    return false;
+}
 
 /*
  * Calculates the bounding lines of a potentially rotated 
@@ -132,19 +152,37 @@ function getLinesForEntity(entity){
 
     //Rotate Points around Entity origin
     for (var i = 0 ; i < lines.length; i++){
-        var x1 = lines[i].x1 * entity.xComp - lines[i].y1 * entity.yComp;
-        var y1 = lines[i].y1 * entity.xComp + lines[i].x1 * entity.yComp;
-
-        var x2 = lines[i].x2 * entity.xComp - lines[i].y2 * entity.yComp;
-        var y2 = lines[i].y2 * entity.xComp + lines[i].x2 * entity.yComp;
-
-        //Translate points to be correctly located on screen
-        lines[i].x1=entity.x+x1;
-        lines[i].x2=entity.x+x2;
-        lines[i].y1=entity.y+y1;
-        lines[i].y2=entity.y+y2;
-
+        rotateLineAroundEntity(lines[i], entity);
     }
 
     return lines;
+}
+function setLinesForEntity(entity){
+    entity.lines = getLinesForEntity(entity);
+}
+
+/*
+ * Rotates a line around the origin of an 'entity'
+ *
+ * @param {Object} line
+ *  These lines must have {x1, y1, x2, y2}
+ * @param {Object} entity
+ *  Entities must have {x, y, width, height, xComp, yComp}
+ * 
+ * @returns {Object} - The rotated line
+ */
+
+function rotateLineAroundEntity(line, entity){
+    //Rotate Points around Entity origin
+    var x1 = line.x1 * entity.xComp - line.y1 * entity.yComp;
+    var y1 = line.y1 * entity.xComp + line.x1 * entity.yComp;
+
+    var x2 = line.x2 * entity.xComp - line.y2 * entity.yComp;
+    var y2 = line.y2 * entity.xComp + line.x2 * entity.yComp;
+
+    //Translate points to be correctly located on screen
+    line.x1=entity.x+x1;
+    line.x2=entity.x+x2;
+    line.y1=entity.y+y1;
+    line.y2=entity.y+y2;
 }

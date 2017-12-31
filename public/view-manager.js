@@ -61,6 +61,7 @@ ViewManager.prototype.setView = function(view=VIEWS.LOGIN){
 				}); 
 				gameCanvas.addEventListener('keyup', function(event) { Keys.onKeyup(event); }, false);
 				gameCanvas.addEventListener('keydown', function(event) { Keys.onKeydown(event); }, false);
+				gameCanvas.addEventListener('click', clickOnCanvas, false);
 				break;
 
 			default:

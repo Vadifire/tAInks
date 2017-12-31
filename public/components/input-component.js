@@ -43,31 +43,63 @@ InputComponent.prototype.readInput = function(){
 *                                                           *
 *************************************************************/
 
-/* This component is for testing only - returns random number beween 0 and 1 */
+/* This component is mainly for testing - returns random number beween 0 and 1 */
 function RandomComponent(x, y, image){InputComponent.call(this,x,y,image)};
 RandomComponent.prototype = Object.create(InputComponent.prototype);
 RandomComponent.prototype.readInput = function(){
 	return Math.random();
 }
 
-/* Component that measures distance to nearest bullet down a line */
-function BulletSensorComponent(x, y, image, dir) {
-    InputComponent.call(this, x, y, image);
-    this.dir = dir; // relative to tank
-}
-BulletSensorComponent.prototype = Object.create(InputComponent.prototype);
-BulletSensorComponent.prototype.readInput = function () {
-    var angle = this.dir + tank.dir; // capture absolute angle
+/* Component that reprsents tank direction */
+function DirComponent(x, y, image){InputComponent.call(this,x,y,image)};
+DirComponent.prototype = Object.create(InputComponent.prototype);
+DirComponent.prototype.readInput = function(){
+	return (this.tank.dir)/(2*Math.PI);
 }
 
+/* Component that reprsents tank direction */
+function xComponent(x, y, image){InputComponent.call(this,x,y,image)};
+xComponent.prototype = Object.create(InputComponent.prototype);
+xComponent.prototype.readInput = function(){
+	return (this.tank.x / ARENA_WIDTH);
+}
+
+/* Component that reprsents tank direction */
+function yComponent(x, y, image){InputComponent.call(this,x,y,image)};
+yComponent.prototype = Object.create(InputComponent.prototype);
+yComponent.prototype.readInput = function(){
+	return (this.tank.y / ARENA_HEIGHT);
+}
+
+/* LASER IMAGES */
+var laserImage1 = new Image();
+laserImage1.src = 'public/img/laser1.png';
+var laserImage2 = new Image();
+laserImage2.src = 'public/img/laser2.png';
 
 /* Component that measures distance to nearest tank down a line */
-function TankSensorComponent(x, y, image, dir) {
+function SensorComponent(x, y, dir, map, image) {
     InputComponent.call(this, x, y, image);
     this.dir = dir; // relative to tank
+    this.entityMap = map;
 }
-TankSensorComponent.prototype = Object.create(InputComponent.prototype);
-TankSensorComponent.prototype.readInput = function () {
-    var angle = this.dir + tank.dir; // capture absolute angle
+SensorComponent.prototype = Object.create(InputComponent.prototype);
+SensorComponent.prototype.readInput = function () {
+    var angle = this.tank.dir + this.dir;
+    var line = {
+        x1: this.xOffset - 64,
+        y1: this.yOffset,
+        x2: this.xOffset + 64,
+        y2: this.yOffset,
+    }
+    rotateLineAroundEntity(line, this.tank);
+    this.line = line;
+    var ret = 0;
+    this.entityMap.forEach(function (e) { //Check for collisions with every ammo pack
+        if (e.lines && doesLineIntersectEntity(line, e)) {
+            ret = 1;
+            return;
+        }
+    }, this);
+    return ret;
 }
-

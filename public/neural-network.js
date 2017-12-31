@@ -19,7 +19,8 @@
  *
  * @param {Tank} tank - the owner of this network
  */
-function NeuralNetwork(tank){
+function NeuralNetwork(tank) {
+    this.draw = true; // TOGGLE
 	this.inputs = [];
 	this.outputs = [];
 	//Assemble IO components
@@ -29,8 +30,9 @@ function NeuralNetwork(tank){
 		} else if (comp instanceof OutputComponent){
 			this.outputs.push(comp);
 		}
-	}, this);
-	this.network = this.constructRandomNetwork(1,3);
+    }, this);
+    this.tankId = tank.id;
+	this.network = this.constructRandomNetwork(2,4);
 	this.count = 0;
     console.log(this.network);
 }
@@ -40,13 +42,13 @@ function NeuralNetwork(tank){
  *
  * @param {number} hLayers - Number of hidden layers
  * @param {number} hNeurons - Number of hidden neurons/layer
- * @returns {Object} A network containing weight and bias
+ * @returns {Object} A network containing and bias
  * matricies for every layer, initialized with random values
  */
 NeuralNetwork.prototype.constructRandomNetwork = function(hLayers, hNeurons){
 	var layerSizes = [];
 	var weights = [];
-	var biases = [];
+    var biases = [];
 
 	layerSizes.push(this.inputs.length);
 	for (var h = 0; h < hLayers; h++){
@@ -61,18 +63,19 @@ NeuralNetwork.prototype.constructRandomNetwork = function(hLayers, hNeurons){
 		for (var n1 = 0; n1 < layerSizes[synapse]; n1++){ //for every firing neuron
 			weights[synapse].push([]);
 			for (var n2 = 0; n2 < layerSizes[synapse+1]; n2++){ //for every sending neuron
-				weights[synapse][n1].push(Math.random()*2-1);
+                weights[synapse][n1].push(Math.random()*2-1);
 			}
 		} 
 		/* populate biases */
 		biases.push([]);
 		for (var n2 = 0; n2 < layerSizes[synapse+1]; n2++){
-			biases[synapse][n2] = (Math.random()*2-1);
+            biases[synapse][n2] = (Math.random()*2-1);
 		}
 	}
 	var network = new Object();
 	network.weights = weights;
-	network.biases = biases;
+    network.biases = biases;
+    this.values = []; //Values for rendering
 	return network;
 }
 
@@ -86,16 +89,15 @@ NeuralNetwork.prototype.act = function(){
 	}
 
 	//read all input values
-	var inputValues = [];
-	this.inputs.forEach(function(input){
+	inputValues = [];
+    this.inputs.forEach(function (input) {
 		inputValues.push(input.readInput());
-	});
-	
+    });
+    
 	//calculate outputs and perform actions
 	if (this.count === 0){
-		this.count = TARGET_FPS/2; //calculate new action every half-second
-		this.outputValues = this.calculateOutputs(inputValues);
-		//this.mutate(0.1); //No mutations once born
+		this.count = TARGET_FPS/4; //calculate new action every 250ms
+		this.outputValues = this.calculateOutputs(inputValues, ctx);
 	}
 	this.count--;
 	for (var i = 0; i < this.outputs.length; i++){
@@ -121,8 +123,8 @@ NeuralNetwork.prototype.calculateOutputs = function(inputs){
 	var numSynapses = this.network.biases.length; // numLayers - 1
 
 	var inputValues = inputs;
-	var outputValues;
-
+    var outputValues;
+    this.values = [];
 	/* Iterate across all hidden layers */
 	for (var syn = 0; syn < numSynapses; syn++){
 		outputValues = []; //clear current output values
@@ -135,9 +137,10 @@ NeuralNetwork.prototype.calculateOutputs = function(inputs){
 			}
 			outputValues[n2] = sigmoid(outputValues[n2]); //squish range to (0,1)
 		}
-
+        this.values.push(inputValues);
 		inputValues = outputValues.slice(); //Next inputs are the newly calculated outputs
-	}
+    }
+    this.values.push(outputValues);
 	//console.log(outputValues);
 	return outputValues;
 }
@@ -148,24 +151,34 @@ NeuralNetwork.prototype.calculateOutputs = function(inputs){
  * @param {number} mutationStrength: how much to mutate weights and biases
  *  mutationStrength must be between 0 and 1. A mutation strength of 0
  *  signals not to change the NeuralNetwork at all. A strength of 1 signals
- *  to completely randomize the NeuralNetwork
+ *  to completely randomize Neurons
+ * @param {number} mutationRate: the likelihood that any given weight
+ *  or bias within the network will mutate. Must be between 0 and 1.
+ *
  */
-NeuralNetwork.prototype.mutate = function (mutationStrength) {
-
+NeuralNetwork.prototype.mutate = function (mutationStrength, mutationRate) {
     var numSynapses = this.network.biases.length; // numLayers - 1
     var stagnation = 1 - mutationStrength; //tendency for things to stay same [0,1]
 
     /* copy original network */
     originalNetwork = JSON.parse(JSON.stringify(this.network));
-    this.network = this.constructRandomNetwork(numSynapses - 1, this.network.biases[1].length);
+    this.network = this.constructRandomNetwork(numSynapses - 1, this.network.biases[0].length);
 
     for (var layer = 0; layer < numSynapses; layer++) {
         //for all biases or 'cols'
         for (var b = 0; b < originalNetwork.biases[layer].length; b++) {
-            this.network.biases[layer][b] = this.network.biases[layer][b] * mutationStrength + originalNetwork.biases[layer][b] * (stagnation);
+            if (Math.random() < mutationRate) { // Check if individual mutation should occur
+                this.network.biases[layer][b] = this.network.biases[layer][b] * mutationStrength + originalNetwork.biases[layer][b] * (stagnation);
+            } else {
+                this.network.biases[layer][b] = originalNetwork.biases[layer][b];
+            }
             //for all weights or 'rows'
             for (var w = 0; w < originalNetwork.weights[layer].length; w++) {
-                this.network.weights[layer][w][b] = this.network.weights[layer][w][b] * mutationStrength + originalNetwork.weights[layer][w][b] * (stagnation);
+                if (Math.random() < mutationRate) { // Check if individual mutation should occur
+                    this.network.weights[layer][w][b] = this.network.weights[layer][w][b] * mutationStrength + originalNetwork.weights[layer][w][b] * (stagnation);
+                } else {
+                    this.network.weights[layer][w][b] = originalNetwork.weights[layer][w][b];
+                }
             }
         }
     }
@@ -200,10 +213,11 @@ NeuralNetwork.prototype.crossover = function (n1, n2) {
  * Genetic algorithm intended to evolve fitness of population over time
  *
  * @param {Map <number, Tank>} tankList - List of tanks to evolve
- * @param {Number} maxMutation - the amount to mutate the worst tank [0,1]
- * @returns {Map <number, Tank>} new Tank map, but with evolved neural networks
+ * @param {number} maxMutationStrength - the degree to mutate the worst tank [0,1]
+ * @param {number} maxMutationRate - the rate at which weights/biases mutate in the worst tank [0,1]
+ * @returns {Map <number, Tank>} new map based on original tanks, but with evolved neural networks
  */
-function evolve(tankList, maxMutation) {
+function evolve(tankList, maxMutationStrength, maxMutationRate) {
     var evolutionArray = Array.from(tankList.values()); // copy original map to array
     var evolvedMap = new Map(); //Map which will return evolved tanks
 
@@ -215,7 +229,8 @@ function evolve(tankList, maxMutation) {
     for (var i = 0; i < totalPop; i++){ //Evolve every tank and add to evolvedMap
         var tank = evolutionArray[i];
         if (tank.neuralNetwork) { //tank is AI controlled
-            tank.neuralNetwork.mutate(maxMutation * (i/maxMutation)); //mutation ~ 1/fitness
+            tank.neuralNetwork.mutate(maxMutationStrength * (i / (totalPop - 1) ),// mutation ~ 1/fitness
+                maxMutationRate * (i / (totalPop - 1) )); // this may be too conservative, but hopefully sustains growth
         }
         evolvedMap.set(tank.id, tank); // Add potentially modified tank to new map
     }
@@ -223,3 +238,20 @@ function evolve(tankList, maxMutation) {
     return evolvedMap;
 }
 
+/*
+ * Render the Neural Network
+ * @param {Object} ctx - The context to draw to
+ */
+NeuralNetwork.prototype.render = function (ctx) {
+    var x = tanks.get(this.tankId).x;
+    var y = tanks.get(this.tankId).y;
+
+    if (this.values) {
+        for (var layer = 0; layer < this.values.length; layer++) {
+            for (var n = 0; n < this.values[layer].length; n++) {
+                var val = Math.round(this.values[layer][n] * 100) / 100; //Round to the nearest hundredth
+                ctx.fillText(val, x + layer*40, y + n * 40);
+            }
+        }
+    }
+}

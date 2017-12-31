@@ -20,8 +20,9 @@ for (var i = 1; i < 9; i++){
 }
 
 var TANK_WIDTH = 68, TANK_HEIGHT = 68;
-var SHOOT_CD = 300; //shoot cd in millis
+var SHOOT_CD = 200; //shoot cd in millis
 var TANK_HEALTH = 50;
+var TANK_BULLETS = 64;
 
 /* Tank Constructor
  *
@@ -48,12 +49,15 @@ function Tank(id, x, y, speed, control){
 	this.rotate(0); // This is done to initialize x and y comps
 	this.frame = 0; //current animation frame
 	this.lastShoot =  0;
-	this.damageDone = 0;
+    this.damageDone = 0;
+	this.bullets = TANK_BULLETS;
+	this.selected = false; // (controls hitbox rendering and selection)
 	if (control)
 		this.name = 'Player ' + id; //assume we're a player
 	else{
 		this.name = 'AI ' + id; // if we don't control, assume AI for now
 	}
+	setLinesForEntity(this);
 }
 
 /*
@@ -64,13 +68,18 @@ Tank.prototype.reset = function() {
     this.damageDone = 0;
     this.health = TANK_HEALTH;
     this.dir = Math.PI / 2;
+    this.xComp = (Math.cos(this.dir));
+    this.yComp = (-Math.sin(this.dir)); //y plane inverted
     this.frame = 0;
+    this.bullets = TANK_BULLETS;
     /*  Position reset should be rethought. With current
         genetic algorithm implementation, it would make more sense
         to come up with a list of valid positions and reset tank
         positions to a random valid location (prevent positional bias) */
-    this.x = this.originalX;
-    this.y = this.originalY; 
+    /*this.x = this.originalX;
+    this.y = this.originalY; */
+    this.x = Math.random() * ARENA_WIDTH;
+    this.y = Math.random() * ARENA_HEIGHT;
 }
 
 /*
@@ -93,13 +102,19 @@ Tank.prototype.attachComponents = function(components){
 /* 
  * @param {number} damage - the damage to inflict to this tank
  */
-Tank.prototype.dealDamage = function(damage){
+Tank.prototype.takeDamage = function(damage){
 	this.health -= damage;
 	if (this.health <= 0){ //die
-        console.log('Did ' + this.damageDone + ' dmg before dying.');
         deadTanks.set(this.id, this); /* add us to global list of dead tanks */
         tanks.delete(this.id);
 	}
+}
+
+/* 
+ * @param {Ammo} damage - the Ammo object to pickup
+ */
+Tank.prototype.pickupAmmo = function(ammo){
+	this.bullets+=ammo.bullets;
 }
 
 /*
@@ -147,6 +162,26 @@ Tank.prototype.move = function(backwards){
 	this.preventCollisions(tanks);
 }
 
+/* 
+ * Rotates the tank's direction (CCW by default)
+ * @param {boolean} cw - Whether the rotation should be CW
+ */
+Tank.prototype.rotate = function(cw){
+	if (cw){
+		this.dir -= this.angularSpeed;
+	}else{
+		this.dir += this.angularSpeed;
+	}
+	this.dir %=  (2*Math.PI);
+	if (this.dir < 0){
+		this.dir+=2*Math.PI;
+	}
+
+	this.xComp = (Math.cos(this.dir));
+	this.yComp = (-Math.sin(this.dir)); //y plane inverted
+
+}
+
 /*
  * Detect collisions with other tanks and snap them back
  * @param {Array} tanks - An array of tanks to check collisions with
@@ -179,54 +214,16 @@ Tank.prototype.preventCollisions = function(tanks){
 }
 
 /* 
- * Rotates the tank's direction (CCW by default)
- * @param {boolean} cw - Whether the rotation should be CW
- */
-Tank.prototype.rotate = function(cw){
-	if (cw){
-		this.dir -= this.angularSpeed;
-	}else{
-		this.dir += this.angularSpeed;
-	}
-	this.dir %=  2*Math.PI;
-
-	this.xComp = (Math.cos(this.dir));
-	this.yComp = (-Math.sin(this.dir)); //y plane inverted
-
-	/*var line1 = {
-		x1: this.x,
-		y1: this.y,
-		x2: this.xComp+this.x,
-		y2: this.yComp+this.y
-	};
-
-	var line2 = {
-		x1: 0,
-		y1: 0,
-		x2: 1000,
-		y2: 0
-	};
-	console.log("=== HORZ LINE ===");
-	console.log(getLinesIntercept(line1, line2));
-	line2 = {
-		x1: 0,
-		y1: 0,
-		x2: 0,
-		y2: 1000
-	};
-	console.log("=== VERT LINE ===");
-	console.log(getLinesIntercept(line1, line2));*/
-}
-
-
-/* 
  * Shoots a bullet from the tank's origin in dir
  */
-Tank.prototype.shoot = function(){
-	var now = performance.now();
-	if ((now - this.lastShoot) >= SHOOT_CD){
-		this.lastShoot = now;
-		new Bullet(this.id, this.x, this.y, 10, this.dir);
+Tank.prototype.shoot = function () {
+    if (this.bullets > 0){
+        var now = performance.now();
+        if ((now - this.lastShoot) >= SHOOT_CD) {
+            this.bullets--;
+            this.lastShoot = now;
+            new Bullet(this.id, this.x, this.y, 12, this.dir);
+        }
 	}
 }
 
@@ -235,7 +232,7 @@ Tank.prototype.shoot = function(){
  * Updates the state of the Tank, listening to keys
  * @param {Object} keys - A listing of which keys are pressed
  */
-Tank.prototype.update = function(Keys){
+Tank.prototype.update = function (Keys) {
 	if (this.control){ // Client's keyboard controls tank
 		if (Keys.isDown(Keys.LEFT)){
 			this.rotate();
@@ -254,9 +251,8 @@ Tank.prototype.update = function(Keys){
 		}
 	}else if (this.neuralNetwork){ // AI powered by Neural Network
 		this.neuralNetwork.act();
-	}
-	var lines = getLinesForEntity(this);
-	this.lines = lines;
+    }
+    setLinesForEntity(this);
 }
 
 /* 
@@ -266,24 +262,22 @@ Tank.prototype.update = function(Keys){
 Tank.prototype.render = function(ctx){
 	ctx.save(); //save context state
 	var img = tankImage[Math.floor(this.frame)]; // img of current frame
-	ctx.translate(this.x, this.y); //shift origin to tank
-	this.drawHealth(ctx);
+    ctx.translate(this.x, this.y); //shift origin to tank
+    this.drawHealth(ctx);
 	ctx.rotate(-this.dir); //rotate plane around tank
 	ctx.drawImage(img, -img.naturalWidth/2, -img.naturalHeight/2);
 	this.components.forEach(function(comp){
 		comp.render(ctx); //draw all components
 	});
-	ctx.restore(); //restore normal xy coordinate plane
+    ctx.restore(); //restore normal xy coordinate plane
 	ctx.fillText(this.name, this.x, this.y-img.naturalHeight/2-16);
-
-	if (this.lines){
-		for (var i = 0 ; i < this.lines.length; i++){
-			ctx.beginPath();
-			ctx.moveTo(this.lines[i].x1, this.lines[i].y1);
-			ctx.lineTo(this.lines[i].x2, this.lines[i].y2);
-			ctx.stroke();
+	if (this.selected){
+		this.drawHitbox(ctx);
+		if (this.neuralNetwork) { //TODO: toggle neural network rendering (?)
+			//this.neuralNetwork.render(ctx); // Draw Neural Network to Screen for Debug
 		}
 	}
+
 }
 
 /* 
@@ -308,4 +302,30 @@ Tank.prototype.drawHealth = function(ctx){
 	ctx.fillStyle = "red";
 	ctx.rect(-20+hp,-54, 40-hp,6);
 	ctx.fill();
+}
+
+/* 
+ * Draws the Tank's hitbox
+ * @param {CanvasRenderingContext2D} ctx - The context to draw to
+ */
+Tank.prototype.drawHitbox = function (ctx) {
+    ctx.strokeStyle = "#0033FF";
+    ctx.lineWidth = "4";
+	if (this.lines){
+        for (var i = 0; i < this.lines.length; i++){
+			ctx.beginPath();
+			ctx.moveTo(this.lines[i].x1, this.lines[i].y1);
+			ctx.lineTo(this.lines[i].x2, this.lines[i].y2);
+			ctx.stroke();
+		}
+    }
+    //Draw lines for components too
+    /*this.components.forEach(function (comp) {
+        if (comp.line) {
+            ctx.beginPath();
+            ctx.moveTo(comp.line.x1, comp.line.y1);
+            ctx.lineTo(comp.line.x2, comp.line.y2);
+            ctx.stroke();
+        }
+    });*/
 }
