@@ -22,7 +22,7 @@ for (var i = 1; i < 9; i++){
 var TANK_WIDTH = 68, TANK_HEIGHT = 68;
 var SHOOT_CD = 200; //shoot cd in millis
 var TANK_HEALTH = 50;
-var TANK_BULLETS = 64;
+var TANK_BULLETS = 32;
 
 /* Tank Constructor
  *
@@ -50,7 +50,7 @@ function Tank(id, x, y, speed, control){
 	this.frame = 0; //current animation frame
 	this.lastShoot =  0;
     this.damageDone = 0;
-	this.bullets = TANK_BULLETS;
+	this.bullets = TANK_BULLETS; //max capacity
 	this.selected = false; // (controls hitbox rendering and selection)
 	if (control)
 		this.name = 'Player ' + id; //assume we're a player
@@ -67,7 +67,8 @@ Tank.prototype.reset = function() {
     this.lastShoot = 0;
     this.damageDone = 0;
     this.health = TANK_HEALTH;
-    this.dir = Math.PI / 2;
+	this.dir = Math.PI / 2;
+	this.rotate(0);
     this.xComp = (Math.cos(this.dir));
     this.yComp = (-Math.sin(this.dir)); //y plane inverted
     this.frame = 0;
@@ -114,7 +115,7 @@ Tank.prototype.takeDamage = function(damage){
  * @param {Ammo} damage - the Ammo object to pickup
  */
 Tank.prototype.pickupAmmo = function(ammo){
-	this.bullets+=ammo.bullets;
+	this.bullets = Math.min(this.bullets+ammo.bullets, TANK_BULLETS);
 }
 
 /*
@@ -123,7 +124,7 @@ Tank.prototype.pickupAmmo = function(ammo){
  * @returns {number} - The fitness of the tank
  */
 Tank.prototype.calculateFitness = function(){
-    return this.health + this.damageDone; //Fitness is health left + total dmg done
+    return this.damageDone; //Fitness is health left + total dmg done
 }
 
 /*
@@ -274,7 +275,7 @@ Tank.prototype.render = function(ctx){
 	if (this.selected){
 		this.drawHitbox(ctx);
 		if (this.neuralNetwork) { //TODO: toggle neural network rendering (?)
-			//this.neuralNetwork.render(ctx); // Draw Neural Network to Screen for Debug
+			this.neuralNetwork.render(ctx); // Draw Neural Network to Screen for Debug
 		}
 	}
 

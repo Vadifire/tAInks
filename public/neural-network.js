@@ -32,7 +32,7 @@ function NeuralNetwork(tank) {
 		}
     }, this);
     this.tankId = tank.id;
-	this.network = this.constructRandomNetwork(2,4);
+	this.network = this.constructRandomNetwork(1,10);
 	this.count = 0;
     console.log(this.network);
 }
@@ -230,7 +230,7 @@ function evolve(tankList, maxMutationStrength, maxMutationRate) {
         var tank = evolutionArray[i];
         if (tank.neuralNetwork) { //tank is AI controlled
             tank.neuralNetwork.mutate(maxMutationStrength * (i / (totalPop - 1) ),// mutation ~ 1/fitness
-                maxMutationRate * (i / (totalPop - 1) )); // this may be too conservative, but hopefully sustains growth
+                maxMutationRate ); // this may be too conservative, but hopefully sustains growth
         }
         evolvedMap.set(tank.id, tank); // Add potentially modified tank to new map
     }
@@ -245,12 +245,11 @@ function evolve(tankList, maxMutationStrength, maxMutationRate) {
 NeuralNetwork.prototype.render = function (ctx) {
     var x = tanks.get(this.tankId).x;
     var y = tanks.get(this.tankId).y;
-
     if (this.values) {
         for (var layer = 0; layer < this.values.length; layer++) {
             for (var n = 0; n < this.values[layer].length; n++) {
                 var val = Math.round(this.values[layer][n] * 100) / 100; //Round to the nearest hundredth
-                ctx.fillText(val, x + layer*40, y + n * 40);
+                ctx.fillText(val, x + layer*36 - (this.values.length-1)*18, y + n * 36 - (this.values[layer].length-1)*18);
             }
         }
     }
