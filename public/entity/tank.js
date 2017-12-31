@@ -22,7 +22,7 @@ for (var i = 1; i < 9; i++){
 var TANK_WIDTH = 68, TANK_HEIGHT = 68;
 var SHOOT_CD = 200; //shoot cd in millis
 var TANK_HEALTH = 50;
-var TANK_BULLETS = 200;
+var TANK_BULLETS = 64;
 
 /* Tank Constructor
  *
@@ -57,6 +57,7 @@ function Tank(id, x, y, speed, control){
 	else{
 		this.name = 'AI ' + id; // if we don't control, assume AI for now
 	}
+	setLinesForEntity(this);
 }
 
 /*
@@ -107,6 +108,13 @@ Tank.prototype.takeDamage = function(damage){
         deadTanks.set(this.id, this); /* add us to global list of dead tanks */
         tanks.delete(this.id);
 	}
+}
+
+/* 
+ * @param {Ammo} damage - the Ammo object to pickup
+ */
+Tank.prototype.pickupAmmo = function(ammo){
+	this.bullets+=ammo.bullets;
 }
 
 /*

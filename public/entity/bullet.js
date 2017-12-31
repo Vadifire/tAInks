@@ -6,7 +6,7 @@
  *	@author Calvin Ellis
  */
 
-/* Image for Bullet*/
+/* Image for Bullet */
 var bulletImage = new Image();
 bulletImage.src = 'public/img/missle/21.png';
 var nextBulletId = 0; //just allow natural overflow
@@ -63,12 +63,10 @@ Bullet.prototype.render = function(ctx){
 }
 
 /*
- * Detect hit detections with other tanks
+ * Detect collisions with tanks
  * @param {Array} tanks - An array of tanks to check collisions with
  */
 Bullet.prototype.hitDetect = function(tanks){
-	var w = (TANK_WIDTH + this.width) / 2;
-    var h = (TANK_HEIGHT + this.height) / 2;
 	tanks.forEach(function(tank){
 		if (tank.id !== this.ownerID){ //not our owner
             if (doesEntityIntersectEntity(this, tank)) {

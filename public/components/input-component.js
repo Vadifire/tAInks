@@ -71,17 +71,21 @@ yComponent.prototype.readInput = function(){
 	return (this.tank.y / ARENA_HEIGHT);
 }
 
+/* LASER IMAGES */
+var laserImage1 = new Image();
+laserImage1.src = 'public/img/laser1.png';
+var laserImage2 = new Image();
+laserImage2.src = 'public/img/laser2.png';
+
 /* Component that measures distance to nearest tank down a line */
-function TankSensorComponent(x, y, dir) {
-    var image = new Image();
-    image.src = 'public/img/laser.png';
+function SensorComponent(x, y, dir, map, image) {
     InputComponent.call(this, x, y, image);
     this.dir = dir; // relative to tank
+    this.entityMap = map;
 }
-TankSensorComponent.prototype = Object.create(InputComponent.prototype);
-TankSensorComponent.prototype.readInput = function () {
+SensorComponent.prototype = Object.create(InputComponent.prototype);
+SensorComponent.prototype.readInput = function () {
     var angle = this.tank.dir + this.dir;
-
     var line = {
         x1: this.xOffset - 64,
         y1: this.yOffset,
@@ -90,14 +94,11 @@ TankSensorComponent.prototype.readInput = function () {
     }
     rotateLineAroundEntity(line, this.tank);
     this.line = line;
-
     var ret = 0;
-    tanks.forEach(function (tank) { //Check for collisions with every tank
-        if (tank.id !== this.tank.id) { //dont check for self-collisions
-            if (tank.lines && doesLineIntersectEntity(line, tank)) {
-                ret = 1;
-                return;
-            }
+    this.entityMap.forEach(function (e) { //Check for collisions with every ammo pack
+        if (e.lines && doesLineIntersectEntity(line, e)) {
+            ret = 1;
+            return;
         }
     }, this);
     return ret;

@@ -24,18 +24,26 @@ var enableAudio = false; //Whether or not we should play Audio
 var arenaSoundLoop = new Howl({src: ['public/audio/arena-loop.mp3'], loop:true, volume: 0.2});
 
 /* GAME VARS */
+
+/* TODO rework maps => create general entity Map */
 var tanks = new Map(); //map tank ids to tanks
 var deadTanks = new Map(); //graveyard of tanks (again, map tank ids to tanks)
 var bullets = new Map(); //Maps bullet ids to bullet obj
+var ammo = new Map(); //Maps ammo ids to ammo obj
 
 var playerTank = new Tank(0, 100, 400, 3, true);
 //Scatter AI tanks
 for (var i = 0; i < 4; i++){ //12
     //var ai = new Tank(i + 1, 200 + 200 * (i % 4) + 30 * (i % 8), 160 + Math.floor(i / 4) * 220, 3, false);
     var ai = new Tank(i + 1, 10+Math.random()*652, 10+Math.random()*358, 3, false);
-    ai.attachComponents([new TankSensorComponent(0, -96, Math.PI / 2),
-        new TankSensorComponent(96 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI / 3),
-        new TankSensorComponent(-96 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI * 2 / 3),
+    ai.attachComponents([new SensorComponent(0, -96, Math.PI / 2, tanks, laserImage1),
+        new SensorComponent(96 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI / 3, tanks, laserImage1),
+        new SensorComponent(-96 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI * 2 / 3, tanks, laserImage1),
+
+        new SensorComponent(0, -92, Math.PI / 2, ammo, laserImage2),
+        new SensorComponent(100 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI / 3, ammo, laserImage2),
+        new SensorComponent(-100 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI * 2 / 3, ammo, laserImage2),
+
         new DirComponent(), new xComponent(), new yComponent(),
 		new DriveComponent(), new RotateComponent(), new ShootComponent(), new RandomComponent()]);
 	tanks.set(ai.id, ai);
@@ -91,7 +99,10 @@ function render(){
 	/* Clear Drawing Area */
 	ctx.clearRect(0,0,ARENA_WIDTH,ARENA_HEIGHT);
 
-	/* Draw All Entities In Game*/
+    /* Draw All Entities In Game*/
+	ammo.forEach(function(ammo){
+		ammo.render(ctx);
+    });
 	bullets.forEach(function (bullet) {
 		bullet.render(ctx);
 	});
@@ -119,12 +130,17 @@ function render(){
 
 /* Update Local Game State */
 function update() {
+    ammo.forEach(function(ammo){
+		ammo.update(ctx);
+    });
 	bullets.forEach(function(bullet){
 		bullet.update(Keys);
 	});
 	tanks.forEach(function(tank){
 		tank.update(Keys);
     });
+
+    insertAmmoRandomly(3-ammo.size); // # of Ammo in Arena
 
     if (tanks.size <= 1) { /* one tank left -> winner decided, end game */
         processGameEnd();
@@ -142,7 +158,7 @@ function processGameEnd() {
         deadTanks.set(tankWinner.id, tankWinner); // add last tank to dead tanks
         tanks.delete(tankWinner.id); // remove from active tanks list
     }
-    tanks = evolveUnselected(deadTanks, 0.25, 0.5); //Allow Divine Influence
+    tanks = evolveUnselected(deadTanks, 0.4, 0.6); //Allow Divine Influence
     deadTanks = new Map(); // clear dead tanks
     bullets = new Map(); // clear any stray bullets
     tanks.forEach(function (tank) { //Revive the tanks
