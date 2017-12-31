@@ -28,7 +28,7 @@ function Ammo(x, y){
 	this.yComp = 0;
 	this.width = ammoImage.naturalWidth;
 	this.height = ammoImage.naturalHeight;
-    this.bullets = 32;
+    this.bullets = 16;
     setLinesForEntity(this);
 	ammo.set(this.id, this); /* add this to bullets map within client.js */
 }

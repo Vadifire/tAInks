@@ -44,8 +44,8 @@ for (var i = 0; i < 4; i++){ //12
         new SensorComponent(100 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI / 3, ammo, laserImage2),
         new SensorComponent(-100 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI * 2 / 3, ammo, laserImage2),
 
-        new DirComponent(), new xComponent(), new yComponent(),
-		new DriveComponent(), new RotateComponent(), new ShootComponent(), new RandomComponent()]);
+        new DirComponent(), new RandomComponent(), new BulletComponent(),
+		new DriveComponent(), new RotateComponent(), new ShootComponent()]);
 	tanks.set(ai.id, ai);
 }
 //Add Player to Map
@@ -140,7 +140,7 @@ function update() {
 		tank.update(Keys);
     });
 
-    insertAmmoRandomly(3-ammo.size); // # of Ammo in Arena
+    insertAmmoRandomly(4-ammo.size); // # of Ammo in Arena
 
     if (tanks.size <= 1) { /* one tank left -> winner decided, end game */
         processGameEnd();
@@ -158,7 +158,7 @@ function processGameEnd() {
         deadTanks.set(tankWinner.id, tankWinner); // add last tank to dead tanks
         tanks.delete(tankWinner.id); // remove from active tanks list
     }
-    tanks = evolveUnselected(deadTanks, 0.4, 0.6); //Allow Divine Influence
+    tanks = evolveUnselected(deadTanks, 0.25, 0.8); //Allow Divine Influence
     deadTanks = new Map(); // clear dead tanks
     bullets = new Map(); // clear any stray bullets
     tanks.forEach(function (tank) { //Revive the tanks

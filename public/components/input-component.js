@@ -71,6 +71,13 @@ yComponent.prototype.readInput = function(){
 	return (this.tank.y / ARENA_HEIGHT);
 }
 
+/* Component that reprsents tank bullet count */
+function BulletComponent(x, y, image){InputComponent.call(this,x,y,image)};
+BulletComponent.prototype = Object.create(InputComponent.prototype);
+BulletComponent.prototype.readInput = function(){
+	return (this.tank.bullets / TANK_BULLETS);
+}
+
 /* LASER IMAGES */
 var laserImage1 = new Image();
 laserImage1.src = 'public/img/laser1.png';
@@ -97,8 +104,14 @@ SensorComponent.prototype.readInput = function () {
     var ret = 0;
     this.entityMap.forEach(function (e) { //Check for collisions with every ammo pack
         if (e.lines && doesLineIntersectEntity(line, e)) {
-            ret = 1;
-            return;
+            if (e instanceof Tank){
+                if ((this.tank.id !== e.id) && e.health > 0){
+                    ret = 1; return;
+                }
+            }
+            else{
+                ret = 1; return;
+            }
         }
     }, this);
     return ret;
