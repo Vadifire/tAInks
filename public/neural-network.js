@@ -203,6 +203,27 @@ NeuralNetwork.prototype.crossover = function (n1, n2) {
     console.log(this.network);*/
 }
 
+
+/*
+ * Overwrite current genes with parent's Neural Networks
+ * TODO: worry about compatability issues
+ *
+ * @param {Object} n1 - The network of the only NN parent 
+ */
+NeuralNetwork.prototype.copyFrom = function (n1) {
+    var numSynapses = this.network.biases.length;
+    for (var layer = 0; layer < numSynapses; layer++) {
+        //for all biases or 'cols'
+        for (var b = 0; b < n1.biases[layer].length; b++) {
+            this.network.biases[layer][b] = n1.biases[layer][b];
+            //for all weights or 'rows'
+            for (var w = 0; w < n1.weights[layer].length; w++) {
+                this.network.weights[layer][w][b] = n1.weights[layer][w][b];
+            }
+        }
+    }
+}
+
 /*
  * Genetic algorithm intended to evolve fitness of population over time
  *
@@ -223,8 +244,8 @@ function evolve(tankList, maxMutationStrength, maxMutationRate) {
     for (var i = 0; i < totalPop; i++){ //Evolve every tank and add to evolvedMap
         var tank = evolutionArray[i];
         if (tank.neuralNetwork) { //tank is AI controlled
-            tank.neuralNetwork.mutate(maxMutationStrength * (i / totalPop - 1),//mutation ~ 1/fitness
-                maxMutationRate * (i / totalPop - 1)); //This may be too conservative, but hopefully sustains growth
+            tank.neuralNetwork.mutate(maxMutationStrength * (i / (totalPop - 1) ),// mutation ~ 1/fitness
+                maxMutationRate * (i / (totalPop - 1) )); // this may be too conservative, but hopefully sustains growth
         }
         evolvedMap.set(tank.id, tank); // Add potentially modified tank to new map
     }

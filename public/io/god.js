@@ -22,7 +22,10 @@
  * @param {number} mutationRate - the rate to mutate unselected tanks weights and biases
  * @returns {Map <number, Tank>} new Tank map, but with evolved neural networks
  */
-function evolveUnselected(tankList, mutationStength, mutationRate) {
+function evolveUnselected(tankList, mutationStrength, mutationRate) {
+
+    console.log('unselected');
+
     var originalSize = tankList.size;
     var newMap = new Map(); //Map which will contain selected and evolved tanks
     var unselected = new Map(); //Map of tanks to be overwritten
@@ -40,29 +43,28 @@ function evolveUnselected(tankList, mutationStength, mutationRate) {
     });
 
     if (newMap.size == 0) { //Absolutely nothing was selected
-        evolve(tankList, mutationStrength, mutationRate); //Fall back on normal evolution (God has foresaken us :<)
+        return evolve(tankList, mutationStrength, mutationRate); //Fall back on normal evolution (God has foresaken us :<)
     }
 
     //Assign probabilities for being a mutant of selected tanks based on fitness
     var countedProb = 0;
     var probabilities = [];
     newMap.forEach(function (tank) { // for all selected tanks
-        countedProb += tank.calculateFitness() / totalSelectedFitness; // get relative probability through fitness
-        probabilities.push({tank: tank, probability: countedProb});
+        countedProb += (tank.calculateFitness() / totalSelectedFitness); // get relative probability through fitness
+        probabilities.push({neuralNetwork: tank.neuralNetwork, probability: countedProb});
     });
 
     //Mutate the unselected tanks at constant strength/rate (for now at least)
     unselected.forEach(function (tank){
         var rand = Math.random();
-        var selectedTank = null;
         for (var i = 0; i < probabilities.length; i++) {
             if (rand > probabilities[i].probability){ //Reached probability bin
-                selectedTank = probabilities[i].tank;
-                break;
+                tank.neuralNetwork.copyFrom(probabilities[i].neuralNetwork.network); //select parent neural network to mutate off
+                break
             }
         }
-        selectedTank.neuralNetwork.mutate(mutationStrength, mutationRate);
-        newMap.push(selectedTank.id, selectedTank); //add new mutant to final map
+        tank.neuralNetwork.mutate(mutationStrength, mutationRate);
+        newMap.set(tank.id, tank); //add new mutant to final map
     });
 
     return newMap;
