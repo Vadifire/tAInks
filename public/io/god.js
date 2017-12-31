@@ -23,9 +23,6 @@
  * @returns {Map <number, Tank>} new Tank map, but with evolved neural networks
  */
 function evolveUnselected(tankList, mutationStrength, mutationRate) {
-
-    console.log('unselected');
-
     var originalSize = tankList.size;
     var newMap = new Map(); //Map which will contain selected and evolved tanks
     var unselected = new Map(); //Map of tanks to be overwritten
@@ -51,19 +48,19 @@ function evolveUnselected(tankList, mutationStrength, mutationRate) {
     var probabilities = [];
     newMap.forEach(function (tank) { // for all selected tanks
         countedProb += (tank.calculateFitness() / totalSelectedFitness); // get relative probability through fitness
-        probabilities.push({neuralNetwork: tank.neuralNetwork, probability: countedProb});
+        probabilities.push({network: tank.neuralNetwork.network, probability: countedProb});
     });
 
     //Mutate the unselected tanks at constant strength/rate (for now at least)
     unselected.forEach(function (tank){
         var rand = Math.random();
         for (var i = 0; i < probabilities.length; i++) {
-            if (rand > probabilities[i].probability){ //Reached probability bin
-                tank.neuralNetwork.copyFrom(probabilities[i].neuralNetwork.network); //select parent neural network to mutate off
-                break
+            if (rand < probabilities[i].probability) { //Reached probability bin
+                tank.neuralNetwork.network = JSON.parse(JSON.stringify(probabilities[i].network)); //select parent neural network to mutate off
+                tank.neuralNetwork.mutate(mutationStrength, mutationRate); //Mutate
+                break;
             }
         }
-        tank.neuralNetwork.mutate(mutationStrength, mutationRate);
         newMap.set(tank.id, tank); //add new mutant to final map
     });
 

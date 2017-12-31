@@ -147,6 +147,7 @@ function processGameEnd() {
     bullets = new Map(); // clear any stray bullets
     tanks.forEach(function (tank) { //Revive the tanks
         tank.reset();
+        console.log(tank.neuralNetwork.network);
     });
     generation++; //Upgrade global generation var
 }

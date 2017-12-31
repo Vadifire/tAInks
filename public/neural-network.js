@@ -167,11 +167,17 @@ NeuralNetwork.prototype.mutate = function (mutationStrength, mutationRate) {
     for (var layer = 0; layer < numSynapses; layer++) {
         //for all biases or 'cols'
         for (var b = 0; b < originalNetwork.biases[layer].length; b++) {
-            this.network.biases[layer][b] = this.network.biases[layer][b] * mutationStrength + originalNetwork.biases[layer][b] * (stagnation);
+            if (Math.random() < mutationRate) { // Check if individual mutation should occur
+                this.network.biases[layer][b] = this.network.biases[layer][b] * mutationStrength + originalNetwork.biases[layer][b] * (stagnation);
+            } else {
+                this.network.biases[layer][b] = originalNetwork.biases[layer][b];
+            }
             //for all weights or 'rows'
             for (var w = 0; w < originalNetwork.weights[layer].length; w++) {
-                if (Math.random() < mutationRate){ // Check if individual mutation should occur
+                if (Math.random() < mutationRate) { // Check if individual mutation should occur
                     this.network.weights[layer][w][b] = this.network.weights[layer][w][b] * mutationStrength + originalNetwork.weights[layer][w][b] * (stagnation);
+                } else {
+                    this.network.weights[layer][w][b] = originalNetwork.weights[layer][w][b];
                 }
             }
         }
@@ -201,27 +207,6 @@ NeuralNetwork.prototype.crossover = function (n1, n2) {
     }
     /*console.log("Child network:");
     console.log(this.network);*/
-}
-
-
-/*
- * Overwrite current genes with parent's Neural Networks
- * TODO: worry about compatability issues
- *
- * @param {Object} n1 - The network of the only NN parent 
- */
-NeuralNetwork.prototype.copyFrom = function (n1) {
-    var numSynapses = this.network.biases.length;
-    for (var layer = 0; layer < numSynapses; layer++) {
-        //for all biases or 'cols'
-        for (var b = 0; b < n1.biases[layer].length; b++) {
-            this.network.biases[layer][b] = n1.biases[layer][b];
-            //for all weights or 'rows'
-            for (var w = 0; w < n1.weights[layer].length; w++) {
-                this.network.weights[layer][w][b] = n1.weights[layer][w][b];
-            }
-        }
-    }
 }
 
 /*
