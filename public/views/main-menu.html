@@ -48,7 +48,7 @@
 	</div>
 	
 	<div class="container-fluid footer">
-		<button onclick="viewmngr.setView(VIEWS.LOGIN);" class="btn btn-danger">Log Out</button>
+		<button class="btn btn-danger logout-btn"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Log Out</button>
 	</div>
 </div>
 		
@@ -56,4 +56,9 @@
 		$('.manage_tanks').click(function () { viewmngr.setView(VIEWS.TANK_GALLERY); });
 		$('.play_local').click(function () { viewmngr.setView(VIEWS.ARENA); });
 		$('.play_online').click(function () { viewmngr.setView(VIEWS.ARENA); });
+		$('.logout-btn').click(function () { 
+			if (confirm("Are you sure you want to log out?") === true){
+				viewmngr.setView(VIEWS.LOGIN);
+			}
+		});
 		</script>
