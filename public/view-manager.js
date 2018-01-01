@@ -74,6 +74,5 @@ ViewManager.prototype.setView = function(view=VIEWS.LOGIN){
 	  dataType: "html",
 	  error: function(textStatus){ console.log(textStatus); }
 	});
-	
 }
 
