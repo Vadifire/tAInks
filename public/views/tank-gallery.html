@@ -1,19 +1,53 @@
 <div id = "tank-gallery" class="text-center">
 
-	<div id="tank-select-wrapper-template" class="tank-select-wrapper col-xs-6">
-		<span id="tAI-name"></span> <br>
-		Speed: <span id="tAI-speed"></span> <br>
+	<div id="tank-select-wrapper-template" class="tank-select-wrapper col-md-6 col-lg-4">
+			<div class="card hover-shadow">
+			  <div class="card-body text-center pt-1 pb-20">
+				<a href="#">
+				  <img class="avatar avatar-xxl" src="public/img/tank/1.png">
+				</a>
+				<h5 class="mt-2 mb-0"><a class="hover-primary" href="#"><span id="tAI-name"></span></a></h5>
+				<div class="mt-20 tank-comps">
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-circle fa-stack-2x"></i>
+						<i class="fa fa-eye fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-circle fa-stack-2x"></i>
+						<i class="fa fa-eye fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-circle fa-stack-2x"></i>
+						<i class="fa fa-eye fa-stack-1x fa-inverse"></i>
+					</span>
+					<span class="fa-stack fa-lg">
+						<i class="fa fa-circle fa-stack-2x"></i>
+						<i class="fa fa-bullseye fa-stack-1x fa-inverse"></i>
+					</span>
+				</div>
+			  </div>
+
+			  <footer class="card-footer flexbox">
+				<div>
+				  <i class="fa fa-tachometer pr-1"></i>
+				  <span><span id="tAI-speed"></span></span>
+				</div>
+				<div>
+				  <i class="fa fa-heart pr-1"></i>
+				  <span><span id="tAI-health"></span></span>
+				</div>
+			  </footer>
+			</div>
 	</div>
 				
-			<div id="headerLogo">
-				<a href="/">
-					<img src = "public/img/logo.png">
-				</a>
-			</div>
-			<div id="tank-select" class="container">
-				<h3 class="camo">Tank Manager</h3>
-			<br>
-			</div>
+	<div id="headerLogo">
+		<a href="/">
+			<img src = "public/img/logo.png">
+		</a>
+	</div>
+			
+	<div id="tank-select" class="row">
+	</div>
 </div>
 		<script>
 		$('#loginForm').on('show.bs.collapse', function () {
