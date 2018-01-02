@@ -31,6 +31,8 @@ var TANK_BULLETS = 32;
  * @param {number} y - Y pos in Arena
  * @param {number} speed  - px / frame to advance in dir
  * @param {boolean} control - whether our client control's the tank
+ *
+ * TO-DO: overload to only expose relevant variables.
  */
 function Tank(id, x, y, speed, control){
 	this.id = id; //unique id TO-DO: avoid id collision

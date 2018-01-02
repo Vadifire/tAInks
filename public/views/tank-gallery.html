@@ -1,0 +1,28 @@
+<div id = "tank-gallery" class="text-center">
+
+	<div id="tank-select-wrapper-template" class="tank-select-wrapper col-xs-6">
+		<span id="tAI-name"></span> <br>
+		Speed: <span id="tAI-speed"></span> <br>
+	</div>
+				
+			<div id="headerLogo">
+				<a href="/">
+					<img src = "public/img/logo.png">
+				</a>
+			</div>
+			<div id="tank-select" class="container">
+				<h3 class="camo">Tank Manager</h3>
+			<br>
+			</div>
+</div>
+		<script>
+		$('#loginForm').on('show.bs.collapse', function () {
+			$('#registerForm').collapse('hide');
+		});
+		$('#registerForm').on('show.bs.collapse', function () {
+			$('#loginForm').collapse('hide');
+		});
+		$('.view-arena-page').click(function () {
+			viewmngr.setView(VIEWS.MAIN_MENU);
+		});
+		</script>
