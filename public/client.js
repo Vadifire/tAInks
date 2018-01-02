@@ -15,6 +15,7 @@ var ARENA_HEIGHT;
 
 /* ARCHITECTURE LEVEL VARS */
 var socket = io(); //Client socket for server communication
+var trainingSettings = new TrainingSettings();
 var gameCanvas; //top, dynamic canvas layer
 var bgCanvas; // background, static canvas layer
 var ctx; //ctx for gameCanvas
