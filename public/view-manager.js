@@ -41,18 +41,19 @@ var VIEWS = {
 	TANK_GALLERY : {src:'/tank-gallery.html', cb:function(){
 		
 		var templateModel = $('#tank-select-wrapper-template').clone();
-		console.log(templateModel);
 		
 		//TO-DO populate tanks from database
-		var tanks = {id1:{name:'hAIry', score:50}, id2:{name:'clAIrance', score:80}, id3:{name:'jAInice', score:75} };
+		//var tanks = {id1:{name:'hAIry', score:50}, id2:{name:'clAIrance', score:80}, id3:{name:'jAInice', score:75} };
+		
+		//TO-DO populate tanks from database
+		var tanks = [ new Tank(100, 5, 5, 2, false), new Tank(200, 5, 5, 2, false), new Tank(300, 5, 5, 2, false) ];
 		
 		
 		//loop all tank fields and match to 'tAI_' + field_name
-		$.each(tanks, function(key, val){
-			//console.log(val);
+		$.each(tanks, function(key, tank){
 			var main_selector = '#tank-select span';
 			var current_tank_html = templateModel.clone(); //clone templateModel
-			current_tank_html.attr('id', 'tank_'+key); //re-assign a unique ID
+			current_tank_html.attr('id', 'tank_'+tank.id); //re-assign a unique ID
 			
 			//gather an array of all id's within the template
 			var IDs = current_tank_html.find('span')
@@ -63,7 +64,7 @@ var VIEWS = {
 			 for (ii = 0; ii < IDs.length; ii++) { 
 				if(IDs[ii].startsWith(STARTS_WITH_STRING)){
 					//found ID starting with STARTS_WITH_STRING, insert value
-					eval("current_tank_html.find('#"+IDs[ii]+"').html(''+val." + IDs[ii].replace(STARTS_WITH_STRING, '') + ")");
+					eval("current_tank_html.find('#"+IDs[ii]+"').html(''+tank." + IDs[ii].replace(STARTS_WITH_STRING, '') + ")");
 				}
 			 }
 			
