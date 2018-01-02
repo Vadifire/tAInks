@@ -8,7 +8,8 @@
  
  /* Constants */
 var VIEW_ELEMENT_ID = '#Viewport'; //the element within the DOM to append to
-var VIEWS_SOURCE_DIR = '/public/views' //directory of views source files
+var VIEWS_SOURCE_DIR = '/public/views'; //directory of views source files
+var STARTS_WITH_STRING = 'tAI-'; //beginning of string to match for data input
 
 /* VIEWS 
  * 
@@ -37,7 +38,41 @@ var VIEWS = {
 				console.log("Successfully loaded Arena!"); 
 			}},
 	ARENA_LOBBY : {src:'/arena-lobby.html', cb:function(){}},
-	TANK_GALLERY : {src:'/tank-gallery.html', cb:function(){}},
+	TANK_GALLERY : {src:'/tank-gallery.html', cb:function(){
+		
+		var templateModel = $('#tank-select-wrapper-template').clone();
+		console.log(templateModel);
+		
+		//TO-DO populate tanks from database
+		var tanks = {id1:{name:'hAIry', score:50}, id2:{name:'clAIrance', score:80}, id3:{name:'jAInice', score:75} };
+		
+		
+		//loop all tank fields and match to 'tAI_' + field_name
+		$.each(tanks, function(key, val){
+			//console.log(val);
+			var main_selector = '#tank-select span';
+			var current_tank_html = templateModel.clone(); //clone templateModel
+			current_tank_html.attr('id', 'tank_'+key); //re-assign a unique ID
+			
+			//gather an array of all id's within the template
+			var IDs = current_tank_html.find('span')
+             .map(function() { return this.id; }) //Project Ids
+             .get();//ToArray
+			 
+			 //loop all IDs in the template to input data
+			 for (ii = 0; ii < IDs.length; ii++) { 
+				if(IDs[ii].startsWith(STARTS_WITH_STRING)){
+					//found ID starting with STARTS_WITH_STRING, insert value
+					eval("current_tank_html.find('#"+IDs[ii]+"').html(''+val." + IDs[ii].replace(STARTS_WITH_STRING, '') + ")");
+				}
+			 }
+			
+			//add newly created node to the DOM
+			current_tank_html.css('display', 'block'); //set display to visible
+			$('#tank-select').append(current_tank_html);
+		});
+		
+	}},
 	TANK_EDIT : {src:'/tank-edit.html', cb:function(){}}
 }
  

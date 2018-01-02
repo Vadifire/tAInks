@@ -263,3 +263,23 @@ h5.camo {
 #tank-select-wrapper-template{
 	display: none;
 }
+
+.tank-select-wrapper{
+	background-color: $main-menu-bg-color;
+	margin-bottom: 10px;
+	border-radius: 3px;
+	padding: 10px;
+	
+	#tAI-name{
+		color: white;
+		font-size: 20px;
+	}
+
+	#tAI-score{
+		color: red;
+		font-weight: bold;
+	}
+
+}
+
+
