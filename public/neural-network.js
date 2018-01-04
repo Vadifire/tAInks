@@ -186,11 +186,14 @@ NeuralNetwork.prototype.mutate = function (mutationStrength, mutationRate) {
 
 /*
  * Overwrite current genes with crossover of two parent Neural Networks
+ * This is done through averaging weights and biases.
+ *
+ * Precondition: The two neural networks are structurally identical
  *
  * @param {Object} n1 - The network of the first NN parent
  * @param {Object} n2 - The network of the second NN parent
  */
-NeuralNetwork.prototype.crossover = function (n1, n2) {
+NeuralNetwork.prototype.crossoverAverage = function (n1, n2) {
     /*console.log("Parent networks:");
     console.log(n1);
     console.log(n2);*/
@@ -202,6 +205,41 @@ NeuralNetwork.prototype.crossover = function (n1, n2) {
             //for all weights or 'rows'
             for (var w = 0; w < n1.weights[layer].length; w++) {
                 this.network.weights[layer][w][b] = (n1.weights[layer][w][b] + n2.weights[layer][w][b]) /2;
+            }
+        }
+    }
+    /*console.log("Child network:");
+    console.log(this.network);*/
+}
+
+/*
+ * Overwrite current genes with cross selection of two parent Neural Networks
+ * This is done by randomly selecting one of the parent's weights or biases
+ *
+ * Precondition: The two neural networks are structurally identical
+ *
+ * @param {Object} n1 - The network of the first NN parent
+ * @param {Object} n2 - The network of the second NN parent
+ * @param {number} selectionRate - The probability of selecting n1 over n2 [0,1]
+ */
+NeuralNetwork.prototype.crossoverSelection = function (n1, n2, selectionRate) {
+
+    var numSynapses = this.network.biases.length; // numLayers - 1
+    for (var layer = 0; layer < numSynapses; layer++) {
+        //for all biases or 'cols'
+        for (var b = 0; b < n1.biases[layer].length; b++) {
+            if (Math.random() < selectionRate) {
+                this.network.biases[layer][b] = n1.biases[layer][b];
+            } else {
+                this.network.biases[layer][b] = n2.biases[layer][b];
+            }
+            //for all weights or 'rows'
+            for (var w = 0; w < n1.weights[layer].length; w++) {
+                if (Math.random() < selectionRate) {
+                    this.network.weights[layer][w][b] = n1.weights[layer][w][b];
+                } else {
+                    this.network.weights[layer][w][b] = n2.weights[layer][w][b];
+                }
             }
         }
     }
