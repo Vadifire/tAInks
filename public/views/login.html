@@ -1,19 +1,19 @@
 <div id = "login-page" class="text-center">
 			<div id="registerForm" class="collapse">
-				<h3 class="camo">Registration<br></h3>
+				<h3>Registration<br></h3>
 				<form action="/players" method="POST">
 					<input type="text" placeholder="Username" name="username"><br>
 					<input type="password" placeholder="Password" name="password"><br>
 					<input type="password" placeholder="Confirm Password" name="password_confirm"><br><br>
 					<div class="col-xs-12 registerToggle">
-						<input ng-click="requestView(1);" value = "Sign Up" id="register" class="btn btn-success btn-transparent view-arena-page">
+						<input ng-click="requestView(1);" value = "Sign Up" id="register" class="btn btn-success view-arena-page">
 					</div>
 					<br><br><span><a href="#loginForm" data-toggle="collapse" aria-expanded="false" aria-controls="loginForm" >Already have an account? Sign in!</a></span>
 				</form>
 			<br>
 			</div>
 			<div id="loginForm" class="collapse show">
-				<h3 class="camo">Login</h3>
+				<h3>Login</h3>
 				<form action="/players" method="GET">
 					<input type="text" placeholder="Username" name="username"><br><br>
 					<input type="password" placeholder="Password" name="password"><br><br>
