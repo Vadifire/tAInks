@@ -2,8 +2,7 @@
  * Tainks-app
  * 
  * This will manage the angular js app tAinks. 
- * It is responsible for changing the views, 
-  * and being the highest-level controller for the SPA
+ * It is responsible for being the highest-level controller for display
  * Authors:
  *	@author Cedric Debelle
  *	@author Calvin Ellis
@@ -54,15 +53,15 @@ var VIEWS = {
 	}
 }
 
+var view = VIEWS.LOGIN; //Current view
+
 app.controller('mainCtrl', function($scope){
-	$scope.view = VIEWS.LOGIN; //Current view
-	
 	$scope.tanks = [ new Tank(1, 5, 5, 9, false), new Tank(2, 5, 5, 2, false), new Tank(3, 5, 5, 6, false), new Tank(4, 5, 5, 4, false), new Tank(5, 5, 5, 6, false) ];
 	
 	
 	/* @return - string - Path to current view's html */
 	$scope.getView = function(){
-		return VIEWS_SOURCE_DIR + $scope.view.src;
+		return VIEWS_SOURCE_DIR + view.src;
 	};
 	
 	/* 
@@ -80,23 +79,32 @@ app.controller('mainCtrl', function($scope){
 		
 		switch($requested_id){
 			case 0:
-				$scope.view = VIEWS.LOGIN;
+				view = VIEWS.LOGIN;
 				break;
 			case 1:
-				$scope.view = VIEWS.MAIN_MENU;
+				view = VIEWS.MAIN_MENU;
 				break;
 			case 2:
-				$scope.view = VIEWS.TANK_GALLERY;
+				view = VIEWS.TANK_GALLERY;
 				break;
 			case 3:
-				$scope.view = VIEWS.ARENA_LOBBY;
+				view = VIEWS.ARENA_LOBBY;
 				break;
 			case 4:
-				$scope.view = VIEWS.ARENA;
+				view = VIEWS.ARENA;
+				setTimeout(function(){
+					if(document.getElementById('arena')){
+						view.cb();
+						clearInterval(this);
+					}
+				}, 200);
 				break;
 			default:
-				$scope.view = VIEWS.LOGIN;
+				view = VIEWS.LOGIN;
 				break;				
 		}
+		
+		
 	};
+	
 });

@@ -1,7 +1,7 @@
 <div id="arena">
 	<div id="arena-header">
 		<div class="col-xs-12 text-center">
-			<button class="btn btn-primary arena-back-button"><i class="fa fa-bars" aria-hidden="true"></i> Main Menu</button>
+			<button ng-click="requestView(1);" class="btn btn-primary arena-back-button"><i class="fa fa-bars" aria-hidden="true"></i> Main Menu</button>
 		</div>
 	</div>
 	<div id = "arena-page">
@@ -10,14 +10,7 @@
 	</div>
 	<div id="arena-footer">
 		<div class="col-xs-12 text-center">
-			<button class="btn btn-danger arena-back-button"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back to Lobby</button>
+			<button ng-click="requestView(1);" class="btn btn-danger arena-back-button"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back to Lobby</button>
 		</div>
 	</div>
 </div>
-<script>
-$('.arena-back-button').click(function(){ 
-	if (confirm("Are you sure you want to leave the match?") === true){
-		viewmngr.setView(VIEWS.MAIN_MENU); 
-	}
-});
-</script>

@@ -53,11 +53,8 @@ for (var i = 0; i < 4; i++){ //12
 var generation = 1;
 console.log("CURRENT GENERATION: "+generation);
 
-var viewmngr; //Object in charge of handling views shown to user.
-
 /* Document is Ready */
 $(function() { 
-	viewmngr = new ViewManager();
 	gameLoop(); //Start Game Loop
 });
 
@@ -77,10 +74,13 @@ window.requestAnimFrame = (function () {
 
 /* Game loop invoked every frame */
 function gameLoop(){
-	switch(viewmngr.currentView){
+	switch(view){
 		case VIEWS.ARENA:
 			update();
-			render();
+			if(!ctx){
+				VIEWS.ARENA.cb();
+			} else 
+				render();
 			requestAnimFrame(gameLoop);
 			break;
 		default:

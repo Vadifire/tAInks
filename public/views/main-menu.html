@@ -18,7 +18,7 @@
 				
 				<hr />
 				<p>View, Edit, and Upgrade your tAInks here!</p>
-				<a href="#" class="manage_tanks">Manage Tanks</a>
+				<a ng-click="requestView(2);" href="#" class="manage_tanks">Manage Tanks</a>
 			</div>
 		</div>
 		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 project project-2 wow animated animated3 fadeInLeft">
@@ -27,7 +27,7 @@
 				<h2>Play Local</h2>
 				<hr />
 				<p>Play locally to train your tAInks or try and kill them!</p>
-				<a href="#" class="play_local">Play Local</a>
+				<a ng-click="requestView(4);" href="#" class="play_local">Play Local</a>
 			</div>
 		</div>
 		<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 project project-3 wow animated animated2 fadeInLeft">
@@ -36,24 +36,13 @@
 				<h2>Play Online</h2>
 				<hr />
 				<p>Play online against other tAInks!</p>
-				<a href="#" class="play_online">Play Online</a>
+				<a ng-click="requestView(4);" href="#" class="play_online">Play Online</a>
 			</div>
 		</div>
 		<div class="clearfix"></div>
 	</div>
 	
 	<div class="container-fluid footer">
-		<button class="btn btn-danger logout-btn"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Log Out</button>
+		<button ng-click="requestView(0);" class="btn btn-danger logout-btn"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Log Out</button>
 	</div>
 </div>
-		
-		<script>
-		$('.manage_tanks').click(function () { viewmngr.setView(VIEWS.TANK_GALLERY); });
-		$('.play_local').click(function () { viewmngr.setView(VIEWS.ARENA); });
-		$('.play_online').click(function () { viewmngr.setView(VIEWS.ARENA); });
-		$('.logout-btn').click(function () { 
-			if (confirm("Are you sure you want to log out?") === true){
-				viewmngr.setView(VIEWS.LOGIN);
-			}
-		});
-		</script>
