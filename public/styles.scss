@@ -18,9 +18,14 @@ body {
  }
 }
 
+.row {
+	margin-left: 0;
+	margin-right: 0;
+}
+
 #headerLogo img{
 	margin-bottom: 20px;
-	width: 500px;
+	width: 300px;
 }
 
 #arena{
@@ -232,26 +237,6 @@ canvas {
 	}
 }
 
-
-h1.camo,
-h2.camo,
-h3.camo,
-h4.camo,
-h5.camo {
-	background-clip: text;
-	text-fill-color: transparent;
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	background-image: url(./img/bg/0011.jpg);
-	font-weight: 900 !important;
-	text-shadow: 0px 0px 6px rgba(255,255, 255,0.2);
-
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
-}
-
 #loginForm,
 #registerForm {
 	input {
@@ -264,22 +249,215 @@ h5.camo {
 	display: none;
 }
 
+
+/* Tank menu styling */
 .tank-select-wrapper{
-	background-color: $main-menu-bg-color;
-	margin-bottom: 10px;
-	border-radius: 3px;
-	padding: 10px;
+	.pr-12 {
+		padding-right: 12px !important;
+	}
+
+	.mb-20 {
+		margin-bottom: 20px !important;
+	}
+
+	.b-1 {
+		border: 1px solid #ebebeb !important;
+	}
+
+	.card {
+		border: 0;
+		border-radius: 0;
+		margin-bottom: 30px;
+		-webkit-transition: .5s;
+		transition: .5s;
+	}
+
+	.card {
+		position: relative;
+		display: -ms-flexbox;
+		display: flex;
+		-ms-flex-direction: column;
+		flex-direction: column;
+		min-width: 0;
+		word-wrap: break-word;
+		background-color: #fff;
+		background-clip: border-box;
+		border: 1px solid rgba(0,0,0,.125);
+		border-radius: .25rem;
+	}
+
+	.media {
+		padding: 16px 12px;
+		-webkit-transition: background-color .2s linear;
+		transition: background-color .2s linear;
+		display: -ms-flexbox;
+		display: flex;
+		-ms-flex-align: start;
+		align-items: flex-start;
+	}
+
+	.card-body {
+		-ms-flex: 1 1 auto;
+		flex: 1 1 auto;
+		padding: 1.25rem;
+	}
+
+	.media .avatar {
+		flex-shrink: 0;
+	}
+
+	.no-radius {
+		border-radius: 0 !important;
+	}
+
+	.avatar-xl {
+		width: 64px;
+		height: 64px;
+		line-height: 64px;
+		font-size: 1.25rem;
+	}
+
+	.avatar {
+		position: relative;
+		display: inline-block;
+		width: 66px;
+		height: 66px;
+		line-height: 36px;
+		text-align: center;
+		border-radius: 100%;
+		background-color: #f5f6f7;
+		color: #8b95a5;
+		text-transform: uppercase;
+		margin-top: 20px;
+	}
+
+	img {
+		max-width: 100%;
+		vertical-align: middle;
+		border-style: none;
+	}
+
+	.mb-2 {
+		margin-bottom: .5rem!important;
+	}
+
+	.fs-20 {
+		font-size: 20px !important;
+	}
+
+	.pr-16 {
+		padding-right: 16px !important;
+	}
+
+	.ls-1 {
+		letter-spacing: 1px !important;
+	}
+
+	.fw-300 {
+		font-weight: 300 !important;
+	}
+
+	.fs-16 {
+		font-size: 16px !important;
+	}
+
+	.media-body>* {
+		margin-bottom: 0;
+	}
+
+	small, time, .small {
+		font-family: Roboto,sans-serif;
+		font-weight: 400;
+		font-size: 11px;
+		color: #8b95a5;
+	}
+
+	.fs-14 {
+		font-size: 14px !important;
+	}
+
+	.mb-12 {
+		margin-bottom: 12px !important;
+	}
+
+	.text-fade {
+		color: rgba(77,82,89,0.7) !important;
+	}
+
+	.card-footer:last-child {
+		border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
+	}
+
+	.card-footer {
+		background-color: #fcfdfe;
+		border-top: 1px solid rgba(77,82,89,0.07);
+		color: #5c626d;
+		padding: 10px 20px;
+	}
+
+	.flexbox {
+		display: -webkit-box;
+		display: flex;
+		-webkit-box-pack: justify;
+		justify-content: space-between;
+	}
+
+	.align-items-center {
+		-ms-flex-align: center!important;
+		align-items: center!important;
+	}
+
+	.card-footer {
+		background-color: #e6e6e6;
+		border-top: 1px solid rgba(77, 82, 89, 0.07);
+		color: #8b95a5;
+		padding: 10px 20px
+	}
+
+	.card-footer>*:last-child {
+		margin-bottom: 0
+	}
+
+	.hover-shadow {
+		-webkit-box-shadow: 0 0 35px rgba(0, 0, 0, 0.11);
+		box-shadow: 0 0 35px rgba(0, 0, 0, 0.11)
+	}
+
+	.fs-10 {
+		font-size: 10px !important;
+	}
+	h5 span {
+		font-family: Roboto,sans-serif;
+		font-weight: 400;
+		//font-size: 11px;
+		color: #000000;
+	}
+	h5 a {
+		color: #8b95a5;
+	}
 	
-	#tAI-name{
-		color: white;
-		font-size: 20px;
+	.fa-tachometer{
+		color: rgba(45, 45, 239, 0.7);
 	}
-
-	#tAI-score{
-		color: red;
-		font-weight: bold;
+	
+	.fa-heart{
+		color: rgba(247, 46, 67, 0.7);
 	}
+	.tank-comps{
+	
+		
+	}
+	
+	
+}    
 
-}
-
-
+#footer-menu {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	color: white;
+	text-shadow: 2px 4px 3px rgba(0,0,0,0.6);
+	text-align: right;;
+	.item{
+	}
+}	

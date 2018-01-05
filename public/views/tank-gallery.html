@@ -1,28 +1,46 @@
 <div id = "tank-gallery" class="text-center">
+	<div id="tank-select" class="row">
+		<div ng-repeat="tank in player_tanks" id="tank-select-wrapper" class="tank-select-wrapper col-md-6 col-lg-4">
+				<div class="card hover-shadow">
+				  <div class="card-body text-center pt-1 pb-20">
+					<a href="#">
+					  <img class="avatar avatar-xxl" src="public/img/tank/1.png">
+					</a>
+					<h5 class="mt-2 mb-0"><a class="hover-primary" href="#">{{tank.name}}</a></h5>
+					<div class="mt-20 tank-comps">
+						<span class="fa-stack fa-lg">
+							<i class="fa fa-circle fa-stack-2x"></i>
+							<i class="fa fa-eye fa-stack-1x fa-inverse"></i>
+						</span>
+						<span class="fa-stack fa-lg">
+							<i class="fa fa-circle fa-stack-2x"></i>
+							<i class="fa fa-eye fa-stack-1x fa-inverse"></i>
+						</span>
+						<span class="fa-stack fa-lg">
+							<i class="fa fa-circle fa-stack-2x"></i>
+							<i class="fa fa-eye fa-stack-1x fa-inverse"></i>
+						</span>
+						<span class="fa-stack fa-lg">
+							<i class="fa fa-circle fa-stack-2x"></i>
+							<i class="fa fa-bullseye fa-stack-1x fa-inverse"></i>
+						</span>
+					</div>
+				  </div>
 
-	<div id="tank-select-wrapper-template" class="tank-select-wrapper col-xs-6">
-		<span id="tAI-name"></span> <br>
-		Speed: <span id="tAI-speed"></span> <br>
+				  <footer class="card-footer flexbox">
+					<div>
+					  <i class="fa fa-tachometer pr-1"></i>
+					  <span>{{tank.speed}}</span>
+					</div>
+					<div>
+					  <i class="fa fa-heart pr-1"></i>
+					  <span>{{tank.health}}</span>
+					</div>
+				  </footer>
+				</div>
+		</div>
 	</div>
-				
-			<div id="headerLogo">
-				<a href="/">
-					<img src = "public/img/logo.png">
-				</a>
-			</div>
-			<div id="tank-select" class="container">
-				<h3 class="camo">Tank Manager</h3>
-			<br>
-			</div>
+	<div class="col-xs-12 text-center">
+		<button ng-click="requestView(1);" class="btn btn-primary arena-back-button"><i class="fa fa-bars" aria-hidden="true"></i> Main Menu</button>
+	</div>
 </div>
-		<script>
-		$('#loginForm').on('show.bs.collapse', function () {
-			$('#registerForm').collapse('hide');
-		});
-		$('#registerForm').on('show.bs.collapse', function () {
-			$('#loginForm').collapse('hide');
-		});
-		$('.view-arena-page').click(function () {
-			viewmngr.setView(VIEWS.MAIN_MENU);
-		});
-		</script>

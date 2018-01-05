@@ -46,7 +46,7 @@ var VIEWS = {
 		//var tanks = {id1:{name:'hAIry', score:50}, id2:{name:'clAIrance', score:80}, id3:{name:'jAInice', score:75} };
 		
 		//TO-DO populate tanks from database
-		var tanks = [ new Tank(100, 5, 5, 2, false), new Tank(200, 5, 5, 2, false), new Tank(300, 5, 5, 2, false) ];
+		var tanks = [ new Tank(1, 5, 5, 9, false), new Tank(2, 5, 5, 2, false), new Tank(3, 5, 5, 6, false), new Tank(4, 5, 5, 4, false), new Tank(5, 5, 5, 6, false) ];
 		
 		
 		//loop all tank fields and match to 'tAI_' + field_name
@@ -68,8 +68,10 @@ var VIEWS = {
 				}
 			 }
 			
-			//add newly created node to the DOM
+			//final styling changes
 			current_tank_html.css('display', 'block'); //set display to visible
+			
+			//add newly created node to the DOM
 			$('#tank-select').append(current_tank_html);
 		});
 		
