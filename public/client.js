@@ -74,16 +74,17 @@ var ammo = new Map(); //Maps ammo ids to ammo obj
 
 var playerTank = new Tank(0, 100, 400, 3, true);
 //Scatter AI tanks
-for (var i = 0; i < 6; i++){ //12
+for (var i = 0; i < 2; i++){ //6
     //var ai = new Tank(i + 1, 200 + 200 * (i % 4) + 30 * (i % 8), 160 + Math.floor(i / 4) * 220, 3, false);
     var ai = new Tank(i + 1, 10+Math.random()*980, 10+Math.random()*580, 3, false);
-    ai.attachComponents([new SensorComponent(0, -160, Math.PI / 2, tanks, laserImage1),
-        new SensorComponent(160 * Math.cos(7*Math.PI/12), -160 * Math.sin(7*Math.PI/12), 7*Math.PI/12, tanks, laserImage1),
-		new SensorComponent(160 * Math.cos(5*Math.PI/12), -160 * Math.sin(5*Math.PI/12), 5*Math.PI/12, tanks, laserImage1),
+    ai.attachComponents([
+        new SensorComponent(0, -4, 0, tanks, laserImage1, 256, 4),
+        new SensorComponent(-4, 0, Math.PI / 12, tanks, laserImage1, 256, 4),
+        new SensorComponent(4, 0, -Math.PI / 12, tanks, laserImage1, 256, 4),
 
-        new SensorComponent(0, -158, Math.PI / 2, ammo, laserImage2),
-        new SensorComponent(158 * Math.cos(7*Math.PI/12), -158 * Math.sin(7*Math.PI/12), 7*Math.PI/12, ammo, laserImage2),
-		new SensorComponent(158 * Math.cos(5*Math.PI/12), -158 * Math.sin(5*Math.PI/12), 5*Math.PI/12, ammo, laserImage2),
+        new SensorComponent(0, 0, 0, ammo, laserImage2, 256, 4),
+        new SensorComponent(0, 0, Math.PI/12, ammo, laserImage2, 256,4 ),
+		new SensorComponent(0, 0, -Math.PI/12, ammo, laserImage2, 256,4 ), //What are constants?
 
         //TODO: cleanup sensor construction code
 

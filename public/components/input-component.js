@@ -85,7 +85,28 @@ var laserImage2 = new Image();
 laserImage2.src = 'public/img/laser2.png';
 
 /* Component that measures distance to nearest tank down a line */
-function SensorComponent(x, y, dir, map, image) {
+function SensorComponent(x, y, dir, map, image, width, height) {
+    //Populate width and height from image if needed
+
+    //The problem is sometimes images don't finish loading...
+    if (!width) {
+        this.width = image.naturalWidth;
+    } else {
+        this.width = width;
+    }
+    if (!height) {
+        this.height = image.naturalHeight;
+    } else {
+        this.height = height;
+    }
+
+    /* Instead of taking the normal coords where x,y denotes where to put
+    the center of the component relative to the center of the tank, we
+    want to think in terms of where to put the base of the laser sensor
+    relative to the tank */
+    x -= Math.sin(dir) * (this.width + TANK_WIDTH)/2;
+    y -= Math.cos(dir) * (this.width + TANK_WIDTH)/2;
+
     InputComponent.call(this, x, y, image);
     this.dir = dir; // relative to tank
     this.entityMap = map;
@@ -94,11 +115,11 @@ SensorComponent.prototype = Object.create(InputComponent.prototype);
 SensorComponent.prototype.readInput = function () {
     var angle = this.tank.dir + this.dir;
     var line = {
-        x1: this.xOffset - 64,
+        x1: this.xOffset - this.width/2,
         y1: this.yOffset,
-        x2: this.xOffset + 64,
+        x2: this.xOffset + this.width/2,
         y2: this.yOffset,
-    }
+    } //Line is not necessarily correct atm
     rotateLineAroundEntity(line, this.tank);
     this.line = line;
     var ret = 0;
