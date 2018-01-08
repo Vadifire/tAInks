@@ -74,25 +74,26 @@ var ammo = new Map(); //Maps ammo ids to ammo obj
 
 var playerTank = new Tank(0, 100, 400, 3, true);
 //Scatter AI tanks
-for (var i = 0; i < 4; i++){ //12
+for (var i = 0; i < 8; i++){ //12
     //var ai = new Tank(i + 1, 200 + 200 * (i % 4) + 30 * (i % 8), 160 + Math.floor(i / 4) * 220, 3, false);
-    var ai = new Tank(i + 1, 10+Math.random()*652, 10+Math.random()*358, 3, false);
-    ai.attachComponents([new SensorComponent(0, -96, Math.PI / 2, tanks, laserImage1),
-        new SensorComponent(96 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI / 3, tanks, laserImage1),
-        new SensorComponent(-96 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI * 2 / 3, tanks, laserImage1),
+    var ai = new Tank(i + 1, 10+Math.random()*980, 10+Math.random()*580, 3, false);
+    ai.attachComponents([new SensorComponent(0, -160, Math.PI / 2, tanks, laserImage1),
+        new SensorComponent(160 * Math.cos(7*Math.PI/12), -160 * Math.sin(7*Math.PI/12), 7*Math.PI/12, tanks, laserImage1),
+		new SensorComponent(160 * Math.cos(5*Math.PI/12), -160 * Math.sin(5*Math.PI/12), 5*Math.PI/12, tanks, laserImage1),
 
-        new SensorComponent(0, -92, Math.PI / 2, ammo, laserImage2),
-        new SensorComponent(100 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI / 3, ammo, laserImage2),
-        new SensorComponent(-100 * (1/2), -96 * (Math.sqrt(3)/2), Math.PI * 2 / 3, ammo, laserImage2),
+        new SensorComponent(0, -158, Math.PI / 2, ammo, laserImage2),
+        new SensorComponent(158 * Math.cos(7*Math.PI/12), -158 * Math.sin(7*Math.PI/12), 7*Math.PI/12, ammo, laserImage2),
+		new SensorComponent(158 * Math.cos(5*Math.PI/12), -158 * Math.sin(5*Math.PI/12), 5*Math.PI/12, ammo, laserImage2),
 
-        new DirComponent(), new RandomComponent(), new BulletComponent(),
+        //TODO: cleanup sensor construction code
+
+        new RandomComponent(),
 		new DriveComponent(), new RotateComponent(), new ShootComponent()]);
 	tanks.set(ai.id, ai);
 }
 //Add Player to Map
 //tanks.set(playerTank.id, playerTank);
 var generation = 1;
-console.log("CURRENT GENERATION: "+generation);
 
 /* Document is Ready */
 $(function() { 
@@ -132,6 +133,9 @@ function gameLoop(){
 var lastTime = 0;
 var fpsCount = 60;
 var fps = 0;
+
+var automaticGenSkip = 30; //seconds until skipping to next gen
+var lastGenTime = 0;
 
 /* Render game-layer for arena */
 function render(){
@@ -181,8 +185,10 @@ function update() {
 
     insertAmmoRandomly(4-ammo.size); // # of Ammo in Arena
 
-    if (tanks.size <= 1) { /* one tank left -> winner decided, end game */
-        processGameEnd();
+    if (tanks.size <= 1 || /* one tank left -> winner decided, end game */
+    	(performance.now() - automaticGenSkip*1000 > lastGenTime)){ 
+    	lastGenTime = performance.now();
+        nextGeneration();
     }
 }
 
@@ -197,7 +203,7 @@ function processGameEnd() {
         deadTanks.set(tankWinner.id, tankWinner); // add last tank to dead tanks
         tanks.delete(tankWinner.id); // remove from active tanks list
     }
-    tanks = evolveUnselected(deadTanks, 0.25, 0.8); //Allow Divine Influence
+    tanks = evolveUnselected(deadTanks, 0.8, 0.5); //Allow Divine Influence
     deadTanks = new Map(); // clear dead tanks
     bullets = new Map(); // clear any stray bullets
     tanks.forEach(function (tank) { //Revive the tanks

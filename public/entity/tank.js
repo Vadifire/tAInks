@@ -22,7 +22,7 @@ for (var i = 1; i < 9; i++){
 var TANK_WIDTH = 68, TANK_HEIGHT = 68;
 var SHOOT_CD = 200; //shoot cd in millis
 var TANK_HEALTH = 50;
-var TANK_BULLETS = 32;
+var TANK_BULLETS = 40;
 
 /* Tank Constructor
  *
