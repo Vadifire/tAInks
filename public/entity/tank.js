@@ -273,7 +273,7 @@ Tank.prototype.render = function(ctx){
 		comp.render(ctx); //draw all components
 	});
     ctx.restore(); //restore normal xy coordinate plane
-	ctx.fillText(this.name, this.x, this.y-img.naturalHeight/2-16);
+    ctx.fillText(this.name, this.x, this.y - img.naturalHeight / 2 - 16);
 	if (this.selected){
 		this.drawHitbox(ctx);
 		if (this.neuralNetwork) { //TODO: toggle neural network rendering (?)
@@ -323,12 +323,12 @@ Tank.prototype.drawHitbox = function (ctx) {
 		}
     }
     //Draw lines for components too
-    /*this.components.forEach(function (comp) {
+    this.components.forEach(function (comp) {
         if (comp.line) {
             ctx.beginPath();
             ctx.moveTo(comp.line.x1, comp.line.y1);
             ctx.lineTo(comp.line.x2, comp.line.y2);
             ctx.stroke();
         }
-    });*/
+    });
 }

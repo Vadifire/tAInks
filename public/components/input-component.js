@@ -104,8 +104,11 @@ function SensorComponent(x, y, dir, map, image, width, height) {
     the center of the component relative to the center of the tank, we
     want to think in terms of where to put the base of the laser sensor
     relative to the tank */
-    x -= Math.sin(dir) * (this.width + TANK_WIDTH)/2;
-    y -= Math.cos(dir) * (this.width + TANK_WIDTH)/2;
+    this.xComp = Math.sin(dir) * (this.width + TANK_WIDTH) / 2;
+    this.yComp = Math.cos(dir) * (this.width + TANK_WIDTH) / 2;
+
+    x -= this.xComp;
+    y -= this.yComp;
 
     InputComponent.call(this, x, y, image);
     this.dir = dir; // relative to tank
@@ -113,13 +116,13 @@ function SensorComponent(x, y, dir, map, image, width, height) {
 }
 SensorComponent.prototype = Object.create(InputComponent.prototype);
 SensorComponent.prototype.readInput = function () {
-    var angle = this.tank.dir + this.dir;
+    var angle = this.dir;
     var line = {
-        x1: this.xOffset - this.width/2,
-        y1: this.yOffset,
-        x2: this.xOffset + this.width/2,
-        y2: this.yOffset,
-    } //Line is not necessarily correct atm
+        x1: this.xOffset + (this.width) / 2,
+        y1: this.yOffset - this.width/2 * Math.sin(angle),
+        x2: this.xOffset - (this.width) / 2,
+        y2: this.yOffset + this.width/2 * Math.sin(angle),
+    } 
     rotateLineAroundEntity(line, this.tank);
     this.line = line;
     var ret = 0;
