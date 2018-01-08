@@ -183,11 +183,10 @@ function update() {
 		tank.update(Keys);
     });
 
-    insertAmmoRandomly(4-ammo.size); // # of Ammo in Arena
+    insertAmmoRandomly(5-ammo.size); // # of Ammo in Arena
 
     if (tanks.size <= 1 || /* one tank left -> winner decided, end game */
     	(performance.now() - automaticGenSkip*1000 > lastGenTime)){ 
-    	lastGenTime = performance.now();
         nextGeneration();
     }
 }
@@ -223,4 +222,5 @@ function nextGeneration() {
     });
     tanks = new Map(); //clear
     processGameEnd();
+    lastGenTime = performance.now();
 }
