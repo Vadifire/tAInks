@@ -186,6 +186,41 @@ NeuralNetwork.prototype.mutate = function (mutationStrength, mutationRate) {
     }
 }
 
+/* MUTATION OPERATORS (modifies current network) */
+NeuralNetwork.prototype.mutateRandomize = function (numWeights, numBiases) {
+
+}
+
+NeuralNetwork.prototype.mutateScale = function (numWeights, numBiases) {
+
+}
+
+NeuralNetwork.prototype.mutateTranslate = function (numWeights, numBiases) {
+
+}
+
+NeuralNetwork.prototype.mutateInvert = function (numWeights, numBiases) {
+
+}
+
+/* CROSSOVER OPERATORS (produces new child) */
+
+//Swap over a single bias
+NeuralNetwork.prototype.crossoverBiases = function (numBiases) {
+
+}
+
+//Swap over a single weight
+NeuralNetwork.prototype.crossoverWeights = function (numWeights) {
+
+}
+
+//Swap over all weights connected to one neuron (and biases?)
+NeuralNetwork.prototype.crossoverNeurons = function (numNeurons) {
+
+}
+
+
 /*
  * Overwrite current genes with crossover of two parent Neural Networks
  * This is done through averaging weights and biases.
