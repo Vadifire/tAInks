@@ -21,7 +21,7 @@ function TrainingSettings(){
 
 	this.learning = { //Configure Automated Learning Techniques
 		simsPerGen: 1,
-		automaticMutation : { //Maximum Mutation Varas
+		automaticMutation : { //Maximum Mutation Vars
 			maxMutationRate : 0.8,
 			maxMutationStrength : 0.5
 		},

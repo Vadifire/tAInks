@@ -32,7 +32,9 @@ function NeuralNetwork(tank) {
 		}
     }, this);
     this.tankId = tank.id;
-	this.network = this.constructRandomNetwork(1,10);
+    //Networks that should have close to direct map behavior typically use 1 hidden layer
+    //# of hidden nodes = # output nodes + 2/3 # input nodes (recommended by a book on machine learning)
+	this.network = this.constructRandomNetwork(1,this.outputs.length + Math.floor(this.inputs.length*(2/3)));
 	this.count = 0;
     console.log(this.network);
 }
