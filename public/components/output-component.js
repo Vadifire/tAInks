@@ -60,11 +60,31 @@ function RotateComponent(x, y, image){OutputComponent.call(this,x,y,image)};
 RotateComponent.prototype = Object.create(OutputComponent.prototype);
 RotateComponent.prototype.performAction = function (value){
 	if (value < 0.4){ 
-		this.tank.rotate(); // bottom third, move CCW
+		this.tank.rotate(); // bottom third, turn CCW
 	}else if (value > 0.6){
-		this.tank.rotate(true); // top third, move CW
+		this.tank.rotate(true); // top third, turn CW
 	}
 }
+
+/* Component that determines if Tank will rotate CCW, CW, or not at all */
+function RotateCWComponent(x, y, image){OutputComponent.call(this,x,y,image)};
+RotateCWComponent.prototype = Object.create(OutputComponent.prototype);
+RotateCWComponent.prototype.performAction = function (value){
+	if (value > 0.5){
+		this.tank.rotate(true); // top third, turn CW
+	}
+}
+
+
+/* Component that determines if Tank will rotate CCW, CW, or not at all */
+function RotateCCWComponent(x, y, image){OutputComponent.call(this,x,y,image)};
+RotateCCWComponent.prototype = Object.create(OutputComponent.prototype);
+RotateCCWComponent.prototype.performAction = function (value){
+	if (value > 0.5){
+		this.tank.rotate(); // top third, move CCW
+	}
+}
+
 
 /* Component that determines if Tank will shoot */
 function ShootComponent(x, y, image){OutputComponent.call(this,x,y,image)};

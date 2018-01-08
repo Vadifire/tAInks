@@ -74,7 +74,7 @@ var ammo = new Map(); //Maps ammo ids to ammo obj
 
 var playerTank = new Tank(0, 100, 400, 3, true);
 //Scatter AI tanks
-for (var i = 0; i < 8; i++){ //12
+for (var i = 0; i < 6; i++){ //12
     //var ai = new Tank(i + 1, 200 + 200 * (i % 4) + 30 * (i % 8), 160 + Math.floor(i / 4) * 220, 3, false);
     var ai = new Tank(i + 1, 10+Math.random()*980, 10+Math.random()*580, 3, false);
     ai.attachComponents([new SensorComponent(0, -160, Math.PI / 2, tanks, laserImage1),
@@ -87,8 +87,8 @@ for (var i = 0; i < 8; i++){ //12
 
         //TODO: cleanup sensor construction code
 
-        new RandomComponent(),
-		new DriveComponent(), new RotateComponent(), new ShootComponent()]);
+        new RandomComponent(), new DirComponent(), new xComponent(), new yComponent(),
+		new DriveComponent(), new RotateCWComponent(), new RotateCCWComponent(), new ShootComponent()]);
 	tanks.set(ai.id, ai);
 }
 //Add Player to Map
@@ -183,7 +183,7 @@ function update() {
 		tank.update(Keys);
     });
 
-    insertAmmoRandomly(5-ammo.size); // # of Ammo in Arena
+    insertAmmoRandomly(7-ammo.size); // # of Ammo in Arena
 
     if (tanks.size <= 1 || /* one tank left -> winner decided, end game */
     	(performance.now() - automaticGenSkip*1000 > lastGenTime)){ 
@@ -202,7 +202,7 @@ function processGameEnd() {
         deadTanks.set(tankWinner.id, tankWinner); // add last tank to dead tanks
         tanks.delete(tankWinner.id); // remove from active tanks list
     }
-    tanks = evolveUnselected(deadTanks, 0.8, 0.5); //Allow Divine Influence
+    tanks = evolveUnselected(deadTanks, 0.6, 0.4); //Allow Divine Influence
     deadTanks = new Map(); // clear dead tanks
     bullets = new Map(); // clear any stray bullets
     tanks.forEach(function (tank) { //Revive the tanks
