@@ -186,37 +186,52 @@ NeuralNetwork.prototype.mutate = function (mutationStrength, mutationRate) {
     }
 }
 
-/* MUTATION OPERATORS (modifies current network) */
-NeuralNetwork.prototype.mutateRandomize = function (numWeights, numBiases) {
+/*
+ * MUTATION OPERATORS (modifies current network, unless copying)
+ *
+ * @param {number} numWeights - # of weights to mutate
+ * @param {number} numBiases - # of biases to mutate
+ * @param {boolean} copy - Whether to make a copy before modifications
+ *
+ * @returns {Object} - mutated NN (moreso for when copying)
+ */
+
+//Randomizes values in the NN
+NeuralNetwork.prototype.mutateRandomize = function (numWeights, numBiases, copy) {
+
+}
+//Scales values in the NN
+NeuralNetwork.prototype.mutateScale = function (numWeights, numBiases, copy) {
+
+}
+//Shifts values in the NN
+NeuralNetwork.prototype.mutateShift = function (numWeights, numBiases, copy) {
+
+}
+//Inverts values in the NN
+NeuralNetwork.prototype.mutateInvert = function (numWeights, numBiases, copy) {
 
 }
 
-NeuralNetwork.prototype.mutateScale = function (numWeights, numBiases) {
+/*
+ * CROSSOVER OPERATORS (produces new child)
+ *
+ * @param {Object} partner - The NN of the other parent
+ * @param {number} numX - The number of things to modify
+ *
+ * @returns {Object} - The child NN.
+ */
+
+//Swap over a number of biases
+NeuralNetwork.prototype.crossoverBiases = function (partner, numBiases) {
 
 }
-
-NeuralNetwork.prototype.mutateTranslate = function (numWeights, numBiases) {
-
-}
-
-NeuralNetwork.prototype.mutateInvert = function (numWeights, numBiases) {
+//Swap over a number of weights
+NeuralNetwork.prototype.crossoverWeights = function (partner, numWeights) {
 
 }
-
-/* CROSSOVER OPERATORS (produces new child) */
-
-//Swap over a single bias
-NeuralNetwork.prototype.crossoverBiases = function (numBiases) {
-
-}
-
-//Swap over a single weight
-NeuralNetwork.prototype.crossoverWeights = function (numWeights) {
-
-}
-
-//Swap over all weights connected to one neuron (and biases?)
-NeuralNetwork.prototype.crossoverNeurons = function (numNeurons) {
+//Swap over all weights connected to one neuron (and biases?
+NeuralNetwork.prototype.crossoverNeurons = function (partner, numNeurons) {
 
 }
 
