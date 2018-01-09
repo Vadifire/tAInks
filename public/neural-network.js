@@ -189,94 +189,89 @@ NeuralNetwork.prototype.mutate = function (mutationStrength, mutationRate) {
 /*
  * MUTATION OPERATORS (modifies current network, unless copying)
  *
- * @param {number} numWeights - # of weights to mutate
  * @param {number} numBiases - # of biases to mutate
- * @param {boolean} copy - Whether to make a copy before modifications
- *
+ * @param {number} numWeights - # of weights to mutate
+ * @param {boolean} copy - Whether to keep state of original and create copy
+ * 
  * @returns {Object} - mutated NN (moreso for when copying)
  */
 
-//Randomizes values in the NN
-NeuralNetwork.prototype.mutateRandomize = function (numWeights, numBiases, copy) {
-    var nn = copy ? JSON.parse(JSON.stringify(this.network)) : this.network;
 
-    //TODO: create reusable random mutate code
+/* Basic Mutation Operator Helper Functions */
+
+/*
+ * @param {function} func(n) - The function used to mutate values
+ * @param {Object} nn - The Neural Network to mutate
+ * @param {number} numBiases - # of biases to mutate
+ */
+NeuralNetwork.prototype.mutateBiases = function (func, nn, numBiases){
     //TODO: Don't allow same entity to be mutated twice? (not sure if worth computational cost...kinda doubt it?)
     for (var i = numBiases; i > 0; i--){
         var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
         var neuron = Math.floor(Math.random(nn.biases[synapseLayer].length)); //get random neuron
-        nn.biases[synapseLayer][neuron] =  Math.random()*2 -1; //randomize between -1 and 1
+        nn.biases[synapseLayer][neuron] = func(nn.biases[synapseLayer][neuron]);
     }
+}
+/*
+ * @param {function} func(n) - The function used to mutate values
+ * @param {Object} nn - The Neural Network to mutate
+ * @param {number} numWeights - # of weights to mutate
+ */
+NeuralNetwork.prototype.mutateWeights = function (func, nn, numWeights){
+    //TODO: Don't allow same entity to be mutated twice? (not sure if worth computational cost...kinda doubt it?)
     for (var i = numWeights; i > 0; i--){
         var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
         var neuron1 = Math.floor(Math.random(nn.weights[synapseLayer].length)); //get random firing neuron layer
         var neuron2 = Math.floor(Math.random(nn.weights[synapseLayer][neuron1].length)); //get random receiving neuron layer
-        nn.weights[synapseLayer][neuron1][neuron2] =  Math.random()*2 -1; //randomize between -1 and 1
+        nn.weights[synapseLayer][neuron1][neuron2] = func(nn.weights[synapseLayer][neuron1][neuron2]);
     }
+}
 
+//TODO: make code just a bit more reusable
+
+//Randomizes values in the NN
+NeuralNetwork.prototype.mutateRandomize = function (numBiases, numWeights, copy) {
+    var nn = copy ? JSON.parse(JSON.stringify(this.network)) : this.network;
+    function func(n){
+        return Math.random()*2 -1; //randomize between -1 and 1
+    };
+    mutateBiases(func, nn, numBiases);
+    mutateWeights(func, nn, numWeights)
+    return nn;
 }
 //Scales values in the NN
-NeuralNetwork.prototype.mutateScale = function (numWeights, numBiases, copy) {
+NeuralNetwork.prototype.mutateScale = function (numBiases, numWeights, copy) {
     var nn = copy ? JSON.parse(JSON.stringify(this.network)) : this.network;
-    //TODO: create reusable random mutate code
-    //TODO: Don't allow same entity to be mutated twice? (not sure if worth computational cost...kinda doubt it?)
-    for (var i = numBiases; i > 0; i--){
-        var scaleFactor = Math.random()+.5; //TODO: how do we want to decide scale factor? (0.5, 1.5 atm)
-        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
-        var neuron = Math.floor(Math.random(nn.biases[synapseLayer].length)); //get random neuron
-        nn.biases[synapseLayer][neuron] *= scaleFactor;
-        nn.biases[synapseLayer][neuron] = Math.max(-1, nn.biases[synapseLayer][neuron]); //bound 
-        nn.biases[synapseLayer][neuron] = Math.min(1, nn.biases[synapseLayer][neuron]);
-    }
-    for (var i = numWeights; i > 0; i--){
-        var scaleFactor = Math.random()+.5; //TODO: how do we want to decide scale factor? (0.5, 1.5 atm)
-        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
-        var neuron1 = Math.floor(Math.random(nn.weights[synapseLayer].length)); //get random firing neuron layer
-        var neuron2 = Math.floor(Math.random(nn.weights[synapseLayer][neuron1].length)); //get random receiving neuron layer
-        nn.weights[synapseLayer][neuron1][neuron2] *= scaleFactor;
-        nn.biases[synapseLayer][neuron1][neuron2] = Math.max(-1, nn.biases[synapseLayer][neuron1][neuron2]); //bound
-        nn.biases[synapseLayer][neuron1][neuron2] = Math.min(1, nn.biases[synapseLayer][neuron1][neuron2]);
-    }
+    function func(n){
+        n *=  Math.random()+.5; //TODO: how do we want to decide scale factor? (0.5, 1.5 atm)
+        n = Math.max(-1, n); //bound n
+        return Math.min(1, n);
+    };
+    mutateBiases(func, nn, numBiases);
+    mutateWeights(func, nn, numWeights)
+    return nn;
 }
 //Shifts values in the NN
-NeuralNetwork.prototype.mutateShift = function (numWeights, numBiases, copy) {
+NeuralNetwork.prototype.mutateShift = function (numBiases, numWeights, copy) {
     var nn = copy ? JSON.parse(JSON.stringify(this.network)) : this.network;
-    //TODO: create reusable random mutate code
-    //TODO: Don't allow same entity to be mutated twice? (not sure if worth computational cost...kinda doubt it?)
-    for (var i = numBiases; i > 0; i--){
-        var shiftFactor = Math.random()-.5; //TODO: how do we want to decide shift factor factor? (-0.5, 0.5) atm
-        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
-        var neuron = Math.floor(Math.random(nn.biases[synapseLayer].length)); //get random neuron
-        nn.biases[synapseLayer][neuron] += shiftFactor;
-        nn.biases[synapseLayer][neuron] = Math.max(-1, nn.biases[synapseLayer][neuron]); //bound 
-        nn.biases[synapseLayer][neuron] = Math.min(1, nn.biases[synapseLayer][neuron]);
-    }
-    for (var i = numWeights; i > 0; i--){
-        var shiftFactor = Math.random()-.5; //TODO: how do we want to decide scale factor? (0.5, 1.5 atm)
-        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
-        var neuron1 = Math.floor(Math.random(nn.weights[synapseLayer].length)); //get random firing neuron layer
-        var neuron2 = Math.floor(Math.random(nn.weights[synapseLayer][neuron1].length)); //get random receiving neuron layer
-        nn.biases[synapseLayer][neuron1][neuron2] += shiftFactor;
-        nn.biases[synapseLayer][neuron1][neuron2] = Math.max(-1, nn.biases[synapseLayer][neuron1][neuron2]); //bound
-        nn.biases[synapseLayer][neuron1][neuron2] = Math.min(1, nn.biases[synapseLayer][neuron1][neuron2]);
-    }
+    function func(n){
+        n +=  Math.random()-.5; //TODO: how do we want to decide shift factor factor? (-0.5, 0.5) atm
+        n = Math.max(-1, n); //bound n
+        return Math.min(1, n);
+    };
+    mutateBiases(func, nn, numBiases);
+    mutateWeights(func, nn, numWeights)
+    return nn;
 }
 //Negates values in the NN
-NeuralNetwork.prototype.mutateInvert = function (numWeights, numBiases, copy) {
+NeuralNetwork.prototype.mutateInvert = function (numBiases, numWeights, copy) {
     var nn = copy ? JSON.parse(JSON.stringify(this.network)) : this.network;
-    //TODO: create reusable random mutate code
-    //TODO: Don't allow same entity to be mutated twice? (not sure if worth computational cost...kinda doubt it?)
-    for (var i = numBiases; i > 0; i--){
-        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
-        var neuron = Math.floor(Math.random(nn.biases[synapseLayer].length)); //get random neuron
-        nn.biases[synapseLayer][neuron] *= -1;
-    }
-    for (var i = numWeights; i > 0; i--){
-        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
-        var neuron1 = Math.floor(Math.random(nn.weights[synapseLayer].length)); //get random firing neuron layer
-        var neuron2 = Math.floor(Math.random(nn.weights[synapseLayer][neuron1].length)); //get random receiving neuron layer
-        nn.weights[synapseLayer][neuron1][neuron2] *= -1;
-    }
+    function func(n){
+        return (n * -1);
+    };
+    mutateBiases(func, nn, numBiases);
+    mutateWeights(func, nn, numWeights)
+    return nn;
 }
 
 /*
