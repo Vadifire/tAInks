@@ -276,6 +276,7 @@ NeuralNetwork.prototype.mutateInvert = function (numBiases, numWeights, copy) {
 
 /*
  * CROSSOVER OPERATORS (produces new child)
+ * The partner is the one being copied from
  *
  * @param {Object} partner - The NN of the other parent
  * @param {number} numX - The number of things to modify
@@ -283,17 +284,46 @@ NeuralNetwork.prototype.mutateInvert = function (numBiases, numWeights, copy) {
  * @returns {Object} - The child NN.
  */
 
+//I'm not sure if two random values should be swapped,
+// or the same corresponding values.
+
 //Swap over a number of biases
 NeuralNetwork.prototype.crossoverBiases = function (partner, numBiases) {
-
+    var nn = JSON.parse(JSON.stringify(this.network));
+    for (var i = numBiases; i > 0; i--) {
+        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
+        var neuron = Math.floor(Math.random(nn.biases[synapseLayer].length)); //get random neuron
+        nn.biases[synapseLayer][neuron] = partner.biases[synapseLayer][neuron];
+    }
+    return nn;
 }
 //Swap over a number of weights
 NeuralNetwork.prototype.crossoverWeights = function (partner, numWeights) {
+    var nn = JSON.parse(JSON.stringify(this.network));
+    for (var i = numWeights; i > 0; i--) {
+        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
+        var neuron1 = Math.floor(Math.random(nn.weights[synapseLayer].length)); //get random firing neuron layer
+        var neuron2 = Math.floor(Math.random(nn.weights[synapseLayer][neuron1].length)); //get random receiving neuron layer
 
+        nn.weights[synapseLayer][neuron1][neuron2] = partner.weights[synapseLayerP][neuron1][neuron2];
+    }
+    return nn;
 }
-//Swap over all weights connected to one neuron (and biases?
+//Swap over all weights and the bias connected to one receiving neuron
 NeuralNetwork.prototype.crossoverNeurons = function (partner, numNeurons) {
-
+    //I suspect this makes the most sense to do for crossover. Mutations can do smaller changes.
+    var nn = JSON.parse(JSON.stringify(this.network));
+    for (var i = numNeurons; i > 0; i--) {
+        //Swap Biases
+        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
+        var neuron = Math.floor(Math.random(nn.biases[synapseLayer].length)); //get random neuron
+        nn.biases[synapseLayer][neuron] = partner.biases[synapseLayer][neuron];
+        //Swap Weights
+        for (var n = 0; n < nn.weights[synapseLayer].length; n++) { //need to test this
+            nn.biases[synapseLayer][n][neuron] = partner.biases[synapseLayer][n][neuron];
+        }
+    }
+    return nn;
 }
 
 
