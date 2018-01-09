@@ -64,7 +64,7 @@ NeuralNetwork.prototype.constructRandomNetwork = function(hLayers, hNeurons){
 		/* populate weights */
 		for (var n1 = 0; n1 < layerSizes[synapse]; n1++){ //for every firing neuron
 			weights[synapse].push([]);
-			for (var n2 = 0; n2 < layerSizes[synapse+1]; n2++){ //for every sending neuron
+			for (var n2 = 0; n2 < layerSizes[synapse+1]; n2++){ //for every receiving neuron
                 weights[synapse][n1].push(Math.random()*2-1);
 			}
 		} 
@@ -198,19 +198,85 @@ NeuralNetwork.prototype.mutate = function (mutationStrength, mutationRate) {
 
 //Randomizes values in the NN
 NeuralNetwork.prototype.mutateRandomize = function (numWeights, numBiases, copy) {
+    var nn = copy ? JSON.parse(JSON.stringify(this.network)) : this.network;
+
+    //TODO: create reusable random mutate code
+    //TODO: Don't allow same entity to be mutated twice? (not sure if worth computational cost...kinda doubt it?)
+    for (var i = numBiases; i > 0; i--){
+        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
+        var neuron = Math.floor(Math.random(nn.biases[synapseLayer].length)); //get random neuron
+        nn.biases[synapseLayer][neuron] =  Math.random()*2 -1; //randomize between -1 and 1
+    }
+    for (var i = numWeights; i > 0; i--){
+        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
+        var neuron1 = Math.floor(Math.random(nn.weights[synapseLayer].length)); //get random firing neuron layer
+        var neuron2 = Math.floor(Math.random(nn.weights[synapseLayer][neuron1].length)); //get random receiving neuron layer
+        nn.weights[synapseLayer][neuron1][neuron2] =  Math.random()*2 -1; //randomize between -1 and 1
+    }
 
 }
 //Scales values in the NN
 NeuralNetwork.prototype.mutateScale = function (numWeights, numBiases, copy) {
-
+    var nn = copy ? JSON.parse(JSON.stringify(this.network)) : this.network;
+    //TODO: create reusable random mutate code
+    //TODO: Don't allow same entity to be mutated twice? (not sure if worth computational cost...kinda doubt it?)
+    for (var i = numBiases; i > 0; i--){
+        var scaleFactor = Math.random()+.5; //TODO: how do we want to decide scale factor? (0.5, 1.5 atm)
+        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
+        var neuron = Math.floor(Math.random(nn.biases[synapseLayer].length)); //get random neuron
+        nn.biases[synapseLayer][neuron] *= scaleFactor;
+        nn.biases[synapseLayer][neuron] = Math.max(-1, nn.biases[synapseLayer][neuron]); //bound 
+        nn.biases[synapseLayer][neuron] = Math.min(1, nn.biases[synapseLayer][neuron]);
+    }
+    for (var i = numWeights; i > 0; i--){
+        var scaleFactor = Math.random()+.5; //TODO: how do we want to decide scale factor? (0.5, 1.5 atm)
+        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
+        var neuron1 = Math.floor(Math.random(nn.weights[synapseLayer].length)); //get random firing neuron layer
+        var neuron2 = Math.floor(Math.random(nn.weights[synapseLayer][neuron1].length)); //get random receiving neuron layer
+        nn.weights[synapseLayer][neuron1][neuron2] *= scaleFactor;
+        nn.biases[synapseLayer][neuron1][neuron2] = Math.max(-1, nn.biases[synapseLayer][neuron1][neuron2]); //bound
+        nn.biases[synapseLayer][neuron1][neuron2] = Math.min(1, nn.biases[synapseLayer][neuron1][neuron2]);
+    }
 }
 //Shifts values in the NN
 NeuralNetwork.prototype.mutateShift = function (numWeights, numBiases, copy) {
-
+    var nn = copy ? JSON.parse(JSON.stringify(this.network)) : this.network;
+    //TODO: create reusable random mutate code
+    //TODO: Don't allow same entity to be mutated twice? (not sure if worth computational cost...kinda doubt it?)
+    for (var i = numBiases; i > 0; i--){
+        var shiftFactor = Math.random()-.5; //TODO: how do we want to decide shift factor factor? (-0.5, 0.5) atm
+        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
+        var neuron = Math.floor(Math.random(nn.biases[synapseLayer].length)); //get random neuron
+        nn.biases[synapseLayer][neuron] += shiftFactor;
+        nn.biases[synapseLayer][neuron] = Math.max(-1, nn.biases[synapseLayer][neuron]); //bound 
+        nn.biases[synapseLayer][neuron] = Math.min(1, nn.biases[synapseLayer][neuron]);
+    }
+    for (var i = numWeights; i > 0; i--){
+        var shiftFactor = Math.random()-.5; //TODO: how do we want to decide scale factor? (0.5, 1.5 atm)
+        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
+        var neuron1 = Math.floor(Math.random(nn.weights[synapseLayer].length)); //get random firing neuron layer
+        var neuron2 = Math.floor(Math.random(nn.weights[synapseLayer][neuron1].length)); //get random receiving neuron layer
+        nn.biases[synapseLayer][neuron1][neuron2] += shiftFactor;
+        nn.biases[synapseLayer][neuron1][neuron2] = Math.max(-1, nn.biases[synapseLayer][neuron1][neuron2]); //bound
+        nn.biases[synapseLayer][neuron1][neuron2] = Math.min(1, nn.biases[synapseLayer][neuron1][neuron2]);
+    }
 }
-//Inverts values in the NN
+//Negates values in the NN
 NeuralNetwork.prototype.mutateInvert = function (numWeights, numBiases, copy) {
-
+    var nn = copy ? JSON.parse(JSON.stringify(this.network)) : this.network;
+    //TODO: create reusable random mutate code
+    //TODO: Don't allow same entity to be mutated twice? (not sure if worth computational cost...kinda doubt it?)
+    for (var i = numBiases; i > 0; i--){
+        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
+        var neuron = Math.floor(Math.random(nn.biases[synapseLayer].length)); //get random neuron
+        nn.biases[synapseLayer][neuron] *= -1;
+    }
+    for (var i = numWeights; i > 0; i--){
+        var synapseLayer = Math.floor(Math.random(nn.biases.length)); //get random synapse layer
+        var neuron1 = Math.floor(Math.random(nn.weights[synapseLayer].length)); //get random firing neuron layer
+        var neuron2 = Math.floor(Math.random(nn.weights[synapseLayer][neuron1].length)); //get random receiving neuron layer
+        nn.weights[synapseLayer][neuron1][neuron2] *= -1;
+    }
 }
 
 /*
