@@ -8,7 +8,7 @@
 
 /* Image for Bullet */
 var bulletImage = new Image();
-bulletImage.src = 'public/img/missle/21.png';
+bulletImage.src = 'public/assets/img/missle/21.png';
 var nextBulletId = 0; //just allow natural overflow
 
 /* Bullet Constructor

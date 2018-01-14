@@ -6,6 +6,9 @@
  *	@author Calvin Ellis
  */
 
+/* Whether the Game Loop is running */
+var running = false;
+
 /* FPS vars for performance measurement */
 const TARGET_FPS = 60;
 var lastTime = 0;
@@ -58,12 +61,24 @@ window.requestAnimFrame = (function () {
 	};
 })();
 
+function startGameLoop(){
+    if (!running){
+        running = true;
+        gameLoop();
+    }
+}
+function stopGameLoop(){
+    running = false;
+}
+
 /* Game loop invoked every frame */
 function gameLoop(){
-    update();
-    if(ctx)
-        render();
-    requestAnimFrame(gameLoop);
+    if (running){
+        update();
+        if(ctx)
+            render();
+        requestAnimFrame(gameLoop);
+    }
 }
 
 /* Render game-layer for arena */

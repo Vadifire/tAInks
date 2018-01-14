@@ -18,7 +18,7 @@ var ctx; //ctx for gameCanvas
 var bgCtx; //ctx for bgCanvas
 var currentPage; //Page (div) currently being viewed
 var enableAudio = false; //Whether or not we should play Audio
-var arenaSoundLoop = new Howl({src: ['public/audio/arena-loop.mp3'], loop:true, volume: 0.2});
+var arenaSoundLoop = new Howl({src: ['public/assets/audio/arena-loop.mp3'], loop:true, volume: 0.2});
 var view = VIEWS.LOGIN; //Current view
 var ARENA_WIDTH;
 var ARENA_HEIGHT;
@@ -58,6 +58,7 @@ var VIEWS = {
 			gameCanvas.addEventListener('keyup', function(event) { Keys.onKeyup(event); }, false);
 			gameCanvas.addEventListener('keydown', function(event) { Keys.onKeydown(event); }, false);
 			gameCanvas.addEventListener('click', clickOnCanvas, false);
+			startGameLoop();
 			console.log("Successfully loaded Arena!"); 
 		}
 	}

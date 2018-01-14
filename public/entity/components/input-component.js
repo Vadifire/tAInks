@@ -80,9 +80,9 @@ BulletComponent.prototype.readInput = function(){
 
 /* LASER IMAGES */
 var laserImage1 = new Image();
-laserImage1.src = 'public/img/laser1.png';
+laserImage1.src = 'public/assets/img/laser1.png';
 var laserImage2 = new Image();
-laserImage2.src = 'public/img/laser2.png';
+laserImage2.src = 'public/assets/img/laser2.png';
 
 /* Component that measures distance to nearest tank down a line */
 function SensorComponent(x, y, dir, map, image, width, height) {

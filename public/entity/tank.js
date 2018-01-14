@@ -15,7 +15,7 @@ var tankImage = [];
 /* populate tank image with animation frames */
 for (var i = 1; i < 9; i++){ 
 	var image = new Image();
-	image.src = 'public/img/tank/'+ (i) + '.png';
+	image.src = 'public/assets/img/tank/'+ (i) + '.png';
 	tankImage.push(image);
 }
 

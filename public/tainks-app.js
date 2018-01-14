@@ -15,7 +15,8 @@
 var VIEWS_SOURCE_DIR = "/public/views"; //directory of views source files
 
 app.controller('mainCtrl', function($scope){
-	$scope.player_tanks = [ new Tank(1, 5, 5, 9, false), new Tank(2, 5, 5, 2, false), new Tank(3, 5, 5, 6, false), new Tank(4, 5, 5, 4, false), new Tank(5, 5, 5, 6, false) ];
+	$scope.player_tanks = [ new Tank(1, 5, 5, 9, false), new Tank(2, 5, 5, 2, false), new Tank(3, 5, 5, 6, false), 
+		new Tank(4, 5, 5, 4, false), new Tank(5, 5, 5, 6, false) ];
 	
 	$scope.game_tanks = tanks;
 	$scope.game_generation = generation;

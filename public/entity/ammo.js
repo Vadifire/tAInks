@@ -9,7 +9,7 @@
 
  /* Image for Ammo Pack */
 var ammoImage = new Image();
-ammoImage.src = 'public/img/missle/ammo-pack.png';
+ammoImage.src = 'public/assets/img/missle/ammo-pack.png';
 var nextAmmoId = 0; //just allow natural overflow
 
 
