@@ -147,19 +147,20 @@ function update() {
 /* 
  * Advance to the next generation
  *
- *  1) 'Soft' kill all remaining tanks 
- *  2) Evolve Tanks
+ *  1) Add dead tanks back to tank map
+ *  2) Evolve tanks
  *  3) Rest and advance to the next gen
  */
 function nextGeneration() {
-    //Soft Kill Tanks
-    tanks.forEach(function (tank) { //soft kill remaining tanks
-        deadTanks.set(tank.id, tank);
-    });
-    tanks = new Map(); //clear
 
-    //Invoke Evolve Method
-    tanks = evolve(deadTanks); //Allow Divine Influence
+	//add dead tanks back to tanks map
+    deadTanks.forEach(function (tank) { 
+        tanks.set(tank.id, tank);
+    });
+    deadTanks = new Map(); //clear
+
+    //Invoke Evolve Method on new map copied from deadTanks
+    evolve(tanks);
 
     //Reset Entities
     deadTanks = new Map(); // clear dead tanks

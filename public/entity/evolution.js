@@ -7,6 +7,7 @@
  *  @author Calvin Ellis
  */
 
+var cumulativeScore; //used across evolvePopulation()
 
 /*
  * Central entry point function for processing evolution
@@ -17,7 +18,8 @@
  * @returns {Map <number, Tank>} map of original tanks, but with evolved neural networks
  */
 function evolve(tankMap) {
-    return evolveMutation(tankMap, 0.6, 0.4);
+    //evolveMutation(tankMap, 0.6, 0.4);
+    cumulativeScore = evolvePopulation(tankMap, cumulativeScore);
 }
 
 /* 
@@ -40,12 +42,11 @@ function sortByFitness(tankMap){
  */
 function getAverageFitness(tankMap){ 
     var average = 0;
-    tanksList.forEach(function (tank) { 
+    tankMap.forEach(function (tank) { 
         average += tank.calculateFitness();
     });
     return (average / tankMap.size);
 }
-
 
 /*
  * Have top of tank population reproduce, bottom be replaced, middle mutate.
@@ -53,7 +54,7 @@ function getAverageFitness(tankMap){
  * 
  * @param {Map <number, Tank>} tankMap - Map of tanks to evolve
  * @param {Map <number, number>} score - Map of tank ids to cumulative score
- * @returns {Map <number, Tank>} map of original tanks, but with evolved neural networks
+ * @returns {Object} - the updated scorecard
  */
 function evolvePopulation(tankMap, score) {
     const SHIFT = 1; // +/- incentive for performance
@@ -63,7 +64,7 @@ function evolvePopulation(tankMap, score) {
 
     if (!score){ //init score
         score = new Map();
-        tanksList.forEach(function (tank) { 
+        tankMap.forEach(function (tank) { 
             score.set(tank.id, 0); //Set all scores to default of 0
         });
     }
@@ -71,8 +72,11 @@ function evolvePopulation(tankMap, score) {
     var sorted = sortByFitness(tankMap);
 
     for (var i = 0; i < sorted.length/3; i++){ 
+
+        console.log(i);
+
         var id1 = sorted[i].id; //top 3rd
-        score.set(id, Math.min(score.get(id) + SHIFT, MAX_SCORE)); // += SHIFT
+        score.set(id1, Math.min(score.get(id1) + SHIFT, MAX_SCORE)); // += SHIFT
 
         id2 = sorted.length-1-i; //bottom 3rd
         score.set(id2, Math.max(score.get(id2) - SHIFT, MIN_SCORE)); // -= SHIFT
@@ -83,11 +87,16 @@ function evolvePopulation(tankMap, score) {
             var child = tankMap.get(id2); // new child will replace lower performing tank
             var parent = tankMap.get(id1);
 
+            console.log(id1+" used as a parent");
+            console.log(id2+" replaced with a child");
+
             //asexual 0 mutation reproduction for now (testing)
             child.neuralNetwork.network = parent.neuralNetwork.crossoverNeurons(parent.neuralNetwork.network, 1);
+            score.set(id2, 1); //bias to think child is OK
         }
     }
-
+    console.log(score);
+    return score;
 }
 
 /*
@@ -97,11 +106,8 @@ function evolvePopulation(tankMap, score) {
  * @param {Map <number, Tank>} tankMap - Map of tanks to evolve
  * @param {number} maxMutationStrength - the degree to mutate the worst tank [0,1]
  * @param {number} maxMutationRate - the rate at which weights/biases mutate in the worst tank [0,1]
- * @returns {Map <number, Tank>} map of original tanks, but with evolved neural networks
  */
 function evolveMutation(tankMap, maxMutationStrength, maxMutationRate) {
-    var evolvedMap = new Map(); //Map which will return evolved tanks
-
     var sortedArray = sortByFitness(tankMap);
     var totalPop = sortedArray.length;
 
@@ -111,8 +117,6 @@ function evolveMutation(tankMap, maxMutationStrength, maxMutationRate) {
             tank.neuralNetwork.mutate(maxMutationStrength * (i / (totalPop - 1) ),// mutation ~ 1/fitness
                 maxMutationRate ); // this may be too conservative, but hopefully sustains growth
         }
-        evolvedMap.set(tank.id, tank); // Add potentially modified tank to new map
     }
-    console.log(evolvedMap);
-    return evolvedMap;
+    //console.log(tankMap);
 }
