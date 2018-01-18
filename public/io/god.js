@@ -40,7 +40,7 @@ function evolveUnselected(tankList, mutationStrength, mutationRate) {
     });
 
     if (newMap.size == 0) { //Absolutely nothing was selected
-        return evolve(tankList, mutationStrength, mutationRate); //Fall back on normal evolution (God has foresaken us :<)
+        return evolve(tankList); //Fall back on normal evolution (God has foresaken us :<)
     }
 
     //Assign probabilities for being a mutant of selected tanks based on fitness

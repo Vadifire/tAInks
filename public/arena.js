@@ -159,7 +159,7 @@ function nextGeneration() {
     tanks = new Map(); //clear
 
     //Invoke Evolve Method
-    tanks = evolveUnselected(deadTanks, 0.6, 0.4); //Allow Divine Influence
+    tanks = evolve(deadTanks); //Allow Divine Influence
 
     //Reset Entities
     deadTanks = new Map(); // clear dead tanks
