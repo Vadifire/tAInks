@@ -14,6 +14,8 @@
  *	@author Calvin Ellis
  */
 
+/* TODO: Fix confusion between NeuralNetwork and NeuralNetwork.network */
+
 /*
  * NeuralNetwork Constructor
  *
@@ -193,7 +195,7 @@ NeuralNetwork.prototype.mutate = function (mutationStrength, mutationRate) {
  * @param {number} numWeights - # of weights to mutate
  * @param {boolean} copy - Whether to keep state of original and create copy
  * 
- * @returns {Object} - mutated NN (moreso for when copying)
+ * @returns {Object} - mutated NN's network (moreso for when copying)
  */
 
 
@@ -281,7 +283,7 @@ NeuralNetwork.prototype.mutateInvert = function (numBiases, numWeights, copy) {
  * @param {Object} partner - The NN of the other parent
  * @param {number} numX - The number of things to modify
  *
- * @returns {Object} - The child NN.
+ * @returns {Object} - The child NN's network.
  */
 
 //I'm not sure if two random values should be swapped,
@@ -337,9 +339,6 @@ NeuralNetwork.prototype.crossoverNeurons = function (partner, numNeurons) {
  * @param {Object} n2 - The network of the second NN parent
  */
 NeuralNetwork.prototype.crossoverAverage = function (n1, n2) {
-    /*console.log("Parent networks:");
-    console.log(n1);
-    console.log(n2);*/
     var numSynapses = this.network.biases.length; // numLayers - 1
     for (var layer = 0; layer < numSynapses; layer++) {
         //for all biases or 'cols'
@@ -351,8 +350,6 @@ NeuralNetwork.prototype.crossoverAverage = function (n1, n2) {
             }
         }
     }
-    /*console.log("Child network:");
-    console.log(this.network);*/
 }
 
 /*
@@ -386,8 +383,6 @@ NeuralNetwork.prototype.crossoverSelection = function (n1, n2, selectionRate) {
             }
         }
     }
-    /*console.log("Child network:");
-    console.log(this.network);*/
 }
 
 /*
