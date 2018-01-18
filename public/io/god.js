@@ -57,7 +57,7 @@ function evolveUnselected(tankList, mutationStrength, mutationRate) {
         for (var i = 0; i < probabilities.length; i++) {
             if (rand < probabilities[i].probability) { //Reached probability bin
                 tank.neuralNetwork.network = JSON.parse(JSON.stringify(probabilities[i].network)); //select parent neural network to mutate off
-                tank.neuralNetwork.mutate(0.2, 0.1); //Mutate
+                tank.neuralNetwork.mutate(mutationStrength, mutationRate); //Mutate
                 break;
             }
         }

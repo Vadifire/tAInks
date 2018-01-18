@@ -391,35 +391,6 @@ NeuralNetwork.prototype.crossoverSelection = function (n1, n2, selectionRate) {
 }
 
 /*
- * Genetic algorithm intended to evolve fitness of population over time
- *
- * @param {Map <number, Tank>} tankList - List of tanks to evolve
- * @param {number} maxMutationStrength - the degree to mutate the worst tank [0,1]
- * @param {number} maxMutationRate - the rate at which weights/biases mutate in the worst tank [0,1]
- * @returns {Map <number, Tank>} new map based on original tanks, but with evolved neural networks
- */
-function evolve(tankList, maxMutationStrength, maxMutationRate) {
-    var evolutionArray = Array.from(tankList.values()); // copy original map to array
-    var evolvedMap = new Map(); //Map which will return evolved tanks
-
-    var totalPop = evolutionArray.length;
-    evolutionArray.sort(function (t1, t2) { //Sort in descending order of fitness
-        return t2.calculateFitness() - t1.calculateFitness();
-    });
-
-    for (var i = 0; i < totalPop; i++){ //Evolve every tank and add to evolvedMap
-        var tank = evolutionArray[i];
-        if (tank.neuralNetwork) { //tank is AI controlled
-            tank.neuralNetwork.mutate(maxMutationStrength * (i / (totalPop - 1) ),// mutation ~ 1/fitness
-                maxMutationRate ); // this may be too conservative, but hopefully sustains growth
-        }
-        evolvedMap.set(tank.id, tank); // Add potentially modified tank to new map
-    }
-
-    return evolvedMap;
-}
-
-/*
  * Render the Neural Network
  * @param {Object} ctx - The context to draw to
  */
