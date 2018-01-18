@@ -18,14 +18,13 @@ var fps = 0;
 var generation = 1;
 var automaticGenSkip = 30; //seconds until skipping to next gen
 var lastGenTime = 0;
+var ammoAmount = 7;
 
 /* TODO rework maps => create general entity Map */
 var tanks = new Map(); //map tank ids to tanks
 var deadTanks = new Map(); //graveyard of tanks (again, map tank ids to tanks)
 var bullets = new Map(); //Maps bullet ids to bullet obj
 var ammo = new Map(); //Maps ammo ids to ammo obj
-
-var playerTank = new Tank(0, 100, 400, 3, true);
 
 //Scatter AI tanks
 for (var i = 0; i < 6; i++){ //6
@@ -44,8 +43,9 @@ for (var i = 0; i < 6; i++){ //6
 		new DriveComponent(), new RotateCWComponent(), new RotateCCWComponent(), new ShootComponent()]);
 	tanks.set(ai.id, ai);
 }
-//Add Player to Map
-//tanks.set(playerTank.id, playerTank);
+
+var playerTank = new Tank(0, 100, 400, 3, true);
+//tanks.set(playerTank.id, playerTank); //add player tank to map
 
 /* Lets Browser Efficiently Manage Frames */
 window.requestAnimFrame = (function () {
@@ -71,7 +71,10 @@ function stopGameLoop(){
     running = false;
 }
 
-/* Game loop invoked every frame */
+/*
+ * Handle periodic game events
+ * (i.e. game state update, canvas rendering)
+ */
 function gameLoop(){
     if (running){
         update();
@@ -81,7 +84,9 @@ function gameLoop(){
     }
 }
 
-/* Render game-layer for arena */
+/* 
+ * Render all entities on the Game Canvas
+ */
 function render(){
 	/* Clear Drawing Area */
 	ctx.clearRect(0,0,ARENA_WIDTH,ARENA_HEIGHT);
@@ -115,56 +120,55 @@ function render(){
     ctx.textAlign = "center";
 }
 
-/* Update Local Game State */
+/*
+ * Handle all game state updates
+ * (ex: entity movement, collision detection, ammo respawn)
+ */
 function update() {
     ammo.forEach(function(ammo){
-		ammo.update(ctx);
+		ammo.update();
     });
 	bullets.forEach(function(bullet){
-		bullet.update(Keys);
+		bullet.update();
 	});
 	tanks.forEach(function(tank){
 		tank.update(Keys);
     });
 
-    insertAmmoRandomly(7-ammo.size); // # of Ammo in Arena
+    insertAmmoRandomly(ammoAmount-ammo.size); // # of Ammo in Arena
 
-    if (tanks.size <= 1 || /* one tank left -> winner decided, end game */
-    	(performance.now() - automaticGenSkip*1000 > lastGenTime)){ 
+    if (tanks.size <= 1 || //Go to next generation when there is one tank left
+    	((performance.now() - automaticGenSkip*1000) > lastGenTime)){ //or automatic gen skip
         nextGeneration();
     }
 }
 
-/*
- * Process the game's end
- *  1) Evolve the population based on individual's fitness function
- *  2) Reset tanks and round
- */
-function processGameEnd() {
-    if (tanks.size === 1) { //if a lone winner stands, now add them to death list
-        var tankWinner = tanks.entries().next().value[1]; //get first tank from tanks Map
-        deadTanks.set(tankWinner.id, tankWinner); // add last tank to dead tanks
-        tanks.delete(tankWinner.id); // remove from active tanks list
-    }
-    tanks = evolveUnselected(deadTanks, 0.6, 0.4); //Allow Divine Influence
-    deadTanks = new Map(); // clear dead tanks
-    bullets = new Map(); // clear any stray bullets
-    tanks.forEach(function (tank) { //Revive the tanks
-        tank.reset();
-        console.log(tank.neuralNetwork.network);
-    });
-    generation++; //Upgrade global generation var
-}
 
-
-/*
- * Kill all remaining tanks and proceed to next gen
+/* 
+ * Advance to the next generation
+ *
+ *  1) 'Soft' kill all remaining tanks 
+ *  2) Evolve Tanks
+ *  3) Rest and advance to the next gen
  */
 function nextGeneration() {
+    //Soft Kill Tanks
     tanks.forEach(function (tank) { //soft kill remaining tanks
         deadTanks.set(tank.id, tank);
     });
     tanks = new Map(); //clear
-    processGameEnd();
+
+    //Invoke Evolve Method
+    tanks = evolveUnselected(deadTanks, 0.6, 0.4); //Allow Divine Influence
+
+    //Reset Entities
+    deadTanks = new Map(); // clear dead tanks
+    bullets = new Map(); // clear any stray bullets
+    tanks.forEach(function (tank) { //Revive the tanks
+        tank.reset();
+    });
+
+    //Advance to the next generation
+    generation++;
     lastGenTime = performance.now();
 }
